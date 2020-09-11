@@ -1,0 +1,2 @@
+// Download backup from server
+scp forge@139.162.227.141:ghana.salvationclincchms.com/storage/app/Laravel/2020-09-01-21-10-38.zip ~/Sites/2020-09-01-21-10-38.zip
