@@ -7,10 +7,11 @@ use App\Http\Requests\BranchStoreRequest;
 use App\Models\Branch;
 use App\Tenant;
 use App\Traits\ResponseTrait;
-use Exception;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Laravel\Passport\Client as PassportClient;
 use Laravel\Passport\PersonalAccessClient as PassportPersonalAccessClient;
+use Exception;
 
 class BranchController extends Controller
 {
@@ -20,16 +21,18 @@ class BranchController extends Controller
   {
     try {
       $validated = (object)$request->validationData();
-      $branch = Branch::create([
-        "name" => $validated->name,
-        "subdomain" => $validated->subdomain,
-        "mask" => generate_mask()
-      ]);
+      $branch = new Branch();
+      $branch->name = $validated->name;
+      $branch->subdomain = $validated->subdomain;
+      $branch->mask = generate_mask();
 
-      if ($branch) {
+      if ($branch->save()) {
+        $domain = strtolower($branch->subdomain) . "." . getenv("TENANT_DOMAIN");
         $tenant = Tenant::create(["id" => strtolower($branch->subdomain)]);
-        $tenant->domains()->create(["domain" => strtolower($branch->subdomain) . "." . getenv("TENANT_DOMAIN")]);
+        $tenant->domains()->create(["domain" => $domain]);
         $tenant->run(function () use ($tenant) {
+
+          // Save passport client
           PassportClient::create([
             "name" => ucfirst($tenant->id) . " Personal Access Client",
             "secret" => Str::random(40),
@@ -39,16 +42,24 @@ class BranchController extends Controller
             "revoked" => 0
           ]);
 
+          // Save passport personal access client
           PassportPersonalAccessClient::create(["client_id" => 1]);
 
-          //Artisan::call("passport:keys");
-          //Artisan::call("tenants:seed", ["--tenants" => $tenant->id]);
+          Artisan::call("tenants:seed", ["--tenants" => $tenant->id]);
         });
 
-        dd($tenant);
-      }
+        if ($tenant) {
+          $branch->tenant_id = $tenant->id;
+          $branch->domain = $domain;
+          $branch->save();
 
-    } catch (Exception $e) {
+          return $this->successResponse("Branch created successfully.");
+        }
+        return $this->errorResponse("An error occurred while creating this branch");
+      }
+      return $this->errorResponse("An error occurred while saving this branch");
+    }
+    catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
     }
   }
