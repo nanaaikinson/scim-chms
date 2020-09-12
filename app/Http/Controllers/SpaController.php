@@ -10,4 +10,9 @@ class SpaController extends Controller
   {
     return view("app");
   }
+
+  public function tenant()
+  {
+    return view("tenant.index");
+  }
 }

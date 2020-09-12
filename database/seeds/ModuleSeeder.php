@@ -1,7 +1,6 @@
 <?php
 
-namespace Database\Tenant;
-
+use App\Models\Module;
 use Illuminate\Database\Seeder;
 
 class ModuleSeeder extends Seeder
@@ -20,7 +19,7 @@ class ModuleSeeder extends Seeder
     ];
 
     foreach ($modules as $module) {
-      \App\Models\Module::create([
+      Module::create([
         "name" => $module,
         "description" => null,
         "mask" => generate_mask()

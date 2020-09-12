@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Tenant;
 use Stancl\Tenancy\Database\Models\Domain;
 
 return [
-  'tenant_model' => \App\Tenant::class,
+  'tenant_model' => Tenant::class,
   'id_generator' => Stancl\Tenancy\UUIDGenerator::class,
 
   'domain_model' => Domain::class,
@@ -51,7 +52,7 @@ return [
      * Tenant database names are created like this:
      * prefix + tenant_id + suffix.
      */
-    'prefix' => 'tenant_',
+    'prefix' => 'scim__tenant__',
     'suffix' => '',
 
     /**
@@ -88,7 +89,7 @@ return [
    * You can clear cache selectively by specifying the tag.
    */
   'cache' => [
-    'tag_base' => 'tenant_', // This tag_base, followed by the tenant_id, will form a tag that will be applied on each cache call.
+    'tag_base' => 'scim__tenant__', // This tag_base, followed by the tenant_id, will form a tag that will be applied on each cache call.
   ],
 
   /**
