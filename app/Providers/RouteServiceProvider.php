@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -91,25 +93,28 @@ class RouteServiceProvider extends ServiceProvider
   public function mapStaffApiRoutes()
   {
     Route::prefix('staff')
-      ->middleware('api')
+      ->middleware("tenantApi")
       ->namespace("App\Http\Controllers\Api\Staff")
-      ->group(base_path('routes/api/staff.php'));
+      ->group(base_path('routes/staff.php'));
   }
 
   public function mapMemberApiRoutes()
   {
-    Route::prefix('member')
-      ->middleware('api')
-      ->namespace("App\Http\Controllers\Api\Member")
-      ->group(base_path('routes/api/member.php'));
+    foreach ($this->centralDomains() as $domain) {
+      Route::prefix('member')
+        ->domain($domain)
+        ->middleware('api')
+        ->namespace("App\Http\Controllers\Api\Member")
+        ->group(base_path('routes/member.php'));
+    }
   }
 
   public function mapFakerApiRoutes()
   {
     Route::prefix('faker')
-      ->middleware('api')
+      ->middleware("tenantApi")
       ->namespace("App\Http\Controllers\Faker")
-      ->group(base_path('routes/api/faker.php'));
+      ->group(base_path('routes/faker.php'));
   }
 
   protected function centralDomains(): array

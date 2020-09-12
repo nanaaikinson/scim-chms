@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Observers\TenantModelObserver;
+use App\Tenant;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
@@ -26,9 +28,6 @@ class AppServiceProvider extends ServiceProvider
   public function boot()
   {
     Schema::defaultStringLength(191);
-    /*if ($this->app->environment() == 'production') {
-      \URL::forceScheme('https');
-      \URL::forceRootUrl(\Config::get('app.url'));
-    }*/
+    Tenant::observe(TenantModelObserver::class);
   }
 }

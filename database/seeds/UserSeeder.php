@@ -1,4 +1,5 @@
 <?php
+namespace Database\Seeds\Tenant;
 
 use Illuminate\Database\Seeder;
 

@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 Route::view("/", "welcome");
 
-Route::get("/books/{token}/download", "Api\BookController@download");
+//Route::get("/books/{token}/download", "Api\BookController@download");
