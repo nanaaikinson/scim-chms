@@ -1,19 +1,20 @@
 import Axios from "./axios";
+import {apiURL} from "@services/api/axios";
 
 export default {
   all() {
-    return Axios.get("/staff/contributions/pledges");
+    return Axios.get(apiURL + "staff/contributions/pledges");
   },
   store(payload) {
-    return Axios.post("/staff/contributions/pledges", payload);
+    return Axios.post(apiURL + "staff/contributions/pledges", payload);
   },
   show(mask) {
-    return Axios.get("/staff/contributions/pledges/" + mask);
+    return Axios.get(apiURL + "staff/contributions/pledges/" + mask);
   },
   update(payload, mask) {
-    return Axios.put("/staff/contributions/pledges/" + mask, payload);
+    return Axios.put(apiURL + "staff/contributions/pledges/" + mask, payload);
   },
   delete(mask) {
-    return Axios.delete("/staff/contributions/pledges/" + mask);
+    return Axios.delete(apiURL + "staff/contributions/pledges/" + mask);
   },
 };
