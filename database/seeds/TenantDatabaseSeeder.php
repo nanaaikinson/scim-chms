@@ -3,6 +3,8 @@
 use App\Models\Country;
 use App\Models\Module;
 use App\Models\Permission;
+use App\Models\Role;
+use App\User;
 use Illuminate\Database\Seeder;
 
 class TenantDatabaseSeeder extends Seeder
@@ -276,7 +278,7 @@ class TenantDatabaseSeeder extends Seeder
     $permissions = Permission::all();
 
     // Super Administrator
-    $superAdmin = \App\Models\Role::create([
+    $superAdmin = Role::create([
       "name" => "super-administrator",
       "display_name" => "Super Administrator",
       "mask" => generate_mask(),
@@ -290,7 +292,7 @@ class TenantDatabaseSeeder extends Seeder
     #################### Users ####################
     $password = bcrypt(12345678);
 
-    $superAdmin = \App\User::create([
+    $superAdmin = User::create([
       "first_name" => "Admin",
       "last_name" => "Admin",
       "email" => "admin@example.com",
@@ -301,7 +303,7 @@ class TenantDatabaseSeeder extends Seeder
 
     $superAdmin->attachRole(ST_SUPER_ADMIN);
 
-    $developer = \App\User::create([
+    $developer = User::create([
       "first_name" => "Nana",
       "last_name" => "Aikinson",
       "email" => "nanaaikinson24@gmail.com",
