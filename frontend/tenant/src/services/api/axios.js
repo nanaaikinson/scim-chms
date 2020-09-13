@@ -1,16 +1,15 @@
 import axios from "axios";
 
-const origin = window.location.origin;
-const pathname = window.location.pathname;
-
-export const apiURL = `${origin}${pathname}`;
-const devURL = "/";
+const devURL = 'http://scim.test/ghana/';
 
 const Axios = axios.create({
-  baseURL: process.env.NODE_ENV === "production" ? apiURL : devURL,
   timeout: 10000,
   params: {}
 });
 
+export const apiURL =
+  process.env.NODE_ENV === "production"
+    ? window.location.origin + window.location.pathname
+    : devURL;
 
 export default Axios;
