@@ -171,7 +171,7 @@
             </ul>
           </div>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a
             id="settings-collapse-btn"
             class="nav-link"
@@ -194,7 +194,7 @@
               </li>
             </ul>
           </div>
-        </li>
+        </li> -->
       </ul>
     </div>
   </nav>

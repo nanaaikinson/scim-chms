@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const devURL = 'http://scim.test/ghana/';
+const devURL = "/";
 
 const Axios = axios.create({
   timeout: 10000,

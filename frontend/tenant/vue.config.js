@@ -2,9 +2,9 @@ const path = require("path");
 
 module.exports = {
   devServer: {
-    proxy: process.env.DEV_API_URL,
+    proxy: "http://scim-chms.io/akwetey/"
   },
-  chainWebpack: (config) => {
+  chainWebpack: config => {
     config.resolve.alias.set(
       "@services",
       path.resolve(__dirname, "src/services")
@@ -32,8 +32,8 @@ module.exports = {
 
   publicPath: process.env.NODE_ENV === "production" ? "/assets/app/" : "/",
 
-  indexPath: process.env.NODE_ENV === 'production'
-    ? '../../../resources/views/tenant/index.blade.php'
-    : 'index.html'
-
+  indexPath:
+    process.env.NODE_ENV === "production"
+      ? "../../../resources/views/tenant/index.blade.php"
+      : "index.html"
 };
