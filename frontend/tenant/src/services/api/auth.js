@@ -1,7 +1,10 @@
-import Axios from "./axios";
+import Axios, {apiURL} from "./axios";
 
 export default {
   login(payload) {
+    console.log(Axios);
+    console.log(apiURL);
+
     return Axios.post("/staff/auth/login", payload);
   },
   logout() {

@@ -1,22 +1,16 @@
 import axios from "axios";
 
-const apiURL = "/";
+const origin = window.location.origin;
+const pathname = window.location.pathname;
+
+export const apiURL = `${origin}${pathname}`;
 const devURL = "/";
+
 const Axios = axios.create({
   baseURL: process.env.NODE_ENV === "production" ? apiURL : devURL,
   timeout: 10000,
   params: {}
 });
 
-// Response interceptor
-// Axios.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (error.response.status === 401) {
-//       this.$store.dispatch("logout");
-//     }
-//     return Promise.reject(error);
-//   }
-// );
 
 export default Axios;

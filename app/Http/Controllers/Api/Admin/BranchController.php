@@ -27,7 +27,7 @@ class BranchController extends Controller
       $branch->mask = generate_mask();
 
       if ($branch->save()) {
-        $domain = $request->getHost() . "/" . strtolower($branch->subdomain);
+        $domain = $request->getHost() . "/" . strtolower($branch->subdomain) . "/";
         $tenant = Tenant::create(["id" => strtolower($branch->subdomain)]);
         $tenant->domains()->create(["domain" => $domain]);
         $tenant->run(function () use ($tenant) {
@@ -36,7 +36,7 @@ class BranchController extends Controller
           PassportClient::create([
             "name" => ucfirst($tenant->id) . " Personal Access Client",
             "secret" => Str::random(40),
-            "redirect" => "http://" . getenv("TENANT_DOMAIN") . "/{$tenant->id}",
+            "redirect" => "http://" . getenv("TENANT_DOMAIN") . "/{$tenant->id}/",
             "personal_access_client" => 1,
             "password_client" => 0,
             "revoked" => 0
