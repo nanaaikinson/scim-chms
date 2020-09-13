@@ -21,8 +21,8 @@ Route::group([
   'prefix' => '/{tenant}',
   'middleware' => [InitializeTenancyByPath::class],
 ], function () {
-//  Route::get("/", "SpaController@tenant");
-  Route::get('/', function () {
-    return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
-  });
+  Route::get("/", "SpaController@tenant");
+//  Route::get('/', function () {
+//    return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
+//  });
 });
