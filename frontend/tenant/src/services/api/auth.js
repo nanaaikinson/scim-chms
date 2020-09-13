@@ -2,13 +2,10 @@ import Axios, {apiURL} from "./axios";
 
 export default {
   login(payload) {
-    console.log(Axios);
-    console.log(apiURL);
-
-    return Axios.post("/staff/auth/login", payload);
+    return Axios.post(apiURL + "staff/auth/login", payload);
   },
   logout() {
-    return Axios.post("/staff/auth/logout");
+    return Axios.post(apiURL + "staff/auth/logout");
   },
   user() {
     return Axios.get("/staff/profile");
