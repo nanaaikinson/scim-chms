@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const apiURL = "";
-const devURL = "http://development.salvationclincchms.com";
+const apiURL = "/";
+const devURL = "/";
 const Axios = axios.create({
   baseURL: process.env.NODE_ENV === "production" ? apiURL : devURL,
   timeout: 10000,
