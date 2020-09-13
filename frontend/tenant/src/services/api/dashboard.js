@@ -1,7 +1,7 @@
-import Axios from "./axios";
+import Axios, {apiURL} from "./axios";
 
 export default {
   init() {
-    return Axios.get("/staff/dashboard");
+    return Axios.get(apiURL + "staff/dashboard");
   },
 };

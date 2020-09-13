@@ -1,36 +1,37 @@
 import axios from "./axios";
+import {apiURL} from "@services/api/axios";
 
 export default {
   all() {
-    return axios.get("/staff/people");
+    return axios.get(apiURL + "staff/people");
   },
   members() {
-    return axios.get("/staff/people/members");
+    return axios.get(apiURL + "staff/people/members");
   },
   store(payload) {
-    return axios.post("/staff/people", payload);
+    return axios.post(apiURL + "staff/people", payload);
   },
   show(mask) {
-    return axios.get("/staff/people/" + mask);
+    return axios.get(apiURL + "staff/people/" + mask);
   },
   update(payload, mask) {
-    return axios.post("/staff/people/" + mask, payload);
+    return axios.post(apiURL + "staff/people/" + mask, payload);
   },
   delete(mask) {
-    return axios.delete("/staff/people/" + mask);
+    return axios.delete(apiURL + "staff/people/" + mask);
   },
   person: {
     details(mask) {
-      return axios.get("/staff/people/" + mask + "/details");
+      return axios.get(apiURL + "staff/people/" + mask + apiURL + "details");
     },
     attendance(mask, params) {
-      return axios.get("/staff/people/" + mask + "/attendance", params);
+      return axios.get(apiURL + "staff/people/" + mask + apiURL + "attendance", params);
     },
     followUp(mask, params) {
-      return axios.get("/staff/people/" + mask + "/follow-ups", params);
+      return axios.get(apiURL + "staff/people/" + mask + apiURL + "follow-ups", params);
     },
     contributions(mask, params) {
-      return axios.get("/staff/people/" + mask + "/contributions", params);
+      return axios.get(apiURL + "staff/people/" + mask + apiURL + "contributions", params);
     },
   },
 };

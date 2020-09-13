@@ -30,8 +30,8 @@ class MemberRegisteredMail extends Mailable implements ShouldQueue
    */
   public function build()
   {
-    return $this->from("noreply@salvationclincchms.com", "SCIM")
-      ->subject('Email Verification')
+    return $this->from("noreply@salvationclincchms.com", "SCIM Support")
+      ->subject("{$this->data['token']} is login/email verification code")
       ->view('email.member.created');
 
   }

@@ -1,22 +1,23 @@
 import axios from "./axios";
+import {apiURL} from "@services/api/axios";
 
 export default {
   all() {
-    return axios.get("/staff/roles");
+    return axios.get(apiURL + "staff/roles");
   },
   rolepermissions() {
-    return axios.get("/staff/roles/permissions");
+    return axios.get(apiURL + "staff/roles/permissions");
   },
   store(payload) {
-    return axios.post("/staff/roles", payload);
+    return axios.post(apiURL + "staff/roles", payload);
   },
   show(mask) {
-    return axios.get("/staff/roles/" + mask);
+    return axios.get(apiURL + "staff/roles/" + mask);
   },
   update(payload, mask) {
-    return axios.put("/staff/roles/" + mask, payload);
+    return axios.put(apiURL + "staff/roles/" + mask, payload);
   },
   delete(mask) {
-    return axios.delete("/staff/roles/" + mask);
+    return axios.delete(apiURL + "staff/roles/" + mask);
   },
 };

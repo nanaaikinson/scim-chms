@@ -7,7 +7,7 @@ import "nprogress/nprogress.css";
 Vue.use(VueRouter);
 
 const router = new VueRouter({
-  mode: "history",
+  mode: process.env.NODE_ENV === "production" ? "hash" : "history",
   base: process.env.NODE_ENV === "production" ? "/" : process.env.BASE_URL,
   routes: [...routes],
 });

@@ -4,8 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -37,31 +38,19 @@ class RouteServiceProvider extends ServiceProvider
     parent::boot();
   }
 
-  /**
-   * Define the routes for the application.
-   *
-   * @return void
-   */
   public function map()
   {
     $this->mapApiRoutes();
 
     $this->mapFakerApiRoutes();
 
-    $this->mapStaffApiRoutes();
+    // $this->mapStaffApiRoutes();
 
     $this->mapMemberApiRoutes();
 
     $this->mapWebRoutes();
   }
 
-  /**
-   * Define the "web" routes for the application.
-   *
-   * These routes all receive session state, CSRF protection, etc.
-   *
-   * @return void
-   */
   protected function mapWebRoutes()
   {
     foreach ($this->centralDomains() as $domain) {
@@ -72,13 +61,6 @@ class RouteServiceProvider extends ServiceProvider
     }
   }
 
-  /**
-   * Define the "api" routes for the application.
-   *
-   * These routes are typically stateless.
-   *
-   * @return void
-   */
   protected function mapApiRoutes()
   {
     foreach ($this->centralDomains() as $domain) {
@@ -93,7 +75,10 @@ class RouteServiceProvider extends ServiceProvider
   public function mapStaffApiRoutes()
   {
     Route::prefix('staff')
-      ->middleware("tenantApi")
+      ->middleware([
+        InitializeTenancyByPath::class,
+        PreventAccessFromCentralDomains::class
+      ])
       ->namespace("App\Http\Controllers\Api\Staff")
       ->group(base_path('routes/staff.php'));
   }
@@ -101,7 +86,7 @@ class RouteServiceProvider extends ServiceProvider
   public function mapMemberApiRoutes()
   {
     foreach ($this->centralDomains() as $domain) {
-      Route::prefix('member')
+      Route::prefix('members')
         ->domain($domain)
         ->middleware('api')
         ->namespace("App\Http\Controllers\Api\Member")
