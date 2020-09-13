@@ -86,7 +86,7 @@ class RouteServiceProvider extends ServiceProvider
   public function mapMemberApiRoutes()
   {
     foreach ($this->centralDomains() as $domain) {
-      Route::prefix('member')
+      Route::prefix('members')
         ->domain($domain)
         ->middleware('api')
         ->namespace("App\Http\Controllers\Api\Member")
