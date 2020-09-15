@@ -46,7 +46,6 @@ class AuthController extends Controller
       ]);
 
       if ($member) {
-        dd($member);
         Mail::to($member->email)->send(new MemberRegisteredMail([
           "name" => $member->first_name,
           "token" => $member->token,

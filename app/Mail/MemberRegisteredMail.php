@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class MemberRegisteredMail extends Mailable implements ShouldQueue
+class MemberRegisteredMail extends Mailable
 {
   use Queueable, SerializesModels;
 
@@ -16,7 +16,7 @@ class MemberRegisteredMail extends Mailable implements ShouldQueue
   /**
    * Create a new message instance.
    *
-   * @return void
+   * @param $data
    */
   public function __construct($data)
   {
