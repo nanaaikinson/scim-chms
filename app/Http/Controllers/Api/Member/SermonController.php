@@ -13,7 +13,7 @@ class SermonController extends Controller
   public function sermons()
   {
     try {
-      $fileContents = file_get_contents(getenv("RSS_FEED_URL"));
+      $fileContents = file_get_contents("http://www.podcasts.com/rss_feed/00b03551b395628591a24c0ab6050926");
       $fileContents = str_replace(array("\n", "\r", "\t"), '', $fileContents);
       $fileContents = trim(str_replace('"', "'", $fileContents));
       $simpleXml = simplexml_load_string($fileContents);
