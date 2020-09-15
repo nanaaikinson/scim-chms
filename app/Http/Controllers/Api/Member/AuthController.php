@@ -46,7 +46,8 @@ class AuthController extends Controller
       ]);
 
       if ($member) {
-        Mail::to($member->email)->queue(new MemberRegisteredMail([
+        dd($member);
+        Mail::to($member->email)->send(new MemberRegisteredMail([
           "name" => $member->first_name,
           "token" => $member->token,
         ]));
