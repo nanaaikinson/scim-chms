@@ -19,6 +19,7 @@ class PrayerRequestController extends Controller
       $validated = (object)$request->validationData();
       $data = [
         "name" => $validated->name,
+        "subject" => $validated->subject,
         "email" => $validated->email,
         "telephone" => $validated->telephone,
         "request" => $validated->request

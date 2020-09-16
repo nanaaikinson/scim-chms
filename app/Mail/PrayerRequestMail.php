@@ -30,8 +30,8 @@ class PrayerRequestMail extends Mailable implements ShouldQueue
    */
   public function build()
   {
-    return $this->from(getenv("MAIL_USERNAME"), getenv("MAIL_FROM_NAME"))
-      ->subject("Prayer request")
+    return $this->from("noreply@salvationclincchms.com", "Salvation Clinic Application")
+      ->subject("Prayer request via mobile app")
       ->view('email.member.prayer-request');
   }
 }

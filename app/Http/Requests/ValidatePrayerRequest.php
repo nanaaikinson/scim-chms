@@ -25,9 +25,18 @@ class ValidatePrayerRequest extends FormRequest
   {
     return [
       "name" => "required",
+      "subject" => "required",
       "email" => "required|email",
-      "telephone" => "required|regex:/(0)[0-9]/|not_regex:/[a-z]/|min:10",
+      "telephone" => "regex:/(0)[0-9]/|not_regex:/[a-z]/|min:10",
       "request" => "required"
+    ];
+  }
+
+  public function messages()
+  {
+    return [
+      "telephone.regex" => "The telephone number entered is invalid",
+      "telephone.not_regex" => "The telephone number must contain only numbers",
     ];
   }
 }
