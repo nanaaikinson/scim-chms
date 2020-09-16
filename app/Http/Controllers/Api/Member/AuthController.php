@@ -11,6 +11,7 @@ use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
@@ -30,6 +31,7 @@ class AuthController extends Controller
         "client_device" => $request->header("User-Agent"),
       ];
 
+      DB::beginTransaction();
       $member = Member::create([
         "first_name" => $validated->first_name,
         "last_name" => $validated->last_name,
@@ -49,12 +51,14 @@ class AuthController extends Controller
           "token" => $member->token,
         ]));
 
+        DB::commit();
         return $this->successResponse(
           "Registration successful.
           \nYou need to verify your email to continue.
           \nIf you have not received the verification email, please check your \"Spam\" or \"Bulk Email\" folder."
         );
       }
+      DB::rollBack();
       return $this->errorResponse("An error occurred while creating your account");
     } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());

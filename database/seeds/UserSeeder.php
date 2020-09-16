@@ -1,6 +1,6 @@
 <?php
-namespace Database\Seeds\Tenant;
 
+use App\User;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
   {
     $password = bcrypt(12345678);
 
-    $superAdmin = \App\User::create([
+    User::create([
       "first_name" => "Admin",
       "last_name" => "Admin",
       "email" => "admin@example.com",
@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
       "mask" => generate_mask()
     ]);
 
-    $developer = \App\User::create([
+    User::create([
       "first_name" => "Nana",
       "last_name" => "Aikinson",
       "email" => "nanaaikinson24@gmail.com",

@@ -30,7 +30,7 @@ class UserCreatedMail extends Mailable implements ShouldQueue
    */
   public function build()
   {
-    return $this->from("noreply@salvationclincchms.com", "SCIM")
+    return $this->from("noreply@salvationclincchms.com", "Salvation Clinic International Ministries")
       ->subject('Login Credential')
       ->view('email.user.created');
 
