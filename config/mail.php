@@ -45,6 +45,10 @@ return [
       'auth_mode' => null,
     ],
 
+    'sendgrid' => [
+      'transport' => 'sendgrid',
+    ],
+
     'ses' => [
       'transport' => 'ses',
     ],
@@ -106,5 +110,4 @@ return [
       resource_path('views/vendor/mail'),
     ],
   ],
-
 ];
