@@ -20,4 +20,3 @@ storage/.DS_Store
 /frontend/node_modules/
 storage/oauth-private.key
 storage/oauth-private.key
-.env.test
