@@ -9,7 +9,22 @@ Vue.use(VueRouter);
 const router = new VueRouter({
   mode: process.env.NODE_ENV === "production" ? "hash" : "history",
   base: process.env.NODE_ENV === "production" ? "/" : process.env.BASE_URL,
-  routes: [...routes],
+  routes: [...routes]
+});
+
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem("_chms_token") || null;
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+  if (requiresAuth) {
+    if (token) {
+      next();
+    } else {
+      next({ name: "Home" });
+    }
+  } else {
+    next();
+  }
 });
 
 router.beforeEach((to, from, next) => {
