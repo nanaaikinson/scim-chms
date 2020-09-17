@@ -33,18 +33,12 @@ class RouteServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    //
-
     parent::boot();
   }
 
   public function map()
   {
     $this->mapApiRoutes();
-
-    $this->mapFakerApiRoutes();
-
-    // $this->mapStaffApiRoutes();
 
     $this->mapMemberApiRoutes();
 
@@ -72,17 +66,6 @@ class RouteServiceProvider extends ServiceProvider
     }
   }
 
-  public function mapStaffApiRoutes()
-  {
-    Route::prefix('staff')
-      ->middleware([
-        InitializeTenancyByPath::class,
-        PreventAccessFromCentralDomains::class
-      ])
-      ->namespace("App\Http\Controllers\Api\Staff")
-      ->group(base_path('routes/staff.php'));
-  }
-
   public function mapMemberApiRoutes()
   {
     foreach ($this->centralDomains() as $domain) {
@@ -92,14 +75,6 @@ class RouteServiceProvider extends ServiceProvider
         ->namespace("App\Http\Controllers\Api\Member")
         ->group(base_path('routes/member.php'));
     }
-  }
-
-  public function mapFakerApiRoutes()
-  {
-    Route::prefix('faker')
-      ->middleware("tenantApi")
-      ->namespace("App\Http\Controllers\Faker")
-      ->group(base_path('routes/faker.php'));
   }
 
   protected function centralDomains(): array

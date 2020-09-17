@@ -79,7 +79,8 @@ class ContributionReportController extends Controller
         }
       });
 
-      return $query->toSql();
+      $data = $query->get();
+      return $this->reportType($data, $reportType, "", "", "");
     } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
     }
