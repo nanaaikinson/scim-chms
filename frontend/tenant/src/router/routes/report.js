@@ -6,23 +6,23 @@ export default [
       {
         path: "/",
         name: "ReportIndex",
-        component: () => import("@views/report/Index.vue"),
+        component: () => import("@views/report/Index.vue")
       },
       {
         path: "attendance",
         name: "ReportAttendance",
-        component: () => import("@views/report/attendance/Index.vue"),
+        component: () => import("@views/report/attendance/Index.vue")
       },
       {
         path: "expenses",
         name: "ReportExpense",
-        component: () => import("@views/report/expense/Index.vue"),
+        component: () => import("@views/report/expense/Index.vue")
       },
       {
         path: "contributions",
         name: "ReportContribution",
-        component: () => import("@views/report/contribution/Index.vue"),
-      },
-    ],
-  },
+        component: () => import("@views/report/contribution/Index.vue")
+      }
+    ]
+  }
 ];
