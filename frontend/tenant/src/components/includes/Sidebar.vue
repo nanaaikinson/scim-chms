@@ -30,37 +30,61 @@
           </router-link>
         </li>-->
         <li class="nav-item">
-          <router-link :to="{ name: 'people' }" class="nav-link">
+          <router-link
+            v-can="'read-person'"
+            :to="{ name: 'people' }"
+            class="nav-link"
+          >
             <i class="link-icon pi pi-user"></i>
             <span class="link-title">People</span>
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'groups' }" class="nav-link">
+          <router-link
+            v-can="'read-group'"
+            :to="{ name: 'groups' }"
+            class="nav-link"
+          >
             <i class="link-icon pi pi-users"></i>
             <span class="link-title">Groups</span>
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'family' }" class="nav-link">
+          <router-link
+            v-can="'read-family'"
+            :to="{ name: 'family' }"
+            class="nav-link"
+          >
             <i class="link-icon pi pi-users"></i>
             <span class="link-title">Family</span>
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'FollowUp' }" class="nav-link">
+          <router-link
+            v-can="'read-follow-up'"
+            :to="{ name: 'FollowUp' }"
+            class="nav-link"
+          >
             <i class="link-icon pi pi-calendar"></i>
             <span class="link-title">Follow Up</span>
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'expenses' }" class="nav-link">
+          <router-link
+            v-can="'read-expense'"
+            :to="{ name: 'expenses' }"
+            class="nav-link"
+          >
             <i class="link-icon pi pi-dollar"></i>
             <span class="link-title">Expenses</span>
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{ name: 'attendance' }" class="nav-link">
+          <router-link
+            v-can="'read-attendance'"
+            :to="{ name: 'attendance' }"
+            class="nav-link"
+          >
             <i class="link-icon pi pi-list"></i>
             <span class="link-title">Attendance</span>
           </router-link>

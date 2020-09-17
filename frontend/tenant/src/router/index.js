@@ -14,6 +14,8 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  NProgress.start();
+
   const token = localStorage.getItem("_chms_token") || null;
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
@@ -37,20 +39,23 @@ function hasAccess(name) {
     case "Home":
       return true;
 
-    case "users":
+    case "user":
       return permissions.includes("read-user");
+
+    case "useredit":
+      return permissions.includes("update-user");
 
     case "role":
       return permissions.includes("read-role");
+
+    case "roleedit":
+      return permissions.includes("update-role");
 
     case "groups":
       return permissions.includes("read-group");
 
     case "people":
       return permissions.includes("read-person");
-
-    case "family":
-      return permissions.includes("read-family");
 
     case "family":
       return permissions.includes("read-family");
@@ -72,10 +77,10 @@ function hasAccess(name) {
   }
 }
 
-router.beforeEach((to, from, next) => {
+/* router.beforeEach((to, from, next) => {
   NProgress.start();
   next();
-});
+}); */
 
 router.afterEach((to, from) => {
   NProgress.done();
