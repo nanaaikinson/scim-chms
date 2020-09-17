@@ -1,6 +1,10 @@
 <?php
 
+use App\Models\Country;
 use App\Models\Module;
+use App\Models\Permission;
+use App\Models\Role;
+use App\User;
 use Illuminate\Database\Seeder;
 
 class TenantDatabaseSeeder extends Seeder
@@ -12,11 +16,6 @@ class TenantDatabaseSeeder extends Seeder
    */
   public function run()
   {
-//    $this->call(ModuleSeeder::class);
-//    $this->call(PermissionSeeder::class);
-//    $this->call(RoleSeeder::class);
-//    $this->call(TenantUserSeeder::class);
-
     #################### Modules ####################
     $modules = [
       "People", "Groups", "Family", "Reports",
@@ -34,7 +33,7 @@ class TenantDatabaseSeeder extends Seeder
     #################### Modules ####################
 
     #################### Permissions ####################
-    \App\Models\Permission::insert([
+    Permission::insert([
       [
         "name" => "create-role", "display_name" => "create role", "module_id" => ST_MOD_ROLES,
         "created_at" => gmdate("Y-m-d H:i:s"), "updated_at" => gmdate("Y-m-d H:i:s")
@@ -54,7 +53,7 @@ class TenantDatabaseSeeder extends Seeder
     ]);
 
     // Users
-    \App\Models\Permission::insert([
+    Permission::insert([
       [
         "name" => "create-user", "display_name" => "create user", "module_id" => ST_MOD_USERS,
         "created_at" => gmdate("Y-m-d H:i:s"), "updated_at" => gmdate("Y-m-d H:i:s")
@@ -74,7 +73,7 @@ class TenantDatabaseSeeder extends Seeder
     ]);
 
     // Groups
-    \App\Models\Permission::insert([
+    Permission::insert([
       [
         "name" => "create-group", "display_name" => "create group", "module_id" => ST_MOD_GROUPS,
         "created_at" => gmdate("Y-m-d H:i:s"), "updated_at" => gmdate("Y-m-d H:i:s")
@@ -94,7 +93,7 @@ class TenantDatabaseSeeder extends Seeder
     ]);
 
     // Family
-    \App\Models\Permission::insert([
+    Permission::insert([
       [
         "name" => "create-family", "display_name" => "create family", "module_id" => ST_MOD_FAMILY,
         "created_at" => gmdate("Y-m-d H:i:s"), "updated_at" => gmdate("Y-m-d H:i:s")
@@ -114,7 +113,7 @@ class TenantDatabaseSeeder extends Seeder
     ]);
 
     // People
-    \App\Models\Permission::insert([
+    Permission::insert([
       [
         "name" => "create-person", "display_name" => "create person", "module_id" => ST_MOD_PEOPLE,
         "created_at" => gmdate("Y-m-d H:i:s"), "updated_at" => gmdate("Y-m-d H:i:s")
@@ -142,7 +141,7 @@ class TenantDatabaseSeeder extends Seeder
     ]);
 
     // Attendance
-    \App\Models\Permission::insert([
+    Permission::insert([
       [
         "name" => "create-attendance", "display_name" => "create attendance", "module_id" => ST_MOD_ATTENDANCE,
         "created_at" => gmdate("Y-m-d H:i:s"), "updated_at" => gmdate("Y-m-d H:i:s")
@@ -162,7 +161,7 @@ class TenantDatabaseSeeder extends Seeder
     ]);
 
     // Follow Up
-    \App\Models\Permission::insert([
+    Permission::insert([
       [
         "name" => "create-follow-up", "display_name" => "create follow-up", "module_id" => ST_MOD_FOLLOW_UP,
         "created_at" => gmdate("Y-m-d H:i:s"), "updated_at" => gmdate("Y-m-d H:i:s")
@@ -182,7 +181,7 @@ class TenantDatabaseSeeder extends Seeder
     ]);
 
     // Contribution
-    \App\Models\Permission::insert([
+    Permission::insert([
       [
         "name" => "create-contribution", "display_name" => "create contribution", "module_id" => ST_MOD_CONTRIBUTIONS,
         "created_at" => gmdate("Y-m-d H:i:s"), "updated_at" => gmdate("Y-m-d H:i:s")
@@ -210,7 +209,7 @@ class TenantDatabaseSeeder extends Seeder
     ]);
 
     // Expense
-    \App\Models\Permission::insert([
+    Permission::insert([
       [
         "name" => "create-expense", "display_name" => "create expense", "module_id" => ST_MOD_EXPENSE,
         "created_at" => gmdate("Y-m-d H:i:s"), "updated_at" => gmdate("Y-m-d H:i:s")
@@ -238,7 +237,7 @@ class TenantDatabaseSeeder extends Seeder
     ]);
 
     // Report
-    \App\Models\Permission::insert([
+    Permission::insert([
       [
         "name" => "view-attendance-report", "display_name" => "view attendance report", "module_id" => ST_MOD_REPORTS,
         "created_at" => gmdate("Y-m-d H:i:s"), "updated_at" => gmdate("Y-m-d H:i:s")
@@ -276,10 +275,10 @@ class TenantDatabaseSeeder extends Seeder
 
     #################### Roles ####################
     // Permissions
-    $permissions = \App\Models\Permission::all();
+    $permissions = Permission::all();
 
     // Super Administrator
-    $superAdmin = \App\Models\Role::create([
+    $superAdmin = Role::create([
       "name" => "super-administrator",
       "display_name" => "Super Administrator",
       "mask" => generate_mask(),
@@ -293,7 +292,7 @@ class TenantDatabaseSeeder extends Seeder
     #################### Users ####################
     $password = bcrypt(12345678);
 
-    $superAdmin = \App\User::create([
+    $superAdmin = User::create([
       "first_name" => "Admin",
       "last_name" => "Admin",
       "email" => "admin@example.com",
@@ -304,7 +303,7 @@ class TenantDatabaseSeeder extends Seeder
 
     $superAdmin->attachRole(ST_SUPER_ADMIN);
 
-    $developer = \App\User::create([
+    $developer = User::create([
       "first_name" => "Nana",
       "last_name" => "Aikinson",
       "email" => "nanaaikinson24@gmail.com",
@@ -315,5 +314,19 @@ class TenantDatabaseSeeder extends Seeder
 
     $developer->attachRole(ST_SUPER_ADMIN);
     #################### Roles ####################
+
+    #################### Countries ####################
+    $countries = json_decode(file_get_contents(base_path("/countries.json")), true);
+    foreach ($countries as $country) {
+      Country::create([
+        "name" => $country["name"],
+        "alpha_2_Code" => $country["alpha2Code"] ?: NULL,
+        "alpha_3_Code" => $country["alpha3Code"] ?: NULL,
+        "calling_code" => !empty($country["callingCodes"]) ? $country["callingCodes"][0] : NULL,
+        "currency" => !empty($country["currencies"]) ? json_encode($country["currencies"][0]) : NULL,
+        "flag" => $country["flag"] ?: NULL,
+      ]);
+    }
+    #################### Countries ####################
   }
 }

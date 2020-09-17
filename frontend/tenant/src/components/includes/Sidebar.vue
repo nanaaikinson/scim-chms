@@ -171,7 +171,7 @@
             </ul>
           </div>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a
             id="settings-collapse-btn"
             class="nav-link"
@@ -194,7 +194,7 @@
               </li>
             </ul>
           </div>
-        </li>
+        </li> -->
       </ul>
     </div>
   </nav>
@@ -215,7 +215,7 @@ export default {
     new BSN.Collapse("#users-role-collapse-btn");
     new BSN.Collapse("#contributions-collapse-btn");
     new BSN.Collapse("#import-collapse-btn");
-    new BSN.Collapse("#settings-collapse-btn");
+    // new BSN.Collapse("#settings-collapse-btn");
   }
 };
 </script>

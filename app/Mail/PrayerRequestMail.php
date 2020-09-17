@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class MemberRegisteredMail extends Mailable implements ShouldQueue
+class PrayerRequestMail extends Mailable implements ShouldQueue
 {
   use Queueable, SerializesModels;
 
@@ -30,9 +30,8 @@ class MemberRegisteredMail extends Mailable implements ShouldQueue
    */
   public function build()
   {
-    return $this->from("noreply@salvationclincchms.com", "Salvation Clinic International Ministries")
-      ->subject("{$this->data['token']} is login/email verification code")
-      ->view('email.member.created');
-
+    return $this->from("noreply@salvationclincchms.com", "Salvation Clinic Application")
+      ->subject("Prayer request via mobile app")
+      ->view('email.member.prayer-request');
   }
 }
