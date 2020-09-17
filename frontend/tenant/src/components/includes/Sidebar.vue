@@ -215,7 +215,7 @@ export default {
     new BSN.Collapse("#users-role-collapse-btn");
     new BSN.Collapse("#contributions-collapse-btn");
     new BSN.Collapse("#import-collapse-btn");
-    new BSN.Collapse("#settings-collapse-btn");
+    // new BSN.Collapse("#settings-collapse-btn");
   }
 };
 </script>

@@ -18,15 +18,13 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
   if (requiresAuth) {
-    if (token) {
-      next();
-    } else if (!token) {
+    if (!token) {
       next({ name: "Home" });
-    } else {
-      if (!hasAccess(to.name)) {
-        next({ name: "Home" });
-      }
     }
+    if (!hasAccess(to.name)) {
+      next({ name: "Home" });
+    }
+    next();
   } else {
     next();
   }
@@ -35,7 +33,6 @@ router.beforeEach((to, from, next) => {
 //check permissions
 function hasAccess(name) {
   const permissions = store.state.user.permissions || [];
-
   switch (name) {
     case "Home":
       return true;

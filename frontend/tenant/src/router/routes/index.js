@@ -37,132 +37,210 @@ export default [
       {
         path: "books",
         name: "Books",
-        component: () => import("@views/books/Index.vue")
+        component: () => import("@views/books/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "books/add",
         name: "BooksAdd",
-        component: () => import("@views/books/Add.vue")
+        component: () => import("@views/books/Add.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "books/edit/:mask",
         name: "BooksEdit",
-        component: () => import("@views/books/Edit.vue")
+        component: () => import("@views/books/Edit.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "user",
         name: "user",
-        component: () => import("@views/users/Index.vue")
+        component: () => import("@views/users/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "user/add",
         name: "adduser",
-        component: () => import("@views/users/Add.vue")
+        component: () => import("@views/users/Add.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "user/edit/:mask",
         name: "useredit",
-        component: () => import("@views/users/Edit.vue")
+        component: () => import("@views/users/Edit.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "role",
         name: "role",
-        component: () => import("@views/roles/Index.vue")
+        component: () => import("@views/roles/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "role/add",
         name: "roleadd",
-        component: () => import("@views/roles/Add.vue")
+        component: () => import("@views/roles/Add.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "role/edit/:mask",
         name: "roleedit",
-        component: () => import("@views/roles/Edit.vue")
+        component: () => import("@views/roles/Edit.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "groups",
         name: "groups",
-        component: () => import("@views/groups/Index.vue")
+        component: () => import("@views/groups/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "groups/add",
         name: "groupadd",
-        component: () => import("@views/groups/Add.vue")
+        component: () => import("@views/groups/Add.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "groups/edit/:mask",
         name: "groupedit",
-        component: () => import("@views/groups/Edit.vue")
+        component: () => import("@views/groups/Edit.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "people",
         name: "people",
-        component: () => import("@views/people/Index.vue")
+        component: () => import("@views/people/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "person/add",
         name: "addperson",
-        component: () => import("@views/people/Add.vue")
+        component: () => import("@views/people/Add.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "person/edit/:mask",
         name: "personedit",
-        component: () => import("@views/people/Edit.vue")
+        component: () => import("@views/people/Edit.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "person/detail/:mask",
         name: "PersonDetail",
-        component: () => import("@views/people/detail/Index.vue")
+        component: () => import("@views/people/detail/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "family",
         name: "family",
-        component: () => import("@views/family/Index.vue")
+        component: () => import("@views/family/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "family/add",
         name: "familyadd",
-        component: () => import("@views/family/Add.vue")
+        component: () => import("@views/family/Add.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "family/edit/:mask",
         name: "familyedit",
-        component: () => import("@views/family/Edit.vue")
+        component: () => import("@views/family/Edit.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "follow-up",
         name: "FollowUp",
-        component: () => import("@views/follow-up/Index.vue")
+        component: () => import("@views/follow-up/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "follow-up/add",
         name: "FollowUpAdd",
-        component: () => import("@views/follow-up/Add.vue")
+        component: () => import("@views/follow-up/Add.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "follow-up/:mask",
         name: "FollowUpEdit",
-        component: () => import("@views/follow-up/Edit.vue")
+        component: () => import("@views/follow-up/Edit.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "attendance",
         name: "attendance",
-        component: () => import("@views/attendance/Index.vue")
+        component: () => import("@views/attendance/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "attendance/add",
         name: "AttendanceAdd",
-        component: () => import("@views/attendance/import/Index.vue")
+        component: () => import("@views/attendance/import/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "attendance/:mask",
         name: "attendanceEdit",
-        component: () => import("@views/attendance/edit/Index.vue")
+        component: () => import("@views/attendance/edit/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: "profile",
         name: "Profile",
-        component: () => import("@views/profile/Index.vue")
+        component: () => import("@views/profile/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
       },
       ...pledgeRoutes,
       ...expenseRoutes,
