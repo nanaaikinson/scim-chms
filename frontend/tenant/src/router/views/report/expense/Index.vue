@@ -34,7 +34,7 @@
                       name="type"
                       id="type"
                       class="custom-select"
-                      v-model.number="form.type"
+                      v-model.number="form.report_type"
                     >
                       <option
                         :value="t.value"
@@ -228,7 +228,7 @@ export default {
         category: "all",
         date: "",
         duration: 1,
-        type: 2,
+        report_type: 2,
         from: null,
         to: null,
       },
@@ -254,7 +254,7 @@ export default {
             ? [this.form.category]
             : this.form.category,
         duration: this.form.duration,
-        type: this.form.type,
+        type: this.form.report_type,
         date:
           this.form.duration === 3 || this.form.duration === 2
             ? dayjs(this.form.date).format("YYYY-MM-DD")

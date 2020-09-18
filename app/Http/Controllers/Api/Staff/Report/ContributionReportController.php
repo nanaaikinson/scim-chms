@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\Staff\Report;
 
+use App\Enums\ContributionMethodEnum;
 use App\Enums\ContributionTypeEnum;
 use App\Enums\ReportDurationEnum;
+use App\Enums\ReportReturnTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Contribution;
 use App\Traits\ResponseTrait;
@@ -80,24 +82,52 @@ class ContributionReportController extends Controller
       });
 
       $data = $query->get();
-      return $this->reportType($data, $reportType, "", "", "");
+      return $this->reportType($data, $reportType, $duration, $from, $to, $date);
     } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
     }
   }
 
-  public function accumulationType()
+  public function accumulationType($data)
+  {
+    $total = 0;
+    $items = $data->map(function($record) use (&$total) {
+      $total += $record->amount;
+      if ($record->type == 4) dd($record->group_id);
+      //$for = "";
+      $group = $record->group ? $record->group->name : "";
+      $pledge = $record->pledge ? $record->pledge->name : "";
+      $person = $record->person ? "{$record->person->first_name} {$record->person->last_name}" : "";
+
+      return [
+        //"for" => $for,
+        "amount" => $record->amount,
+        "date" => $record->date,
+        "frequency" => $record->frequency,
+        "group" => $group,
+        "pledge" => $pledge,
+        "person" => $person,
+        "contribution_type" => (ContributionTypeEnum::fromValue($record->type))->description,
+        "method" => (ContributionMethodEnum::fromValue($record->method))->description
+      ];
+    });
+
+    return ["total" => round($total, 2), "results" => $items];
+  }
+
+  public function chartType($data, $duration, $from, $to, $date)
   {
 
   }
 
-  public function chartType()
+  public function reportType($data, $type, $duration = null, $from = null, $to = null, $date = null)
   {
+    switch ((int)$type) {
+      case ReportReturnTypeEnum::Chart:
+        return $this->chartType($data, $duration, $from, $to, $date);
 
-  }
-
-  public function reportType($results, $type, $duration = null, $from = null, $to = null)
-  {
-
+      default:
+        return $this->accumulationType($data);
+    }
   }
 }

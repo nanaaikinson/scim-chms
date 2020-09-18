@@ -23,7 +23,7 @@ class ExpenseReportController extends Controller
     $to = $request->input("to") ?: null;
     $duration = (int)$request->input("duration");
     $category = $request->input("category") ?: "all"; // Expense category
-    $type = (int)$request->input("type"); // report type // Accumulation,
+    $type = (int)$request->input("report_type"); // report type // Accumulation,
 
     $query = Expense::select("*");
 
