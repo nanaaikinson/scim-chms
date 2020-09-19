@@ -249,4 +249,15 @@ Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(
     });
   });
 
+  // Faker API routes
+  Route::prefix("/faker")->group(function() {
+    Route::get("/expenses", "Faker\ExpenseFakerController@index");
+    Route::get("/groups", "Faker\GroupFakerController@index");
+    Route::get("/people", "Faker\PersonFakerController@index");
+    Route::get("/attendances", "Faker\AttendanceFakerController@index");
+    Route::get("/contributions", "Faker\ContributionFakerController@index");
+    Route::get("/pledges", "Faker\PledgeFakerController@index");
+  });
+
+
 });

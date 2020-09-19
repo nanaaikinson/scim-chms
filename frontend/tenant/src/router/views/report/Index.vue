@@ -4,11 +4,18 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-3">
-            <router-link :to="{name: 'ReportAttendance'}" style="color: inherit">
+            <router-link
+              v-can="'view-attendance-report'"
+              :to="{ name: 'ReportAttendance' }"
+              style="color: inherit"
+            >
               <div class="border py-5">
                 <div class="d-flex justify-content-center align-items-center">
                   <div class="text-center">
-                    <i class="pi pi-calendar-plus pb-2" style="fontSize: 3rem"></i>
+                    <i
+                      class="pi pi-calendar-plus pb-2"
+                      style="fontSize: 3rem"
+                    ></i>
                     <p class="display-5">Attendance</p>
                   </div>
                 </div>
@@ -17,7 +24,11 @@
           </div>
 
           <div class="col-md-3">
-            <router-link :to="{name: 'ReportExpense'}" style="color: inherit">
+            <router-link
+              v-can="'view-expenses-report'"
+              :to="{ name: 'ReportExpense' }"
+              style="color: inherit"
+            >
               <div class="border py-5">
                 <div class="d-flex justify-content-center align-items-center">
                   <div class="text-center">
@@ -30,7 +41,11 @@
           </div>
 
           <div class="col-md-3">
-            <router-link :to="{name: 'ReportContribution'}" style="color: inherit">
+            <router-link
+              v-can="'view-contributions-report'"
+              :to="{ name: 'ReportContribution' }"
+              style="color: inherit"
+            >
               <div class="border py-5">
                 <div class="d-flex justify-content-center align-items-center">
                   <div class="text-center">
@@ -49,6 +64,6 @@
 
 <script>
 export default {
-  name: "ReoprtIndex",
+  name: "ReoprtIndex"
 };
 </script>
