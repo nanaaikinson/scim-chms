@@ -242,6 +242,14 @@ export default [
           requiresAuth: true
         }
       },
+      {
+        path: "/not-authorized",
+        name: "Unauthorized",
+        component: () => import("@views/utils/Unauthorized.vue"),
+        meta: {
+          requiresAuth: false
+        }
+      },
       ...pledgeRoutes,
       ...expenseRoutes,
       ...contributionRoutes,
@@ -265,5 +273,14 @@ export default [
         component: () => import("@views/store/Book.vue")
       }
     ]
+  },
+  {
+    path: "/404",
+    name: "NotFound",
+    component: () => import("@views/utils/404.vue")
+  },
+  {
+    path: "*",
+    redirect: { name: "NotFound" }
   }
 ];

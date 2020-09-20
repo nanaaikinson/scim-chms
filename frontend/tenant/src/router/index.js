@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import routes from "./routes";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
-import store from "../store";
+import hasAccess from "./views/utils/hasaccess";
 
 Vue.use(VueRouter);
 
@@ -18,64 +18,17 @@ router.beforeEach((to, from, next) => {
 
   const token = localStorage.getItem("_chms_token") || null;
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
   if (requiresAuth) {
     if (!token) {
       next({ name: "Home" });
-    }
-    if (!hasAccess(to.name)) {
-      next({ name: "Home" });
+    } else if (!hasAccess(to.name)) {
+      next({ name: "Unauthorized" });
     }
     next();
   } else {
     next();
   }
 });
-
-//check permissions
-function hasAccess(name) {
-  const permissions = store.state.user.permissions || [];
-  switch (name) {
-    case "Home":
-      return true;
-
-    case "user":
-      return permissions.includes("read-user");
-
-    case "useredit":
-      return permissions.includes("update-user");
-
-    case "role":
-      return permissions.includes("read-role");
-
-    case "roleedit":
-      return permissions.includes("update-role");
-
-    case "groups":
-      return permissions.includes("read-group");
-
-    case "people":
-      return permissions.includes("read-person");
-
-    case "family":
-      return permissions.includes("read-family");
-
-    case "FollowUp":
-      return permissions.includes("read-follow-up");
-
-    case "attendance":
-      return permissions.includes("read-attendance");
-
-    case "Contributions":
-      return permissions.includes("read-contribution");
-
-    case "expenses":
-      return permissions.includes("read-expenses");
-
-    default:
-      return false;
-  }
-}
 
 /* router.beforeEach((to, from, next) => {
   NProgress.start();
