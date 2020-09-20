@@ -9,7 +9,7 @@ const Axios = axios.create({
 
 export const apiURL =
   process.env.NODE_ENV === "production"
-    ? window.location.origin + window.location.pathname
+    ? window.location.origin + window.location.pathname + "/"
     : devURL;
 
 export default Axios;
