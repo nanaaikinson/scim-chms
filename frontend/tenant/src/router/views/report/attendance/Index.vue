@@ -305,7 +305,7 @@ export default {
     DataTable,
     Dropdown,
     ApexChart,
-    InputSwitch,
+    InputSwitch
   },
   data() {
     return {
@@ -319,7 +319,7 @@ export default {
         type: 1,
         to: null,
         from: null,
-        duration: 1,
+        duration: 1
       },
       reports: [],
       groups: [],
@@ -330,18 +330,18 @@ export default {
       chartData: {
         attendance: {
           series: [],
-          chartOptions: {},
+          chartOptions: {}
         },
         attendanceSpecific: {
           series: [],
-          chartOptions: {},
-        },
+          chartOptions: {}
+        }
       },
       attendances: [],
       chartType: "",
       config: {
-        allowInput: true,
-      },
+        allowInput: true
+      }
     };
   },
   methods: {
@@ -360,7 +360,7 @@ export default {
           status: this.form.status,
           duration: this.form.duration,
           gender: this.form.gender,
-          type: this.form.type,
+          type: this.form.type
         };
 
         if (this.form.duration === 5) {
@@ -419,7 +419,7 @@ export default {
           this.groups = res;
         }
 
-        this.form.group_id = value;
+        // this.form.group_id = value;
       } catch (error) {
         console.log(error.message);
       }
@@ -438,7 +438,7 @@ export default {
 
         const series = [
           { name: `Attendees ${index}`, data: [] },
-          { name: `Absentees ${index}`, data: [] },
+          { name: `Absentees ${index}`, data: [] }
         ];
         const categories = [];
 
@@ -453,24 +453,24 @@ export default {
           chartOptions: {
             plotOptions: {
               bar: {
-                horizontal: false,
-              },
+                horizontal: false
+              }
             },
             dataLabels: {
-              enabled: false,
+              enabled: false
             },
             xaxis: {
-              categories: categories,
+              categories: categories
             },
             stroke: {
-              curve: "smooth",
+              curve: "smooth"
             },
             title: {
               text: `Attendance ${index}`,
-              align: "center",
-            },
+              align: "center"
+            }
           },
-          toggle: false,
+          toggle: false
         });
       }
     },
@@ -478,7 +478,7 @@ export default {
     renderBar(response) {
       const series = [
         { name: "Attendees ", data: [] },
-        { name: "Absentees ", data: [] },
+        { name: "Absentees ", data: [] }
       ];
       const categories = [];
       response.results.forEach((val, index) => {
@@ -492,21 +492,21 @@ export default {
         chartOptions: {
           plotOptions: {
             bar: {
-              horizontal: false,
-            },
+              horizontal: false
+            }
           },
           dataLabels: {
-            enabled: false,
+            enabled: false
           },
           xaxis: {
-            categories: categories,
+            categories: categories
           },
           stroke: {
-            curve: "smooth",
-          },
-        },
+            curve: "smooth"
+          }
+        }
       };
-    },
+    }
   },
   created() {
     const year = new Date().getFullYear();
@@ -514,7 +514,7 @@ export default {
     for (let i = year; i >= startYear; i--) {
       this.years.push(i);
     }
-  },
+  }
 };
 </script>
 
