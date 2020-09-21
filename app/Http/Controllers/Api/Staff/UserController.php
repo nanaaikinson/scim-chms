@@ -177,7 +177,7 @@ class UserController extends Controller
       DB::beginTransaction();
       if ($user->delete()) {
         if ($role) $user->detachRole($role[0]);
-        
+
         DB::commit();
         return $this->successResponse("User deleted successfully");
       }
