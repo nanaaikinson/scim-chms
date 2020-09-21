@@ -176,7 +176,7 @@
           </div>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" v-can="'view-attendance-report' || 'view-expenses-report' || 'view-contributions-report'">
           <router-link :to="{ name: 'ReportIndex' }" class="nav-link">
             <i class="link-icon pi pi-chart-bar"></i>
             <span class="link-title">Reports</span>
