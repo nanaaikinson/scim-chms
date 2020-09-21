@@ -172,12 +172,16 @@ class UserController extends Controller
   {
     try {
       $user = User::with("roles")->where("mask", $mask)->firstOrFail();
-      $role = $user->roles->pluck("id");
+      $role = $user->roles ? ($user->roles->isNotEmpty() ? $user->roles->pluck("id") : NULL) : NULL;
 
+      DB::beginTransaction();
       if ($user->delete()) {
         if ($role) $user->detachRole($role[0]);
+        
+        DB::commit();
         return $this->successResponse("User deleted successfully");
       }
+      DB::rollBack();
       return $this->errorResponse("An error occurred while deleting this user");
     }
     catch (ModelNotFoundException $e) {
