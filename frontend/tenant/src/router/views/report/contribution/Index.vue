@@ -1,500 +1,546 @@
 <template>
   <div>
-    <div class="row">
-      <div class="col-md-10 offset-md-1">
-        <!--        <div class="alert alert-info mb-3"></div>-->
+    <div class>
+      <div class>
+        <div class="row">
+          <div class="col-md-10 offset-md-1">
+            <div class="alert alert-info mb-3"></div>
 
-        <form @submit.prevent="renderReport">
-          <div class="card mb-3">
-            <div class="card-body px-5">
-              <div class="row mb-3">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label for="category">Contribution Type *</label>
+            <form @submit.prevent="submitReport">
+              <div class="card py-3 px-3 mb-3">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="contributiontype">Contribution Type *</label>
+                      <select
+                        name="contributiontype"
+                        id="contributiontype"
+                        class="custom-select"
+                        v-model.number="form.contributiontype"
+                      >
+                        <option
+                          :value="contribution.value"
+                          :key="i"
+                          v-for="(contribution, i) in contributions"
+                          >{{ contribution.name }}</option
+                        >
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label for="for">For *</label>
+                      <select
+                        name="for"
+                        id="for"
+                        class="custom-select"
+                        v-model.number="form.for"
+                        @change="onChangeAttendanceType"
+                      >
+                        <option value="1">General</option>
+                        <option value="2">Group</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <keep-alive>
+                    <div class="col-md-4" v-if="form.for === 2">
+                      <div class="form-group">
+                        <label for="group" class="d-block">Group *</label>
+                        <Dropdown
+                          v-model="form.group_id"
+                          :options="groups"
+                          optionLabel="name"
+                          optionValue="id"
+                          placeholder="Select Group"
+                          class="form-control"
+                          :filter="true"
+                        />
+                      </div>
+                    </div>
+                  </keep-alive>
+                  <div class="col-md-4">
+                    <label for="method">Payment Type *</label>
                     <select
-                      name="category"
-                      id="category"
+                      name="method"
+                      id="method"
                       class="custom-select"
-                      v-model.number="form.category"
+                      v-model.number="form.method"
                     >
                       <option
-                        :value="c.value"
+                        :value="method.value"
                         :key="i"
-                        v-for="(c, i) in categories"
-                      >{{ c.name }}
-                      </option
+                        v-for="(method, i) in methods"
+                        >{{ method.name }}</option
                       >
                     </select>
                   </div>
                 </div>
+              </div>
 
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label for="type">Type of report *</label>
-                    <select
-                      name="type"
-                      id="type"
-                      class="custom-select"
-                      v-model.number="form.type"
-                    >
-                      <option
-                        :value="t.value"
-                        :key="i"
-                        v-for="(t, i) in reportTypes"
-                      >{{ t.name }}
-                      </option
-                      >
-                    </select>
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="form-group">
+              <div class="card py-3 px-3">
+                <div class="row">
+                  <div class="col-md-4">
                     <label for="duration">Duration *</label>
                     <select
                       name="duration"
                       id="duration"
                       class="custom-select"
                       v-model.number="form.duration"
-                      @change="form.date = ''"
                     >
+                      <option value>Select duration</option>
+                      <option disabled>----------------</option>
                       <option value="1">Day</option>
-                      <option value="2">Week</option>
                       <option value="3">Month</option>
                       <option value="4">Year</option>
                       <option value="5">Specific period</option>
                     </select>
                   </div>
-                </div>
-
-                <div class="col-md-4" v-if="form.duration === 1">
-                  <div class="form-group">
-                    <label for="dayPicker">Date *</label>
-                    <DatePicker
-                      id="dayPicker"
-                      class="form-control bg-white"
-                      v-model="form.date"
-                      placeholder="Select date"
-                      :config="dateConfig.date"
-                      required
-                    />
+                  <div class="col-md-4" v-if="form.duration === 1">
+                    <div class="form-group">
+                      <label for="date">Date *</label>
+                      <flat-pickr
+                        v-model.trim="form.date"
+                        placeholder="Select Date"
+                        name="date"
+                        id="date"
+                        class="form-control bg-white"
+                        :config="config"
+                        required
+                      ></flat-pickr>
+                    </div>
                   </div>
-                </div>
-
-                <div class="col-md-4" v-if="form.duration === 2">
-                  <div class="form-group">
-                    <label for="weekSelector">Week *</label>
-                    <Calendar
-                      class="w-100"
-                      id="weekSelector"
-                      v-model="form.date"
-                      :yearNavigator="true"
-                      dateFormat="yy-mm-dd"
-                      yearRange="1970:2030"
-                      placeholder="Select week"
-                      showWeek
-                      selectOtherMonths
-                      required
-                    />
+                  <div class="col-md-4" v-if="form.duration === 3">
+                    <div class="form-group">
+                      <label for class="d-block">Select Month *</label>
+                      <Calendar
+                        class="w-100"
+                        v-model="form.date"
+                        view="month"
+                        dateFormat="M-yy"
+                        :yearNavigator="true"
+                        yearRange="2000:2100"
+                        placeholder="Select Month"
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
-
-                <div class="col-md-4" v-if="form.duration === 3">
-                  <div class="form-group">
-                    <label for="monthSelector">Month *</label>
-                    <Calendar
-                      class="w-100"
-                      id="monthSelector"
-                      v-model="form.date"
-                      view="month"
-                      dateFormat="M-yy"
-                      :yearNavigator="true"
-                      yearRange="2000:2030"
-                      placeholder="Select week"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div class="col-md-4" v-if="form.duration === 4">
-                  <div class="form-group">
-                    <label for="year">Select Year *</label>
-                    <select
-                      name="year"
-                      id="year"
-                      class="custom-select"
-                      v-model="form.date"
-                      required
-                    >
-                      <option value>Choose year</option>
-                      <option
-                        :value="year"
-                        v-for="(year, i) in years"
-                        :key="i"
-                      >{{ year }}
-                      </option
+                  <div class="col-md-4" v-if="form.duration === 4">
+                    <div class="form-group">
+                      <label for="date">Select Year *</label>
+                      <select
+                        name="date"
+                        id="year"
+                        class="custom-select"
+                        v-model="form.year"
+                        required
                       >
+                        <option value>Choose year</option>
+                        <option
+                          :value="year"
+                          v-for="(year, i) in years"
+                          :key="i"
+                          >{{ year }}</option
+                        >
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-md-4" v-if="form.duration === 5">
+                    <div class="form-group">
+                      <label for="from">Start Date *</label>
+                      <flat-pickr
+                        v-model.trim="form.from"
+                        placeholder="Select Date"
+                        name="from"
+                        id="from"
+                        class="form-control bg-white"
+                        :config="config"
+                        required
+                      ></flat-pickr>
+                    </div>
+                  </div>
+                  <div class="col-md-4" v-if="form.duration === 5">
+                    <div class="form-group">
+                      <label for="to">End Date *</label>
+                      <flat-pickr
+                        v-model.trim="form.to"
+                        placeholder="Select Date"
+                        name="to"
+                        id="to"
+                        class="form-control bg-white"
+                        :config="config"
+                        required
+                      ></flat-pickr>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="type">Type of Report *</label>
+                    <select
+                      name="type"
+                      id="type"
+                      class="custom-select"
+                      v-model.number="form.type"
+                    >
+                      <option value="1">Chart</option>
+                      <option value="2">Count</option>
                     </select>
                   </div>
                 </div>
-
-                <template v-if="form.duration === 5">
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="fromPicker">Start Date *</label>
-                      <DatePicker
-                        id="fromPicker"
-                        class="form-control bg-white"
-                        v-model="form.from"
-                        placeholder="Select date"
-                        :config="dateConfig.date"
-                        required
-                      />
-                    </div>
+                <div class="text-center form-group">
+                  <div class="form-group mt-5">
+                    <button class="btn btn-success px-5" ref="submitBtn">
+                      Submit
+                    </button>
                   </div>
+                </div>
+                <hr class="py-4" />
 
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="toPicker">End Date *</label>
-                      <DatePicker
-                        id="toPicker"
-                        class="form-control bg-white"
-                        v-model="form.to"
-                        placeholder="Select date"
-                        :config="dateConfig.date"
-                        required
-                      />
+                <template v-if="chartType === 'multiple bar charts'">
+                  <div v-for="(report, i) in reports" :key="i">
+                    <div class="d-flex">
+                      <h5 class="pr-3">Attendance Report</h5>
+                      <InputSwitch v-model="report.toggle" />
+                    </div>
+                    <div v-show="!report.toggle">
+                      <ApexChart
+                        type="bar"
+                        :id="`year-${i}`"
+                        :height="450"
+                        :width="850"
+                        :options="report.chartOptions"
+                        :series="report.series"
+                      ></ApexChart>
+                    </div>
+                    <div v-show="report.toggle">
+                      <ApexChart
+                        type="line"
+                        :id="`year-${i}`"
+                        :height="450"
+                        :width="850"
+                        :options="report.chartOptions"
+                        :series="report.series"
+                      ></ApexChart>
                     </div>
                   </div>
                 </template>
+
+                <div v-if="chartType === 'bar chart'">
+                  <div class="d-flex">
+                    <h5 class="pr-3">Attendance Report</h5>
+                    <InputSwitch v-model="toggleReport" />
+                  </div>
+                  <div v-show="!toggleReport">
+                    <ApexChart
+                      type="bar"
+                      :height="450"
+                      :width="850"
+                      :options="chartData.attendanceSpecific.chartOptions"
+                      :series="chartData.attendanceSpecific.series"
+                    ></ApexChart>
+                  </div>
+                  <div v-show="toggleReport">
+                    <ApexChart
+                      type="line"
+                      :height="450"
+                      :width="850"
+                      :options="chartData.attendanceSpecific.chartOptions"
+                      :series="chartData.attendanceSpecific.series"
+                    ></ApexChart>
+                  </div>
+                </div>
+                <div v-if="chartType === 'Table'">
+                  <DataTable
+                    :value="attendances"
+                    :scrollable="true"
+                    scrollHeight="300px"
+                    ref="dt"
+                  >
+                    <template #header>
+                      <div class="d-flex justify-content-between">
+                        <div class="d-flex">
+                          <h5 class="mr-3">
+                            Attendance Total: {{ attendees }}
+                          </h5>
+                          <h5>Absentees Total: {{ absentees }}</h5>
+                        </div>
+                        <button class="btn btn-info" @click="exportCSV($event)">
+                          Export
+                        </button>
+                      </div>
+                    </template>
+                    <Column field="name" header="Name"></Column>
+                    <Column
+                      field="primary_telephone"
+                      header="Telephone"
+                    ></Column>
+                    <Column field="email" header="Email"></Column>
+                    <Column field="gender" header="Gender"></Column>
+                    <Column field="attendance_date" header="Date"></Column>
+                  </DataTable>
+                </div>
+                <div ref="formMsg"></div>
               </div>
-
-              <div class="text-center pb-4 mb-3">
-                <button class="btn btn-success" ref="renderReportBtn">
-                  Render Report
-                </button>
-              </div>
-
-              <hr/>
-
-              <div class="report-container pt-3" ref="reportContainer"></div>
-            </div>
+            </form>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import Report from "@services/api/reports";
-import DatePicker from "vue-flatpickr-component";
-import "flatpickr/dist/flatpickr.min.css";
-
+import Groups from "@services/api/groups";
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
 import Calendar from "primevue/calendar";
-import {addBtnLoading, removeBtnLoading} from "@services/helpers";
-
-import {Grid} from "gridjs";
-import {json2excel} from "js2excel";
-import ApexCharts from "apexcharts";
-
-import "gridjs/dist/theme/mermaid.css";
-
-const dayjs = require("dayjs");
-
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
+import { addBtnLoading, removeBtnLoading } from "@services/helpers";
+import Report from "@services/api/reports";
+import dayjs from "dayjs";
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import Dropdown from "primevue/dropdown";
+import ApexChart from "vue-apexcharts";
+import InputSwitch from "primevue/inputswitch";
 export default {
-  name: "ReportExpense",
-  components: {DatePicker, Calendar},
+  name: "ContributionReport",
+  components: {
+    flatPickr,
+    Calendar,
+    Column,
+    DataTable,
+    Dropdown,
+    ApexChart,
+    InputSwitch
+  },
   data() {
     return {
-      years: [],
-      reportTypes: [
-        {value: 1, name: "Chart"},
-        {value: 2, name: "Accumulation"},
-      ],
-      categories: [
-        {value: "all", name: "All"},
-        {value: 1, name: "Utility"},
-        {value: 2, name: "Donation"},
-        {value: 3, name: "Welfare"},
-        {value: 4, name: "Equipment & Technology"},
-        {value: 5, name: "Allowance"},
-        {value: 6, name: "Building & Construction"},
-        {value: 7, name: "Publicity"},
-        {value: 8, name: "Evangelism"},
-      ],
       form: {
-        category: "all",
+        contributiontype: 1,
+        method: 1,
+        for: 1,
+        group_id: "",
         date: "",
-        duration: 1,
-        type: 2,
-        from: null,
+        year: "",
+        type: 1,
         to: null,
+        from: null,
+        duration: 1
       },
-      dateConfig: {
-        date: {
-          allowInput: true,
+      contributions: [
+        { value: "all", name: "All" },
+        { value: 1, name: "Busing" },
+        { value: 2, name: "Covenant Partner" },
+        { value: 3, name: "Tithe" },
+        { value: 4, name: "Group" },
+        { value: 5, name: "Welfare" },
+        { value: 6, name: "Pledge" },
+        { value: 7, name: "General" }
+      ],
+      methods: [
+        { name: "Cash", value: 1 },
+        { name: "Cheque", value: 2 },
+        { name: "Online", value: 3 },
+        { name: "Mobile Money", value: 4 }
+      ],
+      reports: [],
+      groups: [],
+      years: [],
+      toggleReport: false,
+      chartData: {
+        attendance: {
+          series: [],
+          chartOptions: {}
         },
+        attendanceSpecific: {
+          series: [],
+          chartOptions: {}
+        }
       },
-      resultJsonData: [],
+      attendances: [],
+      chartType: "",
+      config: {
+        allowInput: true
+      }
     };
   },
-  computed: {
-    currency() {
-      return this.$store.getters.currency;
-    },
-  },
   methods: {
-    renderReport(e) {
-      const btn = this.$refs.renderReportBtn;
-      let formData = {
-        category:
-          this.form.category !== "all"
-            ? [this.form.category]
-            : this.form.category,
-        duration: this.form.duration,
-        type: this.form.type,
-        date:
-          this.form.duration === 3 || this.form.duration === 2
-            ? dayjs(this.form.date).format("YYYY-MM-DD")
-            : this.form.date,
-      };
-
-      if (this.form.duration === 5) {
-        formData.from = this.form.from;
-        formData.to = this.form.to;
-      }
-
-      addBtnLoading(btn);
-
-      Report.expenses({params: formData})
-        .then((response) => {
-          const res = response.data;
-          if (Object.entries(res.data).length === 0 || res.data.length === 0) {
-            document.querySelector(
-              ".report-container"
-            ).innerHTML = `<div class="mt-4 text-center">
-              <h3 class="display-4">NO DATA FOUND</h3>
-            </div>`;
-            return;
-          }
-
-          //this.reportTitleGenerator();
-          this.reportGenerator(res.data, formData.type);
-        })
-        .catch((err) => console.log(err))
-        .finally(() => {
-          removeBtnLoading(btn);
-        });
-    },
-
-    reportTitleGenerator() {
-      let title;
-      let params = this.form;
-
-      const catIndex = this.categories.findIndex(
-        (record) => record.value === params.category
-      );
-      const {name: categoryName} = this.categories[catIndex];
-      if (params.type === 2) {
-        if (params.duration === 1) {
-          title = `Total amount of expenses for ${
-            params.category === "all"
-              ? "all expense categories"
-              : categoryName + " expense category"
-          } for`;
-        }
-      } else {
-      }
-    },
-
-    reportGenerator(results, reportType) {
-      // Accumulation
-      if (reportType === 2) {
-        this.renderAccumulationReport(results);
-      } else {
-        this.renderChartReport(results);
-      }
-    },
-
-    renderAccumulationReport(results) {
-      const reportContainer = this.$refs.reportContainer;
-      reportContainer.innerHTML = "";
-
-      const resultJsonData = [];
-      const {results: items} = results;
-      const totalElement = document.createElement("h5");
-      const exportBtn = document.createElement("button");
-      const tableContainer = document.createElement("div");
-      const totalExportContainer = document.createElement("div");
-      tableContainer.setAttribute("id", "table-wrapper");
-      totalExportContainer.className = "d-flex justify-content-between";
-      totalElement.className = "mb-4";
-      exportBtn.className = "btn btn-primary export-btn";
-      exportBtn.textContent = "Export";
-
-      const tableData = items.map((element) => {
-        const jsonData = {
-          Name: element.name,
-          Amount: `${this.currency + "" + element.amount}`,
-          Date: element.date,
-          Type: element.type,
+    async submitReport() {
+      const btn = this.$refs.submitBtn;
+      try {
+        addBtnLoading(btn);
+        const groupID = `${this.form.group_id}`;
+        const params = {
+          date:
+            this.form.duration === 4
+              ? this.form.year
+              : dayjs(this.form.date).format("YYYY-MM-DD"),
+          group_id: groupID.split(""),
+          for: this.form.for,
+          status: this.form.status,
+          duration: this.form.duration,
+          gender: this.form.gender,
+          type: this.form.type
         };
 
-        resultJsonData.push(jsonData);
-        return [
-          element.name,
-          `${this.currency + "" + element.amount}`,
-          element.date,
-          element.type,
-        ];
-      });
-
-      let tableConfig = {
-        columns: ["Name", "Amount", "Date", "Type"],
-        data: tableData,
-        fixedHeader: true,
-        search: {
-          enabled: true,
-        },
-      };
-
-      if (items.length > 10) {
-        tableConfig.height = "600px";
-      }
-
-      totalElement.innerHTML = `Total: <small>${
-        this.currency
-      }</small>${numberWithCommas(results.total)}`;
-      totalExportContainer.appendChild(totalElement);
-      totalExportContainer.appendChild(exportBtn);
-      reportContainer.appendChild(totalExportContainer);
-      reportContainer.appendChild(tableContainer);
-
-      new Grid(tableConfig).render(document.getElementById("table-wrapper"));
-
-      exportBtn.onclick = () => {
-        try {
-          json2excel({
-            data: resultJsonData,
-            name: "Expense-report",
-          });
-        } catch (err) {
-          console.log(err);
+        if (this.form.duration === 5) {
+          params.from = this.form.from;
+          params.to = this.form.to;
+          delete params.date;
         }
-      };
+
+        const response = await Report.contribution({ params });
+        removeBtnLoading(btn);
+        const res = response.data;
+        if (Object.entries(res.data).length === 0 || res.data.length === 0) {
+          this.$refs.formMsg.innerHTML = `<h5 class="text-center">No Data Found</h5>`;
+          this.chartType = "";
+          return;
+        }
+
+        switch (res.data.chart_type) {
+          case "bar chart":
+            this.renderBar(res.data);
+            this.chartType = res.data.chart_type;
+            this.$refs.formMsg.innerHTML = ``;
+            break;
+          case "multiple bar charts":
+            this.renderMultipleBar(res.data);
+            this.chartType = res.data.chart_type;
+            this.$refs.formMsg.innerHTML = ``;
+            break;
+          case "":
+            this.chartType = "Table";
+            this.attendances = res.data.results.results;
+            this.attendees = res.data.results.count.attendees;
+            this.absentees = res.data.results.count.absentees;
+            this.$refs.formMsg.innerHTML = ``;
+            break;
+          default:
+            this.chartType = "Table";
+            this.attendances = res.data.results;
+            this.attendees = res.data.count.attendees;
+            this.absentees = res.data.count.absentees;
+            this.$refs.formMsg.innerHTML = ``;
+        }
+      } catch (error) {
+        removeBtnLoading(btn);
+        console.log(error);
+      }
+    },
+    async onChangeAttendanceType(e) {
+      try {
+        const value = parseInt(e.target.value);
+
+        if (!value) return;
+        if (value === 2) {
+          const response = await Groups.all();
+          const { data: res } = response.data;
+          this.groups = res;
+        }
+
+        this.form.group_id = value;
+      } catch (error) {
+        console.log(error.message);
+      }
     },
 
-    renderChartReport(results) {
-      const {chart_type: chartType, results: items} = results;
-      const reportContainer = this.$refs.reportContainer;
-      reportContainer.innerHTML = "";
+    exportCSV() {
+      this.$refs.dt.exportCSV();
+    },
 
-      if (chartType) {
-        if (chartType === "multiple bar charts") {
-          const chartContainer = document.createElement("div");
-          chartContainer.setAttribute("id", "chartContainer");
-          chartContainer.className = "mt-4";
+    renderMultipleBar(response) {
+      const { results } = response;
+      console.log(results, "results");
 
-          for (const key of Object.keys(items)) {
-            const yearElement = document.createElement("h5");
-            const yearContainer = document.createElement("div");
-            const yearChartContainer = document.createElement("div");
-            yearChartContainer.setAttribute("id", `report-${key}`);
-            yearContainer.className = "mt-4";
-            yearElement.className = "text-center";
-            yearElement.textContent = `Expense report for ${key}`;
+      for (let index of Object.keys(results)) {
+        const resultData = results[index];
 
-            const data = items[key];
-            const options = {
-              series: [{name: `Expense (${this.currency})`, data: []}],
-              chart: {
-                type: "bar",
-                height: 350,
-              },
-              plotOptions: {},
-              dataLabels: {
-                enabled: true,
-              },
-              xaxis: {
-                categories: [],
-              },
-              yaxis: {
-                title: {
-                  text: `Expense Amount (${this.currency})`,
-                },
-              },
-            };
+        const series = [
+          { name: `Attendees ${index}`, data: [] },
+          { name: `Absentees ${index}`, data: [] }
+        ];
+        const categories = [];
 
-            // Set chart values
-            data.forEach((element) => {
-              options.series[0].data.push(element.total);
-              options.xaxis.categories.push(element.name);
-            });
+        resultData.forEach((val, index) => {
+          categories.push(val.name.toUpperCase());
+          series[0].data.push(val.attendees);
+          series[1].data.push(val.absentees);
+        });
 
-            yearContainer.appendChild(yearElement);
-            yearContainer.appendChild(yearChartContainer);
-            chartContainer.appendChild(yearContainer);
-
-            reportContainer.appendChild(chartContainer);
-
-            const chart = new ApexCharts(yearChartContainer, options);
-            chart.render();
-          }
-        } else {
-          const chartContainer = document.createElement("div");
-          chartContainer.setAttribute("id", "chartContainer");
-          chartContainer.className = "mt-4";
-
-          const options = {
-            series: [{name: `Expense (${this.currency})`, data: []}],
-            chart: {
-              type: "bar",
-              height: 350,
-            },
+        this.reports.push({
+          series: series,
+          chartOptions: {
             plotOptions: {
-              // bar: {
-              //   horizontal: true,
-              // },
+              bar: {
+                horizontal: false
+              }
             },
             dataLabels: {
-              enabled: true,
+              enabled: false
             },
             xaxis: {
-              categories: [],
+              categories: categories
             },
-            yaxis: {
-              title: {
-                text: `Expense Amount (${this.currency})`,
-              },
+            stroke: {
+              curve: "smooth"
             },
-          };
-
-          // Set chart values
-          items.forEach((element) => {
-            options.series[0].data.push(element.total);
-            options.xaxis.categories.push(element.name);
-          });
-
-          reportContainer.appendChild(chartContainer);
-
-          const chart = new ApexCharts(chartContainer, options);
-          chart.render();
-        }
-      } else {
-        this.renderAccumulationReport(results.results);
+            title: {
+              text: `Attendance ${index}`,
+              align: "center"
+            }
+          },
+          toggle: false
+        });
       }
     },
+
+    renderBar(response) {
+      const series = [
+        { name: "Attendees ", data: [] },
+        { name: "Absentees ", data: [] }
+      ];
+      const categories = [];
+      response.results.forEach((val, index) => {
+        categories.push(val.name.toUpperCase());
+        series[0].data.push(val.attendees);
+        series[1].data.push(val.absentees);
+      });
+
+      this.chartData.attendanceSpecific = {
+        series: series,
+        chartOptions: {
+          plotOptions: {
+            bar: {
+              horizontal: false
+            }
+          },
+          dataLabels: {
+            enabled: false
+          },
+          xaxis: {
+            categories: categories
+          },
+          stroke: {
+            curve: "smooth"
+          }
+        }
+      };
+    }
   },
   created() {
-    const currentYear = new Date().getFullYear();
+    const year = new Date().getFullYear();
     const startYear = 1970;
-
-    for (let i = currentYear; i >= startYear; i--) this.years.push(i);
-  },
+    for (let i = year; i >= startYear; i--) {
+      this.years.push(i);
+    }
+  }
 };
 </script>
+
+<style scoped>
+div .p-inputswitch {
+  width: 3rem;
+  height: 1.5rem;
+}
+</style>
