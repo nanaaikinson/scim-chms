@@ -107,12 +107,18 @@
           <div class="collapse" id="contributions">
             <ul class="nav sub-menu">
               <li class="nav-item">
-                <router-link :to="{ name: 'pledge' }" class="nav-link"
+                <router-link
+                  :to="{ name: 'pledge' }"
+                  v-can="'read-contribution'"
+                  class="nav-link"
                   >Pledge</router-link
                 >
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'Contributions' }" class="nav-link"
+                <router-link
+                  :to="{ name: 'Contributions' }"
+                  v-can="'read-contribution'"
+                  class="nav-link"
                   >All Contributions</router-link
                 >
               </li>
@@ -136,24 +142,34 @@
           <div class="collapse" id="import">
             <ul class="nav sub-menu">
               <li class="nav-item">
-                <router-link :to="{ name: 'AttendanceAdd' }" class="nav-link"
+                <router-link
+                  :to="{ name: 'AttendanceAdd' }"
+                  v-can="'create-attendance'"
+                  class="nav-link"
                   >Import Attendance</router-link
                 >
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'expenseimport' }" class="nav-link"
+                <router-link
+                  :to="{ name: 'expenseimport' }"
+                  v-can="'import-expense'"
+                  class="nav-link"
                   >Import Expense</router-link
                 >
               </li>
               <li class="nav-item">
                 <router-link
                   :to="{ name: 'contributionsimport' }"
+                  v-can="'import-contribution'"
                   class="nav-link"
                   >Import Contributions</router-link
                 >
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'peopleimport' }" class="nav-link"
+                <router-link
+                  :to="{ name: 'peopleimport' }"
+                  v-can="'import-person'"
+                  class="nav-link"
                   >Import People</router-link
                 >
               </li>
@@ -183,12 +199,18 @@
           <div class="collapse" id="users-roles">
             <ul class="nav sub-menu">
               <li class="nav-item">
-                <router-link :to="{ name: 'user' }" class="nav-link"
+                <router-link
+                  :to="{ name: 'user' }"
+                  v-can="'read-user'"
+                  class="nav-link"
                   >Users</router-link
                 >
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'role' }" class="nav-link"
+                <router-link
+                  :to="{ name: 'role' }"
+                  v-can="'read-role'"
+                  class="nav-link"
                   >Roles</router-link
                 >
               </li>
