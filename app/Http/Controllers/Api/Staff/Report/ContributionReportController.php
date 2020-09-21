@@ -26,12 +26,13 @@ class ContributionReportController extends Controller
       $to = $request->input("to");
       $duration = (int)$request->input("duration");
       $contributionType = $request->input("contribution_type");
-      $pledge = $request->input("pledge");
-      $groupId = $request->input("group_id");
+      $pledgeId = $request->input("pledge_id") ?: NULL;
+      $groupId = $request->input("group_id") ?: NULL;
       $reportType = (int)$request->input("report_type");
       $paymentMethod = $request->input("payment_method");
 
       $query = Contribution::with("person")->with("group")->with("pledge");
+
       // Duration
       $query->where(function ($query) use ($duration, $to, $from, $date) {
         // Day
@@ -61,13 +62,14 @@ class ContributionReportController extends Controller
           $query->whereBetween("date", [$from, $to]);
         }
       });
+
       // Contribution type
-      $query->where(function ($query) use ($groupId, $pledge, $contributionType) {
+      $query->where(function ($query) use ($groupId, $pledgeId, $contributionType) {
         if ($contributionType !== "all") {
           $query->where("type", $contributionType);
 
           if ($contributionType == ContributionTypeEnum::Pledge) {
-            $query->where("type_id", $pledge);
+            $query->where("type_id", $pledgeId);
           }
           if ($contributionType == ContributionTypeEnum::Group) {
             $query->where("type_id", $groupId);
