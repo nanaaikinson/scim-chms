@@ -159,7 +159,7 @@ Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(
         ### Tithe
         Route::prefix("tithes")->group(function () {
           // Route::get("/", "TitheController@index");
-          Route::post("/", "TApi\Staff\itheController@store")->middleware("permission:create-contribution,guard:api");
+          Route::post("/", "Api\Staff\TitheController@store")->middleware("permission:create-contribution,guard:api");
           Route::get("/{mask}", "Api\Staff\TitheController@show")->middleware("permission:read-contribution,guard:api");
           Route::put("/{mask}", "Api\Staff\TitheController@update")->middleware("permission:update-contribution,guard:api");
           Route::delete("/{mask}", "Api\Staff\TitheController@destroy")->middleware("permission:delete-contribution,guard:api");
