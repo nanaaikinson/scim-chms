@@ -17,4 +17,7 @@ export default {
   delete(mask) {
     return axios.delete(apiURL + "staff/groups/" + mask);
   },
+  readOnly() {
+    return axios.get(apiURL + "staff/groups/read-only");
+  }
 };
