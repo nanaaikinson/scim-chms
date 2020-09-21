@@ -5,6 +5,9 @@ export default {
   all() {
     return axios.get(apiURL + "staff/users");
   },
+  readOnly() {
+    return axios.get(apiURL + "staff/users/read-only");
+  },
   store(payload) {
     return axios.post(apiURL + "staff/users", payload);
   },

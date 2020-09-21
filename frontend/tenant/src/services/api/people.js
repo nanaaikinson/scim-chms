@@ -6,7 +6,10 @@ export default {
     return axios.get(apiURL + "staff/people");
   },
   members() {
-    return axios.get(apiURL + "staff/people/members");
+    return axios.get(apiURL + "staff/people/read-only");
+  },
+  readOnly() {
+    return axios.get(apiURL + "staff/people/read-only");
   },
   store(payload) {
     return axios.post(apiURL + "staff/people", payload);

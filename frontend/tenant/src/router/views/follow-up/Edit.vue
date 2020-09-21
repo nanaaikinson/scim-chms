@@ -311,8 +311,8 @@ export default {
       }
       const response = await Promise.all([
         FollowUp.show(mask),
-        People.members(),
-        Users.all(),
+        People.readOnly(),
+        Users.readOnly(),
       ]);
       next((vm) => vm.setData(response));
     } catch (error) {
