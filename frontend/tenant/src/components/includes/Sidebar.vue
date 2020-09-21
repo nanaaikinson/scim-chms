@@ -90,7 +90,7 @@
           </router-link>
         </li>
 
-        <li class="nav-item">
+        <li class="nav-item" v-can="'read-contribution'">
           <a
             id="contributions-collapse-btn"
             class="nav-link"
@@ -109,7 +109,6 @@
               <li class="nav-item">
                 <router-link
                   :to="{ name: 'pledge' }"
-                  v-can="'read-contribution'"
                   class="nav-link"
                   >Pledge</router-link
                 >
@@ -117,7 +116,6 @@
               <li class="nav-item">
                 <router-link
                   :to="{ name: 'Contributions' }"
-                  v-can="'read-contribution'"
                   class="nav-link"
                   >All Contributions</router-link
                 >
@@ -125,7 +123,8 @@
             </ul>
           </div>
         </li>
-        <li class="nav-item">
+
+        <li class="nav-item" v-can="'create-attendance' || 'import-expense' || 'import-contribution' || 'import-person'">
           <a
             id="import-collapse-btn"
             class="nav-link"
@@ -176,13 +175,15 @@
             </ul>
           </div>
         </li>
+
         <li class="nav-item">
           <router-link :to="{ name: 'ReportIndex' }" class="nav-link">
             <i class="link-icon pi pi-chart-bar"></i>
             <span class="link-title">Reports</span>
           </router-link>
         </li>
-        <li class="nav-item">
+
+        <li class="nav-item" v-can="'read-role' || 'read-user'">
           <a
             id="users-role-collapse-btn"
             class="nav-link"
