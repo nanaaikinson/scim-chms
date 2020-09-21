@@ -69,10 +69,10 @@ class ContributionReportController extends Controller
           $query->where("type", $contributionType);
 
           if ($contributionType == ContributionTypeEnum::Pledge) {
-            $query->where("type_id", $pledgeId);
+            $query->where("pledge_id", $pledgeId);
           }
           if ($contributionType == ContributionTypeEnum::Group) {
-            $query->where("type_id", $groupId);
+            $query->where("group_id", $groupId);
           }
         }
       });
