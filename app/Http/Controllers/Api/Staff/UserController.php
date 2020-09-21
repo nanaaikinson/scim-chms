@@ -25,7 +25,7 @@ class UserController extends Controller
   {
     try {
       $users = User::with("roles")->get()->map(function($user) {
-        $role = $user->roles->pluck("display_name");
+        $role = $user->roles ? ($user->roles->isNotEmpty() ? $user->roles->pluck("display_name") : NULL) : NULL;
 
         return [
           "id" => (int)$user->id,
