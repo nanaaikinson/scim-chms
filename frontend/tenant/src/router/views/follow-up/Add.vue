@@ -210,10 +210,10 @@ export default {
   },
   methods: {
     async setData() {
-      const peopleResponse = await People.members();
-      const usersReponse = await Users.all();
+      const peopleResponse = await People.readOnly();
+      const usersResponse = await Users.readOnly();
       const peopleRes = await peopleResponse.data;
-      const usersRes = await usersReponse.data;
+      const usersRes = await usersResponse.data;
 
       this.people = peopleRes.data.map((person) => ({
         id: person.id,
