@@ -67,7 +67,7 @@
               <template #body="slotProps">
                 <router-link
                   tag="button"
-                  v-can="'view-person'"
+                  v-can="'read-person'"
                   :to="{
                     name: 'PersonDetail',
                     params: { mask: slotProps.data.mask }
