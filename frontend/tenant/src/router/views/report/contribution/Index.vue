@@ -17,6 +17,7 @@
                         id="contributiontype"
                         class="custom-select"
                         v-model.number="form.contributiontype"
+                        @change="onChanageContributionType"
                       >
                         <option
                           :value="contribution.value"
@@ -28,28 +29,12 @@
                     </div>
                   </div>
 
-                  <div class="col-md-4">
-                    <div class="form-group">
-                      <label for="for">For *</label>
-                      <select
-                        name="for"
-                        id="for"
-                        class="custom-select"
-                        v-model.number="form.for"
-                        @change="onChangeAttendanceType"
-                      >
-                        <option value="1">General</option>
-                        <option value="2">Group</option>
-                      </select>
-                    </div>
-                  </div>
-
                   <keep-alive>
-                    <div class="col-md-4" v-if="form.for === 2">
+                    <div class="col-md-4" v-if="form.contributiontype === 4">
                       <div class="form-group">
                         <label for="group" class="d-block">Group *</label>
                         <Dropdown
-                          v-model="form.group_id"
+                          v-model.number="form.group_id"
                           :options="groups"
                           optionLabel="name"
                           optionValue="id"
@@ -60,6 +45,23 @@
                       </div>
                     </div>
                   </keep-alive>
+                  <keep-alive>
+                    <div class="col-md-4" v-if="form.contributiontype === 6">
+                      <div class="form-group">
+                        <label for="pledge" class="d-block">Pledge *</label>
+                        <Dropdown
+                          v-model.number="form.pledge_id"
+                          :options="pledge"
+                          optionLabel="title"
+                          optionValue="id"
+                          placeholder="Select Pledge"
+                          class="form-control"
+                          :filter="true"
+                        />
+                      </div>
+                    </div>
+                  </keep-alive>
+
                   <div class="col-md-4">
                     <label for="method">Payment Type *</label>
                     <select
@@ -291,6 +293,7 @@
 
 <script>
 import Groups from "@services/api/groups";
+import Pledge from "@services/api/pledge";
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import Calendar from "primevue/calendar";
@@ -318,8 +321,8 @@ export default {
       form: {
         contributiontype: 1,
         method: 1,
-        for: 1,
-        group_id: "",
+        group_id: null,
+        pledge_id: null,
         date: "",
         year: "",
         type: 1,
@@ -328,10 +331,10 @@ export default {
         duration: 1
       },
       contributions: [
-        { value: "all", name: "All" },
-        { value: 1, name: "Busing" },
-        { value: 2, name: "Covenant Partner" },
-        { value: 3, name: "Tithe" },
+        // { value: "all", name: "All" },
+        { value: 1, name: "Tithe" },
+        { value: 2, name: "Busing" },
+        { value: 3, name: "Covenant Partner" },
         { value: 4, name: "Group" },
         { value: 5, name: "Welfare" },
         { value: 6, name: "Pledge" },
@@ -345,6 +348,7 @@ export default {
       ],
       reports: [],
       groups: [],
+      pledge: [],
       years: [],
       toggleReport: false,
       chartData: {
@@ -369,24 +373,29 @@ export default {
       const btn = this.$refs.submitBtn;
       try {
         addBtnLoading(btn);
-        const groupID = `${this.form.group_id}`;
         const params = {
           date:
             this.form.duration === 4
               ? this.form.year
               : dayjs(this.form.date).format("YYYY-MM-DD"),
-          group_id: groupID.split(""),
-          for: this.form.for,
-          status: this.form.status,
+          groupId: this.form.group_id,
+          pledge: this.form.pledge_id,
+          contributionType: this.form.contributiontype,
+          paymentMethod: this.form.method,
           duration: this.form.duration,
-          gender: this.form.gender,
-          type: this.form.type
+          reportType: this.form.type
         };
 
         if (this.form.duration === 5) {
           params.from = this.form.from;
           params.to = this.form.to;
           delete params.date;
+        }
+        if (this.form.contributiontype === 6) {
+          delete params.groupId;
+        }
+        if (this.form.contributiontype === 4) {
+          delete params.pledge;
         }
 
         const response = await Report.contribution({ params });
@@ -428,18 +437,23 @@ export default {
         console.log(error);
       }
     },
-    async onChangeAttendanceType(e) {
+    async onChanageContributionType(e) {
       try {
         const value = parseInt(e.target.value);
 
         if (!value) return;
-        if (value === 2) {
+        if (value === 4) {
           const response = await Groups.all();
           const { data: res } = response.data;
           this.groups = res;
         }
+        if (value === 6) {
+          const response = await Pledge.all();
+          const { data: res } = response.data;
+          this.pledge = res;
+        }
 
-        this.form.group_id = value;
+        //this.form.group_id = value;
       } catch (error) {
         console.log(error.message);
       }

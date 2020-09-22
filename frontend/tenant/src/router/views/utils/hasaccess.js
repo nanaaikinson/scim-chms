@@ -47,7 +47,7 @@ function hasAccess(name) {
       return permissions.includes("create-person");
 
     case "personedit":
-      return permissions.includes("edit-person");
+      return permissions.includes("update-person");
 
     case "PersonDetail":
       return permissions.includes("read-person");

@@ -6,7 +6,7 @@ export default {
     return axios.get(apiURL + "staff/reports/attendance", params);
   },
   contribution(params) {
-    return axios.get(apiURL + "staff/reports/attendance", params);
+    return axios.get(apiURL + "staff/reports/contributions", params);
   },
   expenses(params) {
     return axios.get(apiURL + "staff/reports/expenses", params);
