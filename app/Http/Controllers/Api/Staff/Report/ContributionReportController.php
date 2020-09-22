@@ -103,6 +103,7 @@ class ContributionReportController extends Controller
 
       return [
         //"for" => $for,
+        "chart_type" => "table",
         "amount" => $record->amount,
         "date" => $record->date,
         "frequency" => $record->frequency,
