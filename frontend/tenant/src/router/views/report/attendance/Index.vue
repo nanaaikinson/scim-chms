@@ -374,6 +374,9 @@ export default {
           delete params.date;
         }
 
+        //reset array
+        this.reports.length = 0;
+
         const response = await Report.attendance({ params });
         removeBtnLoading(btn);
         const res = response.data;

@@ -400,6 +400,8 @@ export default {
         if (this.form.contributiontype === 4) {
           delete params.pledge;
         }
+        //reset array
+        this.reports.length = 0;
 
         const response = await Report.contribution({ params });
         removeBtnLoading(btn);
