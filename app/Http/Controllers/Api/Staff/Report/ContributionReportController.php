@@ -93,6 +93,7 @@ class ContributionReportController extends Controller
   public function accumulationType($data)
   {
     $total = 0;
+     $chart_type = "Table";
     $items = $data->map(function($record) use (&$total) {
       $total += $record->amount;
       if ($record->type == 4) dd($record->group_id);
@@ -103,7 +104,6 @@ class ContributionReportController extends Controller
 
       return [
         //"for" => $for,
-        "chart_type" => "table",
         "amount" => $record->amount,
         "date" => $record->date,
         "frequency" => $record->frequency,
@@ -115,7 +115,7 @@ class ContributionReportController extends Controller
       ];
     });
 
-    return ["total" => round($total, 2), "results" => $items];
+    return ["total" => round($total, 2), "results" => $items, "chart_type"=> $chart_type];
   }
 
   public function chartType($data, $duration = null, $from = null, $to = null, $date = null)
