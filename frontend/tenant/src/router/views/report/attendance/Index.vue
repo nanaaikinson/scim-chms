@@ -296,6 +296,7 @@ import Column from "primevue/column";
 import Dropdown from "primevue/dropdown";
 import ApexChart from "vue-apexcharts";
 import InputSwitch from "primevue/inputswitch";
+import Swal from "sweetalert2";
 export default {
   name: "AttendanceReport",
   components: {
@@ -348,6 +349,10 @@ export default {
     async submitReport() {
       const btn = this.$refs.submitBtn;
       try {
+        if (!this.form.group_id) {
+          Swal.fire("", "All fields marked * are required", "info");
+          return;
+        }
         addBtnLoading(btn);
         const groupID = `${this.form.group_id}`;
         const params = {
@@ -368,6 +373,9 @@ export default {
           params.to = this.form.to;
           delete params.date;
         }
+
+        //reset array
+        this.reports.length = 0;
 
         const response = await Report.attendance({ params });
         removeBtnLoading(btn);

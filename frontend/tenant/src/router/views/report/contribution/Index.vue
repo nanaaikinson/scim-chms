@@ -63,7 +63,7 @@
                   </keep-alive>
 
                   <div class="col-md-4">
-                    <label for="method">Payment Type *</label>
+                    <label for="method">Payment Method *</label>
                     <select
                       name="method"
                       id="method"
@@ -201,7 +201,7 @@
                 <template v-if="chartType === 'multiple bar charts'">
                   <div v-for="(report, i) in reports" :key="i">
                     <div class="d-flex">
-                      <h5 class="pr-3">Attendance Report</h5>
+                      <h5 class="pr-3">Contribution Report</h5>
                       <InputSwitch v-model="report.toggle" />
                     </div>
                     <div v-show="!report.toggle">
@@ -229,7 +229,7 @@
 
                 <div v-if="chartType === 'bar chart'">
                   <div class="d-flex">
-                    <h5 class="pr-3">Attendance Report</h5>
+                    <h5 class="pr-3">Contribution Report</h5>
                     <InputSwitch v-model="toggleReport" />
                   </div>
                   <div v-show="!toggleReport">
@@ -237,8 +237,8 @@
                       type="bar"
                       :height="450"
                       :width="850"
-                      :options="chartData.attendanceSpecific.chartOptions"
-                      :series="chartData.attendanceSpecific.series"
+                      :options="chartData.contributions.chartOptions"
+                      :series="chartData.contributions.series"
                     ></ApexChart>
                   </div>
                   <div v-show="toggleReport">
@@ -246,14 +246,14 @@
                       type="line"
                       :height="450"
                       :width="850"
-                      :options="chartData.attendanceSpecific.chartOptions"
-                      :series="chartData.attendanceSpecific.series"
+                      :options="chartData.contributions.chartOptions"
+                      :series="chartData.contributions.series"
                     ></ApexChart>
                   </div>
                 </div>
                 <div v-if="chartType === 'Table'">
                   <DataTable
-                    :value="attendances"
+                    :value="totalContributions"
                     :scrollable="true"
                     scrollHeight="300px"
                     ref="dt"
@@ -261,24 +261,21 @@
                     <template #header>
                       <div class="d-flex justify-content-between">
                         <div class="d-flex">
-                          <h5 class="mr-3">
-                            Attendance Total: {{ attendees }}
-                          </h5>
-                          <h5>Absentees Total: {{ absentees }}</h5>
+                          <h5 class="mr-3">Total Amount: {{ total }}</h5>
                         </div>
                         <button class="btn btn-info" @click="exportCSV($event)">
                           Export
                         </button>
                       </div>
                     </template>
-                    <Column field="name" header="Name"></Column>
+                    <Column field="amount" header="Amount"></Column>
+                    <Column field="date" header="Date"></Column>
+                    <Column field="person" header="Full Name"></Column>
                     <Column
-                      field="primary_telephone"
-                      header="Telephone"
+                      field="contribution_type"
+                      header="Contribution Type"
                     ></Column>
-                    <Column field="email" header="Email"></Column>
-                    <Column field="gender" header="Gender"></Column>
-                    <Column field="attendance_date" header="Date"></Column>
+                    <Column field="method" header="Payment Method"></Column>
                   </DataTable>
                 </div>
                 <div ref="formMsg"></div>
@@ -305,6 +302,7 @@ import Column from "primevue/column";
 import Dropdown from "primevue/dropdown";
 import ApexChart from "vue-apexcharts";
 import InputSwitch from "primevue/inputswitch";
+import Swal from "sweetalert2";
 export default {
   name: "ContributionReport",
   components: {
@@ -319,7 +317,7 @@ export default {
   data() {
     return {
       form: {
-        contributiontype: 1,
+        contributiontype: "all",
         method: 1,
         group_id: null,
         pledge_id: null,
@@ -331,7 +329,7 @@ export default {
         duration: 1
       },
       contributions: [
-        // { value: "all", name: "All" },
+        { value: "all", name: "All" },
         { value: 1, name: "Tithe" },
         { value: 2, name: "Busing" },
         { value: 3, name: "Covenant Partner" },
@@ -350,18 +348,15 @@ export default {
       groups: [],
       pledge: [],
       years: [],
+      total: "",
       toggleReport: false,
       chartData: {
-        attendance: {
-          series: [],
-          chartOptions: {}
-        },
-        attendanceSpecific: {
+        contributions: {
           series: [],
           chartOptions: {}
         }
       },
-      attendances: [],
+      totalContributions: [],
       chartType: "",
       config: {
         allowInput: true
@@ -372,18 +367,26 @@ export default {
     async submitReport() {
       const btn = this.$refs.submitBtn;
       try {
+        if (!this.form.group_id && this.form.contributiontype === 4) {
+          Swal.fire("", "All fields marked * are required", "info");
+          return;
+        }
+        if (!this.form.pledge_id && this.form.contributiontype === 6) {
+          Swal.fire("", "All fields marked * are required", "info");
+          return;
+        }
         addBtnLoading(btn);
         const params = {
           date:
             this.form.duration === 4
               ? this.form.year
               : dayjs(this.form.date).format("YYYY-MM-DD"),
-          groupId: this.form.group_id,
-          pledge: this.form.pledge_id,
-          contributionType: this.form.contributiontype,
-          paymentMethod: this.form.method,
+          group_id: this.form.group_id,
+          pledge_id: this.form.pledge_id,
+          contribution_type: this.form.contributiontype,
+          payment_method: this.form.method,
           duration: this.form.duration,
-          reportType: this.form.type
+          report_type: this.form.type
         };
 
         if (this.form.duration === 5) {
@@ -397,39 +400,43 @@ export default {
         if (this.form.contributiontype === 4) {
           delete params.pledge;
         }
+        //reset array
+        this.reports.length = 0;
 
         const response = await Report.contribution({ params });
         removeBtnLoading(btn);
         const res = response.data;
-        if (Object.entries(res.data).length === 0 || res.data.length === 0) {
+        // console.log(res.results);
+        if (
+          Object.entries(res.results).length === 0 ||
+          res.results.length === 0
+        ) {
           this.$refs.formMsg.innerHTML = `<h5 class="text-center">No Data Found</h5>`;
           this.chartType = "";
           return;
         }
 
-        switch (res.data.chart_type) {
+        switch (res.chart_type) {
           case "bar chart":
-            this.renderBar(res.data);
-            this.chartType = res.data.chart_type;
+            this.renderBar(res.results);
+            this.chartType = res.chart_type;
             this.$refs.formMsg.innerHTML = ``;
             break;
           case "multiple bar charts":
-            this.renderMultipleBar(res.data);
-            this.chartType = res.data.chart_type;
+            this.renderMultipleBar(res.results);
+            this.chartType = res.chart_type;
             this.$refs.formMsg.innerHTML = ``;
             break;
-          case "":
+          case "Table":
             this.chartType = "Table";
-            this.attendances = res.data.results.results;
-            this.attendees = res.data.results.count.attendees;
-            this.absentees = res.data.results.count.absentees;
+            this.totalContributions = res.results;
+            this.total = res.total;
             this.$refs.formMsg.innerHTML = ``;
             break;
           default:
             this.chartType = "Table";
-            this.attendances = res.data.results;
-            this.attendees = res.data.count.attendees;
-            this.absentees = res.data.count.absentees;
+            this.totalContributions = res.results.results;
+            this.total = res.results.total;
             this.$refs.formMsg.innerHTML = ``;
         }
       } catch (error) {
@@ -464,22 +471,15 @@ export default {
     },
 
     renderMultipleBar(response) {
-      const { results } = response;
-      console.log(results, "results");
+      for (let index of Object.keys(response)) {
+        const resultData = response[index];
 
-      for (let index of Object.keys(results)) {
-        const resultData = results[index];
-
-        const series = [
-          { name: `Attendees ${index}`, data: [] },
-          { name: `Absentees ${index}`, data: [] }
-        ];
+        const series = [{ name: `Total Amount ${index}`, data: [] }];
         const categories = [];
 
         resultData.forEach((val, index) => {
-          categories.push(val.name.toUpperCase());
-          series[0].data.push(val.attendees);
-          series[1].data.push(val.absentees);
+          categories.push(val.name);
+          series[0].data.push(val.total);
         });
 
         this.reports.push({
@@ -500,7 +500,7 @@ export default {
               curve: "smooth"
             },
             title: {
-              text: `Attendance ${index}`,
+              text: `Contributions ${index}`,
               align: "center"
             }
           },
@@ -510,18 +510,14 @@ export default {
     },
 
     renderBar(response) {
-      const series = [
-        { name: "Attendees ", data: [] },
-        { name: "Absentees ", data: [] }
-      ];
+      const series = [{ name: "Total Amount", data: [] }];
       const categories = [];
-      response.results.forEach((val, index) => {
-        categories.push(val.name.toUpperCase());
-        series[0].data.push(val.attendees);
-        series[1].data.push(val.absentees);
+      response.forEach((val, index) => {
+        categories.push(val.name);
+        series[0].data.push(val.total);
       });
 
-      this.chartData.attendanceSpecific = {
+      this.chartData.contributions = {
         series: series,
         chartOptions: {
           plotOptions: {
