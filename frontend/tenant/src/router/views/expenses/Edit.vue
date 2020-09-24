@@ -31,6 +31,7 @@
                       name="amount"
                       id="amount"
                       min="0"
+                      step="0.01"
                       class="form-control"
                       required
                       v-model.trim="amount"
@@ -109,7 +110,7 @@ import "flatpickr/dist/flatpickr.css";
 export default {
   name: "ExpenseEdit",
   components: {
-    flatPickr,
+    flatPickr
   },
   data() {
     return {
@@ -131,8 +132,8 @@ export default {
         { name: "Evangelism", id: 8 },
         { name: "Transport And Fuel", id: 9 },
         { name: "Administrative And Stationery", id: 10 },
-        { name: "Miscellaneous", id: 11 },
-      ],
+        { name: "Miscellaneous", id: 11 }
+      ]
     };
   },
   methods: {
@@ -146,7 +147,7 @@ export default {
           name: this.name,
           date: this.date,
           type: this.type,
-          comment: this.comment,
+          comment: this.comment
         };
         const response = await Expenses.update(formData, this.mask);
         const res = response.data;
@@ -159,7 +160,7 @@ export default {
         if (res.code === 422) {
           removeBtnLoading(btn);
           const errorData = Object.values(res.errors);
-          errorData.map((error) => {
+          errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
         } else {
@@ -172,13 +173,13 @@ export default {
     setData(expense) {
       console.log(data);
       const { data } = expense;
-      this.amount = data.amount;
+      this.amount = parseFloat(data.amount).toFixed(2);
       this.name = data.name;
       this.date = data.date;
       this.comment = data.comment;
       this.mask = data.mask;
       this.type = data.type;
-    },
+    }
   },
 
   async beforeRouteEnter(to, from, next) {
@@ -189,10 +190,10 @@ export default {
       }
 
       const response = await Expenses.show(mask);
-      next((vm) => vm.setData(response.data));
+      next(vm => vm.setData(response.data));
     } catch (error) {
       console.log(error);
     }
-  },
+  }
 };
 </script>

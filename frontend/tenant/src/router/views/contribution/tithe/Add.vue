@@ -8,14 +8,23 @@
               <p class="mb-3">NB: Fields marked * are required</p>
 
               <div class="ml-auto">
-                <button class="btn btn-primary" type="button" @click="addRecord">Add More Records</button>
+                <button
+                  class="btn btn-primary"
+                  type="button"
+                  @click="addRecord"
+                >
+                  Add More Records
+                </button>
               </div>
             </div>
 
             <form @submit.prevent="submitForm">
               <div class="row">
                 <div class="col-md-6" v-for="(tithe, i) in tithes" :key="i">
-                  <div class="border pb-3 pt-4 px-5 shadow-sm mb-3" style="min-height:330px;">
+                  <div
+                    class="border pb-3 pt-4 px-5 shadow-sm mb-3"
+                    style="min-height:330px;"
+                  >
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
@@ -51,7 +60,9 @@
                           </div>
 
                           <input
-                            type="text"
+                            type="number"
+                            min="0"
+                            step="0.01"
                             :name="`amount-${i}`"
                             :id="`amount-${i}`"
                             class="form-control"
@@ -75,7 +86,9 @@
                       </div>
 
                       <div class="col-md-6">
-                        <template v-if="tithe.frequency.toLowerCase() === 'monthly'">
+                        <template
+                          v-if="tithe.frequency.toLowerCase() === 'monthly'"
+                        >
                           <div class="form-group">
                             <label for class="d-block">Select Month *</label>
                             <Calendar
@@ -117,7 +130,8 @@
                               :value="method.id"
                               v-for="(method, i) in methods"
                               :key="i"
-                            >{{ method.name }}</option>
+                              >{{ method.name }}</option
+                            >
                           </select>
                         </div>
                       </div>
@@ -143,7 +157,9 @@
                     class="btn btn-success px-5"
                     ref="submitBtn"
                     :disabled="!tithes.length"
-                  >Submit</button>
+                  >
+                    Submit
+                  </button>
                 </div>
               </div>
             </form>
@@ -170,7 +186,7 @@ export default {
   components: {
     Dropdown,
     Calendar,
-    flatPickr,
+    flatPickr
   },
   data() {
     return {
@@ -183,36 +199,36 @@ export default {
           frequency: "Monthly",
           person: "",
           comment: "",
-          method: "",
-        },
+          method: ""
+        }
       ],
       dateConfig: {
         altInput: true,
         altFormat: "F j, Y",
         dateFormat: "Y-m-d",
-        allowInput: true,
+        allowInput: true
       },
       methods: [
         { name: "Cash", id: 1 },
         { name: "Cheque", id: 2 },
         { name: "Online", id: 3 },
-        { name: "Mobile Money", id: 4 },
-      ],
+        { name: "Mobile Money", id: 4 }
+      ]
     };
   },
   computed: {
     defaultAvatar() {
       return this.$store.getters.defaultAvatar;
-    },
+    }
   },
   methods: {
     getMembers() {
       People.members()
-        .then((response) => {
+        .then(response => {
           const { data } = response.data;
           this.people = data;
         })
-        .catch((err) => console.log(err));
+        .catch(err => console.log(err));
     },
 
     addRecord() {
@@ -222,7 +238,7 @@ export default {
         frequency: "Monthly",
         person: null,
         comment: "",
-        method: 1,
+        method: 1
       });
     },
 
@@ -234,7 +250,7 @@ export default {
       const btn = this.$refs.submitBtn;
       const errors = [];
 
-      this.tithes.forEach((tithe) => {
+      this.tithes.forEach(tithe => {
         if (!tithe.person) errors.push("error");
         if (!tithe.date) errors.push("error");
       });
@@ -246,28 +262,28 @@ export default {
 
       addBtnLoading(btn);
 
-      const tithes = this.tithes.map((tithe) => {
+      const tithes = this.tithes.map(tithe => {
         const date = dayjs(tithe.date).format("YYYY-MM-DD");
 
         return {
           ...tithe,
           frequency: tithe.frequency.toLowerCase(),
-          date,
+          date
         };
       });
 
       Contribution.titheAdd({ tithes })
-        .then((response) => {
+        .then(response => {
           const res = response.data;
           Swal.fire("Success", res.message, "success");
           this.$router.push({ name: "Contributions" });
         })
-        .catch((err) => {
+        .catch(err => {
           const { status, data } = err.response;
           let errorBag = "";
           if (status === 422) {
             const errorData = Object.values(data.errors);
-            errorData.map((error) => {
+            errorData.map(error => {
               errorBag += `<span class="d-block">${error}</span>`;
             });
           } else {
@@ -278,11 +294,11 @@ export default {
         .finally(() => {
           removeBtnLoading(btn);
         });
-    },
+    }
   },
 
   created() {
     this.getMembers();
-  },
+  }
 };
 </script>

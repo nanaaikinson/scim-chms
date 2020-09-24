@@ -28,6 +28,8 @@
                   type="number"
                   name="amount"
                   id="amount"
+                  min="0"
+                  step="0.01"
                   class="form-control"
                   required
                   v-model.trim="amount"
@@ -72,7 +74,7 @@ export default {
       title: "",
       amount: "",
       purpose: "",
-      mask: "",
+      mask: ""
     };
   },
   methods: {
@@ -84,7 +86,7 @@ export default {
         const formData = {
           title: this.title,
           amount: this.amount,
-          purpose: this.purpose,
+          purpose: this.purpose
         };
         const response = await Pledge.update(formData, this.mask);
         const res = response.data;
@@ -97,7 +99,7 @@ export default {
         if (res.code === 422) {
           removeBtnLoading(btn);
           const errorData = Object.values(res.errors);
-          errorData.map((error) => {
+          errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
         } else {
@@ -109,10 +111,10 @@ export default {
     setData(pledge) {
       const { data } = pledge;
       this.title = data.title;
-      this.amount = data.amount;
+      this.amount = parseFloat(data.amount).toFixed(2);
       this.purpose = data.purpose;
       this.mask = data.mask;
-    },
+    }
   },
   async beforeRouteEnter(to, from, next) {
     try {
@@ -121,10 +123,10 @@ export default {
         next({ name: "Home" });
       }
       const response = await Pledge.show(mask);
-      next((vm) => vm.setData(response.data));
+      next(vm => vm.setData(response.data));
     } catch (error) {
       console.log(error);
     }
-  },
+  }
 };
 </script>

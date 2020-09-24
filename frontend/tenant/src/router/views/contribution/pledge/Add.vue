@@ -12,14 +12,20 @@
                   class="btn btn-primary"
                   type="button"
                   @click="addMoreRecords"
-                >Add More Records</button>
+                >
+                  Add More Records
+                </button>
               </div>
             </div>
             <div class="form-msg" ref="formMsg"></div>
 
             <form @submit.prevent="addPledge">
               <div class="row mt-3">
-                <div class="col-md-6 mb-4" v-for="(contribution, i) in contributions" :key="i">
+                <div
+                  class="col-md-6 mb-4"
+                  v-for="(contribution, i) in contributions"
+                  :key="i"
+                >
                   <div class="row border mr-2 py-4 px-3">
                     <div class="col-md-6">
                       <div class="form-group">
@@ -28,6 +34,7 @@
                           type="number"
                           :name="`amount-${i}`"
                           min="0"
+                          step="0.01"
                           :id="`amount-${i}`"
                           class="form-control"
                           required
@@ -96,7 +103,12 @@
                           class="custom-select"
                           v-model.number="contribution.method"
                         >
-                          <option :value="m.id" v-for="(m, i) in methods" :key="i">{{ m.name }}</option>
+                          <option
+                            :value="m.id"
+                            v-for="(m, i) in methods"
+                            :key="i"
+                            >{{ m.name }}</option
+                          >
                         </select>
                       </div>
                     </div>
@@ -118,7 +130,9 @@
 
               <div class="text-center">
                 <div class="form-group mt-5">
-                  <button class="btn btn-success px-5" ref="submitBtn">Save</button>
+                  <button class="btn btn-success px-5" ref="submitBtn">
+                    Save
+                  </button>
                 </div>
               </div>
             </form>
@@ -143,7 +157,7 @@ export default {
   name: "AddPledge",
   components: {
     Dropdown,
-    flatPickr,
+    flatPickr
   },
   data() {
     return {
@@ -154,8 +168,8 @@ export default {
           date: "",
           person: "",
           pledge: "",
-          method: 1,
-        },
+          method: 1
+        }
       ],
       members: [],
       pledges: [],
@@ -163,8 +177,8 @@ export default {
         { name: "Cash", id: 1 },
         { name: "Cheque", id: 2 },
         { name: "Online", id: 3 },
-        { name: "Mobile Money", id: 4 },
-      ],
+        { name: "Mobile Money", id: 4 }
+      ]
     };
   },
 
@@ -174,7 +188,7 @@ export default {
       const formMsg = this.$refs.formMsg;
       try {
         const errors = [];
-        this.contributions.forEach((contribution) => {
+        this.contributions.forEach(contribution => {
           if (!contribution.person) errors.push("error");
           if (!contribution.date) errors.push("error");
           if (!contribution.pledge) errors.push("error");
@@ -187,7 +201,7 @@ export default {
         }
         addBtnLoading(btn);
         const formData = {
-          contributions: this.contributions,
+          contributions: this.contributions
         };
         const response = await Contribution.pledgeAdd(formData);
         const res = response.data;
@@ -200,7 +214,7 @@ export default {
         if (res.code === 422) {
           removeBtnLoading(btn);
           const errorData = Object.values(res.errors);
-          errorData.map((error) => {
+          errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
         } else {
@@ -237,15 +251,15 @@ export default {
         date: "",
         person: "",
         pledge: "",
-        method: 1,
+        method: 1
       });
     },
     RemoveRecord() {
       this.contributions.pop();
-    },
+    }
   },
   async created() {
     await Promise.all([this.getMembers(), this.getPledges()]);
-  },
+  }
 };
 </script>

@@ -30,6 +30,7 @@
                       type="number"
                       name="amount"
                       min="0"
+                      step="0.01"
                       id="amount"
                       class="form-control"
                       required
@@ -113,7 +114,7 @@ export default {
   name: "GeneralEdit",
   components: {
     Dropdown,
-    flatPickr,
+    flatPickr
   },
   data() {
     return {
@@ -127,8 +128,8 @@ export default {
         { name: "Cash", id: 1 },
         { name: "Cheque", id: 2 },
         { name: "Online", id: 3 },
-        { name: "Mobile Money", id: 4 },
-      ],
+        { name: "Mobile Money", id: 4 }
+      ]
     };
   },
   methods: {
@@ -142,7 +143,7 @@ export default {
           comment: this.comment,
           date: this.date,
           name: this.name,
-          method: this.method,
+          method: this.method
         };
         const response = await Contribution.generalUpdate(formData, this.mask);
         const res = response.data;
@@ -155,7 +156,7 @@ export default {
         if (res.code === 422) {
           removeBtnLoading(btn);
           const errorData = Object.values(res.errors);
-          errorData.map((error) => {
+          errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
         } else {
@@ -166,13 +167,13 @@ export default {
     },
     //set data
     setData(data) {
-      this.amount = data.amount;
+      this.amount = parseFloat(data.amount).toFixed(2);
       this.name = data.name;
       this.date = data.date;
       this.comment = data.comment;
       this.mask = data.mask;
       this.method = data.method;
-    },
+    }
   },
 
   async beforeRouteEnter(to, from, next) {
@@ -183,10 +184,10 @@ export default {
       }
 
       const response = await Contribution.generalShow(mask);
-      next((vm) => vm.setData(response.data));
+      next(vm => vm.setData(response.data));
     } catch (error) {
       console.log(error);
     }
-  },
+  }
 };
 </script>

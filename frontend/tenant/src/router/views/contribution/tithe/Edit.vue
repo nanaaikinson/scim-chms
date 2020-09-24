@@ -24,11 +24,17 @@
                   </div>
 
                   <div class="col-md-6">
-                    <ValidationProvider name="amount" rules="required|decimal" v-slot="{ errors }">
+                    <ValidationProvider
+                      name="amount"
+                      rules="required|decimal"
+                      v-slot="{ errors }"
+                    >
                       <div class="form-group">
                         <label for>Amount *</label>
                         <input
-                          type="text"
+                          type="number"
+                          min="0"
+                          step="0.01"
                           name="amount"
                           id="amount"
                           class="form-control"
@@ -75,7 +81,10 @@
                       </ValidationProvider>
                     </keep-alive>
 
-                    <div class="form-group" v-if="tithe.frequency.toLowerCase() === 'weekly'">
+                    <div
+                      class="form-group"
+                      v-if="tithe.frequency.toLowerCase() === 'weekly'"
+                    >
                       <label for class="d-block">Select Date *</label>
                       <flatPickr
                         class="form-control bg-white"
@@ -100,7 +109,8 @@
                           :value="method.id"
                           v-for="(method, i) in methods"
                           :key="i"
-                        >{{ method.name }}</option>
+                          >{{ method.name }}</option
+                        >
                       </select>
                     </div>
                   </div>
@@ -119,7 +129,9 @@
                     </div>
 
                     <div class="form-group mt-4">
-                      <button class="btn btn-success px-5" ref="submitBtn">Submit</button>
+                      <button class="btn btn-success px-5" ref="submitBtn">
+                        Submit
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -147,7 +159,7 @@ export default {
   components: {
     Dropdown,
     Calendar,
-    flatPickr,
+    flatPickr
   },
   data() {
     return {
@@ -157,29 +169,29 @@ export default {
         amount: 0,
         frequency: "",
         comment: "",
-        method: "",
+        method: ""
       },
       frequencies: ["Weekly", "Monthly"],
       dateConfig: {
         altInput: true,
         altFormat: "F j, Y",
         dateFormat: "Y-m-d",
-        allowInput: true,
+        allowInput: true
       },
       mask: "",
       methods: [
         { name: "Cash", id: 1 },
         { name: "Cheque", id: 2 },
         { name: "Online", id: 3 },
-        { name: "Mobile Money", id: 4 },
-      ],
+        { name: "Mobile Money", id: 4 }
+      ]
     };
   },
   methods: {
     setData(payload) {
       this.tithe.person = payload.person;
       this.tithe.date = payload.date;
-      this.tithe.amount = payload.amount;
+      this.tithe.amount = parseFloat(payload.amount).toFixed(2);
       this.tithe.frequency =
         payload.frequency.charAt(0).toUpperCase() + payload.frequency.slice(1);
       this.tithe.comment = payload.comment;
@@ -187,7 +199,7 @@ export default {
       this.tithe.method = payload.method;
     },
     submitForm(e) {
-      this.$refs.form.validate().then((result) => {
+      this.$refs.form.validate().then(result => {
         if (!result) return;
 
         const btn = this.$refs.submitBtn;
@@ -197,21 +209,21 @@ export default {
           ...this.tithe,
           person: this.tithe.person.id,
           frequency: this.tithe.frequency.toLowerCase(),
-          date: dayjs(this.tithe.date).format("YYYY-MM-DD"),
+          date: dayjs(this.tithe.date).format("YYYY-MM-DD")
         };
 
         Contribution.titheUpdate(tithe, this.mask)
-          .then((response) => {
+          .then(response => {
             const res = response.data;
             Swal.fire("Success", res.message, "success");
             this.$router.push({ name: "Contributions" });
           })
-          .catch((err) => {
+          .catch(err => {
             const { status, data } = err.response;
             let errorBag = "";
             if (status === 422) {
               const errorData = Object.values(data.errors);
-              errorData.map((error) => {
+              errorData.map(error => {
                 errorBag += `<span class="d-block">${error}</span>`;
               });
             } else {
@@ -223,14 +235,14 @@ export default {
             removeBtnLoading(btn);
           });
       });
-    },
+    }
   },
   async beforeRouteEnter(to, from, next) {
     const mask = to.params.mask;
     const response = await Contribution.titheShow(mask);
     const res = response.data;
 
-    next((vm) => vm.setData(res.data));
-  },
+    next(vm => vm.setData(res.data));
+  }
 };
 </script>
