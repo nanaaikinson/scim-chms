@@ -59,6 +59,7 @@
                           type="number"
                           :name="`amount-${i}`"
                           min="0"
+                          step="0.01"
                           :id="`amount-${i}`"
                           class="form-control"
                           required
@@ -138,7 +139,7 @@ import "flatpickr/dist/flatpickr.css";
 export default {
   name: "General",
   components: {
-    flatPickr,
+    flatPickr
   },
   data() {
     return {
@@ -148,15 +149,15 @@ export default {
           comment: "",
           name: "",
           date: "",
-          method: 1,
-        },
+          method: 1
+        }
       ],
       methods: [
         { name: "Cash", id: 1 },
         { name: "Cheque", id: 2 },
         { name: "Online", id: 3 },
-        { name: "Mobile Money", id: 4 },
-      ],
+        { name: "Mobile Money", id: 4 }
+      ]
     };
   },
 
@@ -166,7 +167,7 @@ export default {
       const formMsg = this.$refs.formMsg;
       try {
         const errors = [];
-        this.contributions.forEach((contribution) => {
+        this.contributions.forEach(contribution => {
           if (!contribution.date) errors.push("error");
           if (!contribution.name) errors.push("error");
           if (!contribution.method) errors.push("error");
@@ -178,7 +179,7 @@ export default {
         }
         addBtnLoading(btn);
         const formData = {
-          contributions: this.contributions,
+          contributions: this.contributions
         };
         const response = await Contribution.generalAdd(formData);
         const res = response.data;
@@ -191,7 +192,7 @@ export default {
         if (res.code === 422) {
           removeBtnLoading(btn);
           const errorData = Object.values(res.errors);
-          errorData.map((error) => {
+          errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
         } else {
@@ -207,12 +208,12 @@ export default {
         comment: "",
         name: "",
         date: "",
-        method: 1,
+        method: 1
       });
     },
     RemoveRecord() {
       this.contributions.pop();
-    },
-  },
+    }
+  }
 };
 </script>

@@ -27,8 +27,9 @@
                 <input
                   type="number"
                   name="amount"
-                  id="amount"
                   min="0"
+                  step="0.01"
+                  id="amount"
                   class="form-control"
                   required
                   v-model.trim="amount"
@@ -72,7 +73,7 @@ export default {
     return {
       title: "",
       amount: 0,
-      purpose: "",
+      purpose: ""
     };
   },
   methods: {
@@ -84,7 +85,7 @@ export default {
         const formData = {
           title: this.title,
           amount: this.amount,
-          purpose: this.purpose,
+          purpose: this.purpose
         };
         const response = await Pledge.store(formData);
         const res = response.data;
@@ -97,7 +98,7 @@ export default {
         if (res.code === 422) {
           removeBtnLoading(btn);
           const errorData = Object.values(res.errors);
-          errorData.map((error) => {
+          errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
         } else {
@@ -105,7 +106,7 @@ export default {
         }
         formMsg.innerHTML = `<div class="alert alert-danger">${errorBag}</div>`;
       }
-    },
-  },
+    }
+  }
 };
 </script>

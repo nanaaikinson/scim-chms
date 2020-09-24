@@ -17,6 +17,7 @@
                       type="number"
                       name="amount"
                       min="0"
+                      step="0.01"
                       id="amount"
                       class="form-control"
                       required
@@ -69,8 +70,18 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="method">Method of payment *</label>
-                    <select name="method" id="method" class="custom-select" v-model.number="method">
-                      <option :value="m.id" v-for="(m, i) in methods" :key="i">{{ m.name }}</option>
+                    <select
+                      name="method"
+                      id="method"
+                      class="custom-select"
+                      v-model.number="method"
+                    >
+                      <option
+                        :value="m.id"
+                        v-for="(m, i) in methods"
+                        :key="i"
+                        >{{ m.name }}</option
+                      >
                     </select>
                   </div>
                 </div>
@@ -92,7 +103,9 @@
               </div>
               <div class="text-center">
                 <div class="form-group mt-5">
-                  <button class="btn btn-success px-5" ref="submitBtn">Update</button>
+                  <button class="btn btn-success px-5" ref="submitBtn">
+                    Update
+                  </button>
                 </div>
               </div>
             </form>
@@ -117,7 +130,7 @@ export default {
   name: "GroupEdit",
   components: {
     Dropdown,
-    flatPickr,
+    flatPickr
   },
   data() {
     return {
@@ -134,8 +147,8 @@ export default {
         { name: "Cash", id: 1 },
         { name: "Cheque", id: 2 },
         { name: "Online", id: 3 },
-        { name: "Mobile Money", id: 4 },
-      ],
+        { name: "Mobile Money", id: 4 }
+      ]
     };
   },
   methods: {
@@ -150,7 +163,7 @@ export default {
           date: this.date,
           person: this.member,
           group: this.group,
-          method: this.method,
+          method: this.method
         };
         const response = await Contribution.groupUpdate(formData, this.mask);
         const res = response.data;
@@ -163,7 +176,7 @@ export default {
         if (res.code === 422) {
           removeBtnLoading(btn);
           const errorData = Object.values(res.errors);
-          errorData.map((error) => {
+          errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
         } else {
@@ -177,14 +190,14 @@ export default {
       const { data } = convenant[2].data;
       this.members = convenant[0].data.data;
       this.groups = convenant[1].data.data;
-      this.amount = data.amount;
+      this.amount = parseFloat(data.amount).toFixed(2);
       this.member = data.person.id;
       this.group = data.group.id;
       this.date = data.date;
       this.comment = data.comment;
       this.mask = data.mask;
       this.method = data.method;
-    },
+    }
   },
 
   async beforeRouteEnter(to, from, next) {
@@ -197,12 +210,12 @@ export default {
       const response = await Promise.all([
         Member.members(),
         Group.all(),
-        Contribution.groupShow(mask),
+        Contribution.groupShow(mask)
       ]);
-      next((vm) => vm.setData(response));
+      next(vm => vm.setData(response));
     } catch (error) {
       console.log(error);
     }
-  },
+  }
 };
 </script>
