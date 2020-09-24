@@ -11,14 +11,7 @@
         <li>
           Values for expense type are as follows;
           <ul class="pl-4">
-            <li>1 is for Utility</li>
-            <li>2 is for Donation</li>
-            <li>3 is for Welfare</li>
-            <li>4 is for Equipment And Technology</li>
-            <li>5 is for Allowance</li>
-            <li>6 is for Building And Construction</li>
-            <li>7 is for Publicity</li>
-            <li>8 is for Evangelism</li>
+            <li v-for="(type, i) in expenseTypes" :key="i">{{ type.id }} is for {{ type.name }}</li>
           </ul>
         </li>
       </ul>
@@ -59,6 +52,19 @@ export default {
   data() {
     return {
       disableProgessButton: true,
+      expenseTypes: [
+        { name: "Utility ", id: 1 },
+        { name: "Donation ", id: 2 },
+        { name: "Welfare ", id: 3 },
+        { name: "Equipment And Technology ", id: 4 },
+        { name: "Allowance  ", id: 5 },
+        { name: "Building And Construction", id: 6 },
+        { name: "Publicity", id: 7 },
+        { name: "Evangelism", id: 8 },
+        { name: "Transport And Fuel", id: 9 },
+        { name: "Administrative And Stationery", id: 10 },
+        { name: "Miscellaneous", id: 11 },
+      ]
     };
   },
 
