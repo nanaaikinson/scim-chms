@@ -13,6 +13,9 @@ use BenSampo\Enum\Enum;
  * @method static static BuildingAndConstruction()
  * @method static static Publicity()
  * @method static static Evangelism()
+ * @method static static TransportAndFuel()
+ * @method static static AdministrativeAndStationery()
+ * @method static static Miscellaneous()
  */
 final class ExpenseTypeEnum extends Enum
 {
@@ -24,4 +27,7 @@ final class ExpenseTypeEnum extends Enum
   const BuildingAndConstruction = 6;
   const Publicity = 7;
   const Evangelism = 8;
+  const TransportAndFuel = 9;
+  const AdministrativeAndStationery = 10;
+  const Miscellaneous = 11;
 }

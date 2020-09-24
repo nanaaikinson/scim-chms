@@ -129,6 +129,9 @@ export default {
         { name: "Building And Construction", id: 6 },
         { name: "Publicity", id: 7 },
         { name: "Evangelism", id: 8 },
+        { name: "Transport And Fuel", id: 9 },
+        { name: "Administrative And Stationery", id: 10 },
+        { name: "Miscellaneous", id: 11 },
       ],
     };
   },
