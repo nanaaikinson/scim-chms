@@ -223,6 +223,9 @@ export default {
         { value: 6, name: "Building & Construction" },
         { value: 7, name: "Publicity" },
         { value: 8, name: "Evangelism" },
+        { name: "Transport And Fuel", value: 9 },
+        { name: "Administrative And Stationery", value: 10 },
+        { name: "Miscellaneous", value: 11 },
       ],
       form: {
         category: "all",
