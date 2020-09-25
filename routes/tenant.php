@@ -260,7 +260,7 @@ Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(
         Route::get("/", "Api\Staff\SettingController@currency");
 
         Route::prefix("currency")->group(function() {
-          Route::get("/read-only", "Api\Staff\SettingController@currencies");
+          Route::get("/all", "Api\Staff\SettingController@currencies");
           Route::get("/", "Api\Staff\SettingController@currency");
           Route::put("/", "Api\Staff\SettingController@updateCurrency");
         });
