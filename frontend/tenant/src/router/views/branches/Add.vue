@@ -87,19 +87,6 @@ export default {
         }
         formMsg.innerHTML = `<div class="alert alert-danger">${errorBag}</div>`;
       }
-    },
-
-    setData(data) {
-      this.permissions = data.data;
-    }
-  },
-
-  async beforeRouteEnter(to, from, next) {
-    try {
-      const response = await Role.rolepermissions();
-      next(vm => vm.setData(response.data));
-    } catch (error) {
-      console.log(error);
     }
   }
 };

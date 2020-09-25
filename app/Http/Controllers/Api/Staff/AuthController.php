@@ -71,6 +71,8 @@ class AuthController extends Controller
 
         if ($user->status == ST_ACTIVE) {
           $token = $user->createToken('Personal Access Token')->accessToken;
+          $currency = (new SettingController())->currency();
+
           return $this->dataResponse([
             "token" => $token,
             "access_type" => "Bearer",
@@ -79,6 +81,9 @@ class AuthController extends Controller
               "email" => $user->email,
               "avatar" => "",
               "permissions" => $user->allPermissions()->pluck("name")
+            ],
+            "settings" => [
+              "currency" => $currency->getData()->data
             ]
           ]);
         }

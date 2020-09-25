@@ -139,7 +139,7 @@ Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(
         Route::delete("/{mask}", "Api\Staff\FollowUpController@destroy")->middleware("permission:delete-follow-up,guard:api");
       });
 
-      // Contributions
+      ### Contributions
       Route::prefix("contributions")->group(function () {
         Route::get("/", "Api\Staff\ContributionController@index")->middleware("permission:read-contribution,guard:api");
         Route::get("/template", "Api\Staff\ContributionController@template")->middleware("permission:import-contribution,guard:api");
@@ -233,7 +233,7 @@ Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(
         Route::delete("/{mask}", "Api\Staff\ExpenseController@destroy")->middleware("permission:delete-expense,guard:api");
       });
 
-      // Reports
+      ### Reports
       Route::prefix("reports")->group(function () {
         Route::get("/attendance", "Api\Staff\Report\AttendanceReportController@index")->middleware("permission:view-attendance-report,guard:api");
         Route::get("/expenses", "Api\Staff\Report\ExpenseReportController@index")->middleware("permission:view-expenses-report,guard:api");
@@ -245,6 +245,25 @@ Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(
         Route::get("/", "Api\Staff\AuthController@user");
         Route::put("/change-password", "Api\Staff\AuthController@changePassword");
         Route::put("/change-details", "Api\Staff\AuthController@changeDetails");
+      });
+
+      ### Ticketing
+      Route::prefix("ticketing")->group(function () {
+        Route::get("/", "Api\Staff\TicketController@index");
+        Route::post("/", "Api\Staff\TicketController@store");
+        Route::get("/{mask}", "Api\Staff\TicketController@show");
+        Route::post("/{mask}", "Api\Staff\TicketController@update");
+      });
+
+      ### Settings
+      Route::prefix("settings")->group(function() {
+        Route::get("/", "Api\Staff\SettingController@currency");
+
+        Route::prefix("currency")->group(function() {
+          Route::get("/all", "Api\Staff\SettingController@currencies");
+          Route::get("/", "Api\Staff\SettingController@currency");
+          Route::put("/", "Api\Staff\SettingController@updateCurrency");
+        });
       });
     });
   });

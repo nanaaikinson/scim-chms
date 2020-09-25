@@ -24,6 +24,7 @@ class BranchController extends Controller
       $branch = new Branch();
       $branch->name = $validated->name;
       $branch->subdomain = $validated->subdomain;
+      $branch->country_id = $request->country_id ?: 86;
       $branch->mask = generate_mask();
 
       if ($branch->save()) {

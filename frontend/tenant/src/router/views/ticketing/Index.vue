@@ -3,17 +3,14 @@
     <div class="card">
       <div class="card-body">
         <div class="mb-5">
-          <router-link
-            v-can="'create-contribution'"
-            :to="{ name: 'pledgeadd' }"
-            class="btn btn-primary px-5"
-            >Add Pledge</router-link
+          <router-link :to="{ name: 'ticketsadd' }" class="btn btn-primary px-5"
+            >New Ticket</router-link
           >
         </div>
 
         <div>
           <DataTable
-            :value="pledges"
+            :value="tickets"
             :paginator="true"
             :rows="10"
             :loading="loading"
@@ -34,41 +31,61 @@
               </div>
             </template>
             <template #empty>
-              <div class="text-center">No data found.</div>
+              <div class="text-center">
+                No data found.
+              </div>
             </template>
-            <Column field="id" header="ID" sortable></Column>
             <Column field="title" header="Title" sortable></Column>
-            <Column field="amount" header="Amount" sortable>
+            <Column field="tag" header="Tag" sortable>
               <template #body="slotProps">
-                <small>{{ currency }}</small>
-                {{ slotProps.data.amount }}
+                <span
+                  class="badge badge-danger"
+                  v-if="slotProps.data.tag == 'Bug'"
+                  >{{ slotProps.data.tag }}</span
+                >
+                <span
+                  class="badge badge-primary"
+                  v-if="slotProps.data.tag == 'Suggestion'"
+                  >{{ slotProps.data.tag }}</span
+                >
+                <span
+                  class="badge badge-success"
+                  v-if="slotProps.data.tag == 'Feature'"
+                  >{{ slotProps.data.tag }}</span
+                >
               </template>
             </Column>
-            <Column field="purpose" header="Purpose" sortable></Column>
+            <Column field="description" header="Description" sortable></Column>
+            <Column field="status" header="Status" sortable>
+              <template #body="slotProps">
+                <span
+                  class="badge badge-info"
+                  v-if="slotProps.data.status == 'open'"
+                  >{{
+                    slotProps.data.status[0].toUpperCase() +
+                      slotProps.data.status.slice(1)
+                  }}</span
+                >
+                <span class="badge badge-success" v-else>{{
+                  slotProps.data.status[0].toUpperCase() +
+                    slotProps.data.status.slice(1)
+                }}</span>
+              </template>
+            </Column>
             <Column field="actions" header="Actions">
               <template #body="slotProps">
                 <router-link
                   tag="button"
-                  v-can="'update-contribution'"
                   :to="{
-                    name: 'pledgeedit',
+                    name: 'ticketsedit',
                     params: { mask: slotProps.data.mask }
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
                 >
                   <i class="pi pi-pencil"></i>
-                </router-link>
-                <button
-                  class="btn btn-danger btn-icon mr-2"
-                  v-can="'delete-contribution'"
-                  v-tooltip.top="'Delete'"
-                  @click="deletePledge(slotProps.data.mask, $event)"
-                >
-                  <i class="pi pi-trash no-pointer-events"></i>
-                </button>
-              </template>
-            </Column>
+                </router-link> </template
+            ></Column>
           </DataTable>
         </div>
       </div>
@@ -79,75 +96,37 @@
 <script>
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
-import Pledge from "@services/api/pledge";
+import Ticket from "@services/api/ticketing";
 import { addBtnLoading, removeBtnLoading } from "@services/helpers";
 import Swal from "sweetalert2";
 import InputText from "primevue/inputtext";
 
 export default {
-  name: "Pledge",
+  name: "Tickets",
   components: { DataTable, Column, InputText },
   data() {
     return {
       filters: {},
-      pledges: [],
+      tickets: [],
       loading: true
     };
   },
-  computed: {
-    currency() {
-      return this.$store.getters.currency;
-    }
-  },
   methods: {
-    //fetch pledges
-    async getPledges() {
+    //fetch tickets
+    async fetchTickets() {
       try {
-        const response = await Pledge.all();
+        const response = await Ticket.all();
         this.loading = false;
         const res = response.data;
-        this.pledges = res.data;
+        this.tickets = res.data;
       } catch (error) {
         console.log(error);
         this.loading = false;
       }
-    },
-
-    /* delete pledge  */
-    async deletePledge(mask, e) {
-      const btn = e.target;
-      try {
-        const result = await Swal.fire({
-          text: "Do you want to delete this pledge?",
-          icon: "warning",
-          showCancelButton: true,
-          cancelButtonText: "No",
-          confirmButtonText: "Yes Delete It",
-          reverseButtons: true
-        });
-        if (result.value) {
-          addBtnLoading(btn);
-          const response = await Pledge.delete(mask);
-          removeBtnLoading(btn);
-          const res = response.data;
-          Swal.fire({
-            icon: "success",
-            title: res.message
-          });
-          this.getPledges();
-        }
-      } catch (error) {
-        removeBtnLoading(btn);
-        const res = error.response.data;
-        Swal.fire({
-          icon: "error",
-          title: res.message
-        });
-      }
     }
   },
   async created() {
-    await this.getPledges();
+    await this.fetchTickets();
   }
 };
 </script>
