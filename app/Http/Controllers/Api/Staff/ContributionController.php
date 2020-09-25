@@ -81,7 +81,7 @@ class ContributionController extends Controller
           foreach ($records as $contribution) {
             $contributions[] = [
               "mask" => (int)$contribution->mask,
-              "title" => (int)$contribution->name,
+              "title" => $contribution->name,
               "date" => $contribution->date,
               "amount" => $contribution->amount,
               "method" => $contribution->method ? (ContributionMethodEnum::fromValue($contribution->method))->description : "",

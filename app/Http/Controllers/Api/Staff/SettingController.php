@@ -10,6 +10,7 @@ use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SettingController extends Controller
 {
@@ -23,7 +24,8 @@ class SettingController extends Controller
         return [
           "code" => $currency->code,
           "symbol" => $currency->symbol,
-          "country" => $country->name
+          "country" => $country->name,
+          "country_id" => $country->id
         ];
       });
 
@@ -81,6 +83,22 @@ class SettingController extends Controller
 
   public function updateCurrency(Request $request)
   {
+    try {
+      $validator = Validator::make($request->all(), ["currency" => "required"]);
+      if ($validator->fails()) return $this->validationResponse($validator->errors());
 
+      $setting = Setting::firstOrFail();
+      $setting->currency = $request->input("currency");
+      if ($setting->save()) {
+        return $this->successResponse("Currency saved successfully");
+      }
+      return $this->errorResponse("An error occurred while saving this");
+    }
+    catch (ModelNotFoundException $e) {
+      return $this->notFoundResponse();
+    }
+    catch (Exception $e) {
+      return $this->errorResponse($e->getMessage());
+    }
   }
 }
