@@ -244,6 +244,14 @@ export default [
         }
       },
       {
+        path: "set-currency",
+        name: "currency",
+        component: () => import("@views/settings/Currency.vue"),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
         path: "/not-authorized",
         name: "Unauthorized",
         component: () => import("@views/utils/Unauthorized.vue"),

@@ -42,7 +42,8 @@ export default new Vuex.Store({
       localStorage.setItem(`_chms_token`, token);
     },
     setCurrency(state, { currency }) {
-      state.settings.currency = currency;
+      console.log(currency.symbol);
+      state.settings.currency = currency.symbol ?? currency.code;
     },
     logout(state) {
       state.user = {};

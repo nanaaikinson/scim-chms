@@ -172,6 +172,9 @@ function hasAccess(name) {
     case "ticketsedit":
       return true;
 
+    case "currency":
+      return true;
+
     default:
       return false;
   }
