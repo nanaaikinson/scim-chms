@@ -47,7 +47,7 @@ class TicketController extends Controller
       DB::beginTransaction();
       $ticket = Ticket::create([
         "title" => $validated->title,
-        "description" => $validated->description,
+        "description" => $request->input("description"),
         "tag" => $validated->tag,
         "tenant_id" => $tenantId,
         "mask" => generate_mask(),
@@ -113,7 +113,7 @@ class TicketController extends Controller
 
       DB::beginTransaction();
       $ticket->title = $validated->title;
-      $ticket->description = $validated->description;
+      $ticket->description = $request->input("description");
       $ticket->tag = $validated->tag;
       $ticket->tenant_id = $tenantId;
 

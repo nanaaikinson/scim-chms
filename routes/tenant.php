@@ -254,6 +254,17 @@ Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(
         Route::get("/{mask}", "Api\Staff\TicketController@show");
         Route::post("/{mask}", "Api\Staff\TicketController@update");
       });
+
+      ### Settings
+      Route::prefix("settings")->group(function() {
+        Route::get("/", "Api\Staff\SettingController@currency");
+
+        Route::prefix("currency")->group(function() {
+          Route::get("/read-only", "Api\Staff\SettingController@currencies");
+          Route::get("/", "Api\Staff\SettingController@currency");
+          Route::put("/", "Api\Staff\SettingController@updateCurrency");
+        });
+      });
     });
   });
 
