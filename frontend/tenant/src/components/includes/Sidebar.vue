@@ -199,6 +199,12 @@
             <span class="link-title">Ticketing</span>
           </router-link>
         </li>
+        <li class="nav-item">
+          <router-link :to="{ name: 'currency' }" class="nav-link">
+            <i class="link-icon pi pi-cog"></i>
+            <span class="link-title">Settings</span>
+          </router-link>
+        </li>
 
         <li class="nav-item" v-can="'read-role' || 'read-user'">
           <a
