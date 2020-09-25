@@ -10,7 +10,6 @@ use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use PHPUnit\Framework\Constraint\Count;
 
 class SettingController extends Controller
 {
@@ -82,6 +81,6 @@ class SettingController extends Controller
 
   public function updateCurrency(Request $request)
   {
-    
+
   }
 }
