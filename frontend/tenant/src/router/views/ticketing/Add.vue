@@ -6,37 +6,45 @@
 
         <div class="form-msg" ref="formMsg"></div>
 
-        <form @submit.prevent="addBranch">
+        <form @submit.prevent="newTicket">
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label for="name">Branch Name *</label>
+                <label for="title">Title *</label>
                 <input
                   type="text"
-                  name="name"
-                  id="name"
+                  name="title"
+                  id="title"
                   class="form-control"
                   required
-                  v-model.trim="name"
+                  v-model.trim="title"
                 />
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label for="country">Country</label>
-                <input
-                  name="country"
-                  id="country"
+                <label for="tag">Tag</label>
+                <select
+                  name="tag"
+                  id="tag"
+                  v-model.number="tag"
+                  required
                   class="form-control"
-                  v-model.trim="country"
-                />
+                >
+                  <option value="">Select </option>
+                  <option value="1">Bug</option>
+                  <option value="2">Suggestion</option>
+                  <option value="3">Feature</option>
+                </select>
               </div>
             </div>
           </div>
 
           <div class="text-center">
             <div class="form-group mt-5">
-              <button class="btn btn-success px-5" ref="submitBtn">Save</button>
+              <button class="btn btn-success px-5" ref="submitBtn">
+                Save Ticket
+              </button>
             </div>
           </div>
         </form>
@@ -47,38 +55,40 @@
 
 <script>
 import { addBtnLoading, removeBtnLoading } from "@services/helpers";
-import Branches from "@services/api/branches";
+import Ticket from "@services/api/ticketing";
 import Swal from "sweetalert2";
 
 export default {
-  name: "AddBranch",
+  name: "NewTicket",
   data() {
     return {
-      name: "",
-      country: ""
+      title: "",
+      tag: "",
+      description: ""
     };
   },
   methods: {
-    async addBranch(e) {
+    async newTicket(e) {
       const btn = this.$refs.submitBtn;
       const formMsg = this.$refs.formMsg;
       try {
         addBtnLoading(btn);
         const formData = {
-          name: this.name,
-          country: this.country
+          title: this.title,
+          tag: this.tag,
+          description: this.description
         };
-        const response = await Branches.store(formData);
+        const response = await Ticket.store(formData);
         const res = response.data;
         removeBtnLoading(btn);
         Swal.fire("Success", res.message, "success");
-        this.$router.push({ name: "branches" });
+        this.$router.push({ name: "tickets" });
       } catch (err) {
-        const res = err.response.data;
+        removeBtnLoading(btn);
+        const res = err.response;
         let errorBag = "";
-        if (res.code === 422) {
-          removeBtnLoading(btn);
-          const errorData = Object.values(res.errors);
+        if (res.status === 422) {
+          const errorData = Object.values(res.data.errors);
           errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });

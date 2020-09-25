@@ -163,6 +163,15 @@ function hasAccess(name) {
     case "ReportContribution":
       return permissions.includes("view-contributions-report");
 
+    case "tickets":
+      return true;
+
+    case "ticketsadd":
+      return true;
+
+    case "ticketsedit":
+      return true;
+
     default:
       return false;
   }

@@ -406,11 +406,9 @@ export default {
         const response = await Report.contribution({ params });
         removeBtnLoading(btn);
         const res = response.data;
-        // console.log(res.results);
-        if (
-          Object.entries(res.results).length === 0 ||
-          res.results.length === 0
-        ) {
+        //console.log(res.results);
+        const checkResult = res.results || res.results.results;
+        if (checkResult.length === 0) {
           this.$refs.formMsg.innerHTML = `<h5 class="text-center">No Data Found</h5>`;
           this.chartType = "";
           return;
@@ -479,7 +477,7 @@ export default {
 
         resultData.forEach((val, index) => {
           categories.push(val.name);
-          series[0].data.push(val.total);
+          series[0].data.push(parseFloat(val.total).toFixed(2));
         });
 
         this.reports.push({
@@ -514,7 +512,7 @@ export default {
       const categories = [];
       response.forEach((val, index) => {
         categories.push(val.name);
-        series[0].data.push(val.total);
+        series[0].data.push(parseFloat(val.total).toFixed(2));
       });
 
       this.chartData.contributions = {
