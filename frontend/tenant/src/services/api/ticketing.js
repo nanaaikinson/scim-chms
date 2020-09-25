@@ -12,7 +12,7 @@ export default {
     return axios.get(apiURL + "staff/ticketing/" + mask);
   },
   update(payload, mask) {
-    return axios.put(apiURL + "staff/ticketing/" + mask, payload);
+    return axios.post(apiURL + "staff/ticketing/" + mask, payload);
   },
   delete(mask) {
     return axios.delete(apiURL + "staff/ticketing/" + mask);
