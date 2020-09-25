@@ -4,6 +4,7 @@ import expenseRoutes from "./expense";
 import pledgeRoutes from "./pledge";
 import importRoutes from "./imports";
 import branchesRoutes from "./branches";
+import ticketsRoutes from "./ticket";
 
 export default [
   {
@@ -255,7 +256,8 @@ export default [
       ...contributionRoutes,
       ...reportRoutes,
       ...importRoutes,
-      ...branchesRoutes
+      ...branchesRoutes,
+      ...ticketsRoutes
     ]
   },
   {

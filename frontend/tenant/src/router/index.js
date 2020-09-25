@@ -15,8 +15,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  const persistenceKey = window.location.pathname || "chms";
-  const token = localStorage.getItem(`_${persistenceKey}_token`) || null;
+  // const persistenceKey = window.location.pathname || "chms";
+  const token = localStorage.getItem(`_chms_token`) || null;
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   if (requiresAuth) {
     if (!token) {

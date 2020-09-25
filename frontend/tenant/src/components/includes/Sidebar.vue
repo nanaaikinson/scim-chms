@@ -107,16 +107,12 @@
           <div class="collapse" id="contributions">
             <ul class="nav sub-menu">
               <li class="nav-item">
-                <router-link
-                  :to="{ name: 'pledge' }"
-                  class="nav-link"
+                <router-link :to="{ name: 'pledge' }" class="nav-link"
                   >Pledge</router-link
                 >
               </li>
               <li class="nav-item">
-                <router-link
-                  :to="{ name: 'Contributions' }"
-                  class="nav-link"
+                <router-link :to="{ name: 'Contributions' }" class="nav-link"
                   >All Contributions</router-link
                 >
               </li>
@@ -124,7 +120,15 @@
           </div>
         </li>
 
-        <li class="nav-item" v-can="'create-attendance' || 'import-expense' || 'import-contribution' || 'import-person'">
+        <li
+          class="nav-item"
+          v-can="
+            'create-attendance' ||
+              'import-expense' ||
+              'import-contribution' ||
+              'import-person'
+          "
+        >
           <a
             id="import-collapse-btn"
             class="nav-link"
@@ -176,10 +180,23 @@
           </div>
         </li>
 
-        <li class="nav-item" v-can="'view-attendance-report' || 'view-expenses-report' || 'view-contributions-report'">
+        <li
+          class="nav-item"
+          v-can="
+            'view-attendance-report' ||
+              'view-expenses-report' ||
+              'view-contributions-report'
+          "
+        >
           <router-link :to="{ name: 'ReportIndex' }" class="nav-link">
             <i class="link-icon pi pi-chart-bar"></i>
             <span class="link-title">Reports</span>
+          </router-link>
+        </li>
+        <li class="nav-item">
+          <router-link :to="{ name: 'tickets' }" class="nav-link">
+            <i class="link-icon pi pi-ticket"></i>
+            <span class="link-title">Ticketing</span>
           </router-link>
         </li>
 

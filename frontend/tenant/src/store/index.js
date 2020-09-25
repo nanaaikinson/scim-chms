@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import Auth from "@services/api/auth";
 import router from "@router";
-const persistenceKey = window.location.pathname || "chms";
+//const persistenceKey = window.location.pathname || "chms";
 
 Vue.use(Vuex);
 
@@ -13,11 +13,11 @@ export default new Vuex.Store({
     auth: {
       email: "",
       password: "",
-      remember: false,
+      remember: false
     },
     settings: {
-      currency: "GH₵",
-    },
+      currency: "GH₵"
+    }
   },
   getters: {
     user(state) {
@@ -31,7 +31,7 @@ export default new Vuex.Store({
     },
     currency(state) {
       return state.settings.currency;
-    },
+    }
   },
 
   mutations: {
@@ -39,12 +39,12 @@ export default new Vuex.Store({
       state.user = { name, email, avatar, permissions };
     },
     setToken(state, token) {
-      localStorage.setItem(`_${persistenceKey}_token`, token);
+      localStorage.setItem(`_chms_token`, token);
     },
     logout(state) {
       state.user = {};
-      localStorage.removeItem(`_${persistenceKey}_token`);
-    },
+      localStorage.removeItem(`_chms_token`);
+    }
   },
 
   actions: {
@@ -57,7 +57,7 @@ export default new Vuex.Store({
 
             resolve(true);
           })
-          .catch((err) => {
+          .catch(err => {
             const { status, data } = err.response;
 
             reject({ status, data });
@@ -71,8 +71,8 @@ export default new Vuex.Store({
           commit("logout");
           router.replace({ name: "Home" });
         })
-        .catch((err) => console.log(err));
-    },
+        .catch(err => console.log(err));
+    }
   },
-  plugins: [createPersistedState({ key: `_${persistenceKey}_store` })],
+  plugins: [createPersistedState({ key: `_chms_store` })]
 });
