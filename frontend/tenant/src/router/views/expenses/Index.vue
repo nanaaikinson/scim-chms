@@ -40,7 +40,12 @@
             </template>
             <Column field="name" header="Name" sortable></Column>
             <Column field="type" header="type" sortable></Column>
-            <Column field="amount" header="amount" sortable></Column>
+            <Column field="amount" header="amount" sortable>
+              <template #body="slotProps">
+                <small>{{ currency }}</small>
+                {{ slotProps.data.amount }}
+              </template>
+            </Column>
             <Column field="date" header="date" sortable></Column>
             <Column field="actions" header="Actions">
               <template #body="slotProps">
@@ -90,6 +95,11 @@ export default {
       expenses: [],
       loading: true
     };
+  },
+  computed: {
+    currency() {
+      return this.$store.getters.currency;
+    }
   },
   methods: {
     //fetch expenses

@@ -38,7 +38,12 @@
             </template>
             <Column field="id" header="ID" sortable></Column>
             <Column field="title" header="Title" sortable></Column>
-            <Column field="amount" header="Amount" sortable></Column>
+            <Column field="amount" header="Amount" sortable>
+              <template #body="slotProps">
+                <small>{{ currency }}</small>
+                {{ slotProps.data.amount }}
+              </template>
+            </Column>
             <Column field="purpose" header="Purpose" sortable></Column>
             <Column field="actions" header="Actions">
               <template #body="slotProps">
@@ -88,6 +93,11 @@ export default {
       pledges: [],
       loading: true
     };
+  },
+  computed: {
+    currency() {
+      return this.$store.getters.currency;
+    }
   },
   methods: {
     //fetch pledges

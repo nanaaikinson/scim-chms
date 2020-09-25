@@ -41,6 +41,9 @@ export default new Vuex.Store({
     setToken(state, token) {
       localStorage.setItem(`_chms_token`, token);
     },
+    setCurrency(state, { currency }) {
+      state.settings.currency = currency;
+    },
     logout(state) {
       state.user = {};
       localStorage.removeItem(`_chms_token`);
@@ -54,6 +57,7 @@ export default new Vuex.Store({
           .then(({ data: res }) => {
             commit("setUser", res.data.user);
             commit("setToken", res.data.token);
+            commit("setCurrency", res.data.settings);
 
             resolve(true);
           })

@@ -38,6 +38,19 @@
                 </select>
               </div>
             </div>
+            <div class="col-md-8">
+              <div class="form-group">
+                <label for="description">Description</label>
+                <textarea
+                  name=""
+                  id=""
+                  cols="30"
+                  rows="10"
+                  class="form-control"
+                  v-model="description"
+                ></textarea>
+              </div>
+            </div>
           </div>
 
           <div class="text-center">
