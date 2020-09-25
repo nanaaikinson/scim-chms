@@ -152,12 +152,14 @@ class BookController extends Controller
           if (!is_null($bookCover)) {
             if ($book->image) {
               FileManager::deleteFile($book->image->filename);
+              $book->image()->delete();
             }
             $book->image()->create(["url" => $bookCover->url, "filename" => $bookCover->path, "mask" => generate_mask()]);
           }
 
           if (!is_null($bookFile)) {
             FileManager::deleteFile($book->file->filename);
+            $book->file()->delete();
             $book->file()->create(["url" => $bookFile->url, "filename" => $bookFile->path, "mask" => generate_mask()]);
           }
 
