@@ -86,7 +86,7 @@ class ContributionController extends Controller
               "amount" => $contribution->amount,
               "method" => $contribution->method ? (ContributionMethodEnum::fromValue($contribution->method))->description : "",
               "created_at" => gmdate("Y-m-d", strtotime($contribution->created_at)),
-              "type" => $contribution->type !== 0 ? (ContributionTypeEnum::fromValue($contribution->type))->description : "general",
+              "type" => $contribution->type == 0 ? (ContributionTypeEnum::fromValue($contribution->type))->description : "general",
               "person" => $contribution->person_name ? [
                 "name" => $contribution->person_name,
                 "mask" => $contribution->person_mask
