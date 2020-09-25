@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 import Auth from "@services/api/auth";
 import router from "@router";
+const persistenceKey = window.location.pathname || "chms";
 
 Vue.use(Vuex);
 
@@ -38,11 +39,11 @@ export default new Vuex.Store({
       state.user = { name, email, avatar, permissions };
     },
     setToken(state, token) {
-      localStorage.setItem("_chms_token", token);
+      localStorage.setItem(`_${persistenceKey}_token`, token);
     },
     logout(state) {
       state.user = {};
-      localStorage.removeItem("_chms_token");
+      localStorage.removeItem(`_${persistenceKey}_token`);
     },
   },
 
@@ -73,5 +74,5 @@ export default new Vuex.Store({
         .catch((err) => console.log(err));
     },
   },
-  plugins: [createPersistedState({ key: "_chms_store" })],
+  plugins: [createPersistedState({ key: `_${persistenceKey}_store` })],
 });
