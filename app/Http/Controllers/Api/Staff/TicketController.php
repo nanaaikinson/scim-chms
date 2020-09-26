@@ -6,11 +6,13 @@ use App\Classes\FileManager;
 use App\Enums\TicketTagEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTicketRequest;
+use App\Mail\DeveloperTicketMail;
 use App\Models\Ticket;
 use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class TicketController extends Controller
@@ -42,6 +44,7 @@ class TicketController extends Controller
   {
     try {
       $tenantId = tenant("id");
+      $user = $request->user();
       $validated = (object)$request->validationData();
 
       DB::beginTransaction();
@@ -65,7 +68,9 @@ class TicketController extends Controller
           $ticket->image()->create(["url" => $image->url, "filename" => $image->path, "mask" => generate_mask()]);
         }
 
-        // TODO: Send dev email
+        // Send email to devs
+        $this->sendMail($ticket, $user, $tenantId, "Created");
+
         DB::commit();
         return $this->successResponse("Ticket created successfully");
       }
@@ -105,6 +110,7 @@ class TicketController extends Controller
   {
     try {
       $tenantId = tenant("id");
+      $user = $request->user();
       $ticket = Ticket::with("image")
         ->where("mask", $mask)
         ->where("tenant_id", $tenantId)
@@ -134,6 +140,9 @@ class TicketController extends Controller
           $ticket->image()->create(["url" => $image->url, "filename" => $image->path, "mask" => generate_mask()]);
         }
 
+        // Send email to devs
+        $this->sendMail($ticket, $user, $tenantId, "Updated");
+
         DB::commit();
         return $this->successResponse("Ticket updated successfully");
       }
@@ -145,6 +154,26 @@ class TicketController extends Controller
       return $this->notFoundResponse();
     } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
+    }
+  }
+
+  public function sendMail($ticket, $user, $tenantId, $action="Created")
+  {
+    $devs = getenv("DEVS_EMAILS") ? explode(",", getenv("DEVS_EMAILS")) : [];
+    foreach ($devs as $dev) {
+      Mail::to($dev)->queue(new DeveloperTicketMail([
+        "action" => $action,
+        "ticket" => (object)[
+          "id" => $ticket->id,
+          "title" => $ticket->title,
+          "description" => $ticket->description,
+          "tag" => (TicketTagEnum::fromValue((int)$ticket->tag))->description
+        ],
+        "user" => (object)[
+          "name" => "{$user->first_name} {$user->last_name}",
+          "branch" => strtoupper($tenantId)
+        ]
+      ]));
     }
   }
 }
