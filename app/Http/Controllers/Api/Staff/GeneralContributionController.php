@@ -25,9 +25,9 @@ class GeneralContributionController extends Controller
       $type = "";
 
       switch (strtolower($requestContributionType)) {
-        case "alter-seed":
+        case "altar-seed":
           $type = ContributionTypeEnum::AltarSeed;
-          $response = "Alter seed";
+          $response = "Altar seed";
           break;
         case "offering":
           $type = ContributionTypeEnum::Offering;

@@ -45,7 +45,7 @@
                         <div class="d-flex">
                           <label for="amount">Amount *</label>
                           <button
-                            style="margin-top: -8px;"
+                            style="margin-top: -8px"
                             class="btn btn-danger btn-icon-28 ml-auto"
                             type="button"
                             @click="RemoveRecord"
@@ -93,8 +93,9 @@
                             :value="method.id"
                             v-for="(method, i) in methods"
                             :key="i"
-                            >{{ method.name }}</option
                           >
+                            {{ method.name }}
+                          </option>
                         </select>
                       </div>
                     </div>
@@ -139,7 +140,7 @@ import "flatpickr/dist/flatpickr.css";
 export default {
   name: "General",
   components: {
-    flatPickr
+    flatPickr,
   },
   data() {
     return {
@@ -149,15 +150,15 @@ export default {
           comment: "",
           name: "",
           date: "",
-          method: 1
-        }
+          method: 1,
+        },
       ],
       methods: [
         { name: "Cash", id: 1 },
         { name: "Cheque", id: 2 },
         { name: "Online", id: 3 },
-        { name: "Mobile Money", id: 4 }
-      ]
+        { name: "Mobile Money", id: 4 },
+      ],
     };
   },
 
@@ -171,8 +172,8 @@ export default {
           case "general":
             type = "general";
             break;
-          case "alter-seed":
-            type = "alter-seed";
+          case "altar-seed":
+            type = "altar-seed";
             break;
           case "offering":
             type = "offering";
@@ -182,7 +183,7 @@ export default {
             break;
         }
         const errors = [];
-        this.contributions.forEach(contribution => {
+        this.contributions.forEach((contribution) => {
           if (!contribution.date) errors.push("error");
           if (!contribution.name) errors.push("error");
           if (!contribution.method) errors.push("error");
@@ -195,7 +196,7 @@ export default {
         addBtnLoading(btn);
         const formData = {
           contributions: this.contributions,
-          type
+          type,
         };
         const response = await Contribution.generalAdd(formData);
         const res = response.data;
@@ -208,7 +209,7 @@ export default {
         if (res.code === 422) {
           removeBtnLoading(btn);
           const errorData = Object.values(res.errors);
-          errorData.map(error => {
+          errorData.map((error) => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
         } else {
@@ -224,12 +225,12 @@ export default {
         comment: "",
         name: "",
         date: "",
-        method: 1
+        method: 1,
       });
     },
     RemoveRecord() {
       this.contributions.pop();
-    }
-  }
+    },
+  },
 };
 </script>

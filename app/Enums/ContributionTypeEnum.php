@@ -33,7 +33,7 @@ final class ContributionTypeEnum extends Enum
       case self::CovenantPartner:
         return 'Covenant Partner';
       case self::AltarSeed:
-        return 'Alter Seed';
+        return 'Altar Seed';
       default:
         return self::getKey($value);
     }

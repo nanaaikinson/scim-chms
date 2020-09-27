@@ -54,9 +54,9 @@
               >
               <router-link
                 v-can="'create-contribution'"
-                :to="{ name: 'generalAdd', query: { type: 'alter-seed' } }"
+                :to="{ name: 'generalAdd', query: { type: 'altar-seed' } }"
                 class="dropdown-item"
-                >Alter Seed</router-link
+                >Altar Seed</router-link
               >
               <router-link
                 v-can="'create-contribution'"
@@ -109,7 +109,7 @@
                   slotProps.data.title
                 }}</span>
                 <span
-                  v-if="slotProps.data.type.toLowerCase() === 'alter seed'"
+                  v-if="slotProps.data.type.toLowerCase() === 'altar seed'"
                   >{{ slotProps.data.title }}</span
                 >
                 <span v-else>{{ slotProps.data.person.name }}</span>
@@ -136,7 +136,7 @@
                   v-can="'update-contribution'"
                   :to="{
                     name: 'covenantedit',
-                    params: { mask: slotProps.data.mask }
+                    params: { mask: slotProps.data.mask },
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
@@ -151,7 +151,7 @@
                   v-can="'update-contribution'"
                   :to="{
                     name: 'busingedit',
-                    params: { mask: slotProps.data.mask }
+                    params: { mask: slotProps.data.mask },
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
@@ -164,7 +164,7 @@
                   v-can="'update-contribution'"
                   :to="{
                     name: 'TitheEdit',
-                    params: { mask: slotProps.data.mask }
+                    params: { mask: slotProps.data.mask },
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
@@ -177,7 +177,7 @@
                   v-can="'update-contribution'"
                   :to="{
                     name: 'groupEdit',
-                    params: { mask: slotProps.data.mask }
+                    params: { mask: slotProps.data.mask },
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
@@ -190,7 +190,7 @@
                   v-can="'update-contribution'"
                   :to="{
                     name: 'welfareedit',
-                    params: { mask: slotProps.data.mask }
+                    params: { mask: slotProps.data.mask },
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
@@ -203,7 +203,7 @@
                   v-can="'update-contribution'"
                   :to="{
                     name: 'pledgeEdit',
-                    params: { mask: slotProps.data.mask }
+                    params: { mask: slotProps.data.mask },
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
@@ -217,7 +217,7 @@
                   :to="{
                     name: 'generalEdit',
                     params: { mask: slotProps.data.mask },
-                    query: { type: 'general' }
+                    query: { type: 'general' },
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
@@ -231,7 +231,7 @@
                   :to="{
                     name: 'generalEdit',
                     params: { mask: slotProps.data.mask },
-                    query: { type: 'offering' }
+                    query: { type: 'offering' },
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
@@ -245,11 +245,11 @@
                   :to="{
                     name: 'generalEdit',
                     params: { mask: slotProps.data.mask },
-                    query: { type: 'alter-seed' }
+                    query: { type: 'altar-seed' },
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
-                  v-if="slotProps.data.type.toLowerCase() === 'alter seed'"
+                  v-if="slotProps.data.type.toLowerCase() === 'altar seed'"
                 >
                   <i class="pi pi-pencil"></i>
                 </router-link>
@@ -292,16 +292,16 @@ export default {
     return {
       table: {
         data: [],
-        total: 0
+        total: 0,
       },
       loading: true,
-      filters: {}
+      filters: {},
     };
   },
   computed: {
     currency() {
       return this.$store.getters.currency;
-    }
+    },
   },
   methods: {
     async setData() {
@@ -321,7 +321,7 @@ export default {
           showCancelButton: true,
           cancelButtonText: "No",
           confirmButtonText: "Yes Delete It",
-          reverseButtons: true
+          reverseButtons: true,
         });
         if (result.value) {
           addBtnLoading(btn);
@@ -351,7 +351,7 @@ export default {
             case "offering":
               response = await Contribution.generaldelete(mask);
               break;
-            case "alter seed":
+            case "altar seed":
               response = await Contribution.generaldelete(mask);
               break;
           }
@@ -360,7 +360,7 @@ export default {
           const res = response.data;
           Swal.fire({
             icon: "success",
-            title: res.message
+            title: res.message,
           });
           this.setData();
         }
@@ -369,19 +369,19 @@ export default {
         const res = error.response.data;
         Swal.fire({
           icon: "error",
-          title: res.message
+          title: res.message,
         });
       }
-    }
+    },
   },
   beforeRouteEnter(to, from, next) {
-    next(vm => {
+    next((vm) => {
       vm.setData();
       next();
     });
   },
   mounted() {
     new BSN.Dropdown("#myDropdown");
-  }
+  },
 };
 </script>
