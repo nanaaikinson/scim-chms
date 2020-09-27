@@ -55,6 +55,20 @@ return [
       'visibility' => 'public',
     ],
 
+    'central' => [
+      'driver' => 'local',
+      'root' => storage_path('app/public'),
+      'url' => env('APP_URL') . '/storage',
+      'visibility' => 'public',
+    ],
+
+    'tenant' => [
+      'driver' => 'local',
+      'root' => storage_path('app/public'),
+      'url' => env('APP_URL') . '/storage',
+      'visibility' => 'public',
+    ],
+
     'public_uploads' => [
       'driver' => 'local',
       'root'   => public_path() . '/uploads',
@@ -69,7 +83,6 @@ return [
       'url' => env('AWS_URL'),
       'endpoint' => env('AWS_ENDPOINT'),
     ],
-
   ],
 
   /*

@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Api\Staff;
 
-use App\Classes\FileManager;
+use App\Classes\FileManagerTenancy;
 use App\Enums\ContributionMethodEnum;
 use App\Enums\ContributionTypeEnum;
 use App\Enums\FollowUpEnum;
 use App\Enums\MemberStatusEnum;
 use App\Exports\GenericExport;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePersonRequest;
 use App\Imports\GenericImport;
 use App\Models\AttendancePerson;
 use App\Models\Family;
@@ -19,7 +18,6 @@ use App\Models\Person;
 use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Exception;
-use hanneskod\classtools\Transformer\Action\CommentStripper;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,7 +33,7 @@ class PersonController extends Controller
 
   public function index()
   {
-    // TODO: Refactor FileManager
+    // TODO: Refactor FileManagerTenancy
     try {
       $people = [];
       Person::with("familyPersons")->with("avatar")
@@ -116,7 +114,7 @@ class PersonController extends Controller
 
       if ($request->hasFile("avatar")) {
         $file = $request->file("avatar");
-        $avatar = FileManager::uploadFile($file, "people", $nameSlug);
+        $avatar = FileManagerTenancy::uploadFile($file, "people", $nameSlug, "tenancy");
       }
 
       if ($person->save()) {
@@ -265,7 +263,7 @@ class PersonController extends Controller
 
       if ($request->hasFile("avatar")) {
         $file = $request->file("avatar");
-        $avatar = FileManager::uploadFile($file, "people", $nameSlug);
+        $avatar = FileManagerTenancy::uploadFile($file, "people", $nameSlug, "tenancy");
       }
 
       if ($person->save()) {
@@ -279,7 +277,7 @@ class PersonController extends Controller
           ]);
 
           if ($image) {
-            FileManager::deleteFile($image->filename);
+            FileManagerTenancy::deleteFile($image->filename, "tenancy");
             $image->delete();
           }
         }
@@ -330,19 +328,19 @@ class PersonController extends Controller
 
       DB::beginTransaction();
       if ($person->delete()) {
-        $person->familyPersons->each(function($record) {
+        $person->familyPersons->each(function ($record) {
           $record->delete();
         });
-        $person->groupPersons->each(function($record) {
+        $person->groupPersons->each(function ($record) {
           $record->delete();
         });
-        $person->attendancePersons->each(function($record) {
+        $person->attendancePersons->each(function ($record) {
           $record->delete();
         });
-        $person->followUps->each(function($record) {
+        $person->followUps->each(function ($record) {
           $record->delete();
         });
-        $person->contributions->each(function($record) {
+        $person->contributions->each(function ($record) {
           $record->delete();
         });
 
@@ -352,7 +350,6 @@ class PersonController extends Controller
 
       DB::rollBack();
       return $this->errorResponse("An error occurred while deleting this person");
-
     } catch (ModelNotFoundException $e) {
       return $this->errorResponse("No data found for this person");
     } catch (Exception $e) {
@@ -432,7 +429,6 @@ class PersonController extends Controller
         "avatar" => $person->avatar ? url("/") . $person->avatar->url : "",
         "age" => $person->date_of_birth ? Carbon::now()->diffInYears(Carbon::parse($person->date_of_birth)) : "",
       ]);
-
     } catch (ModelNotFoundException $e) {
       return $this->notFoundResponse("No data found for this person");
     } catch (Exception $e) {
@@ -655,8 +651,7 @@ class PersonController extends Controller
         return $this->errorResponse("No data found to import");
       }
       return $this->errorResponse("File must be of type excel: xlsx, xls or csv");
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
     }
   }

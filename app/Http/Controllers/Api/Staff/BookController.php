@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Staff;
 
-use App\Classes\FileManager;
+use App\Classes\FileManagerTenancy;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Models\BookLink;
@@ -62,11 +62,11 @@ class BookController extends Controller
       $bookCover = null;
       $bookFile = null;
       if ($request->hasFile("cover")) {
-        $bookCover = FileManager::uploadFile($request->file("cover"), "images", $slug);
+        $bookCover = FileManagerTenancy::uploadFile($request->file("cover"), "images", $slug, "central");
       }
 
       if ($request->hasFile("file")) {
-        $bookFile = FileManager::uploadFile($request->file("file"), "files", $slug);
+        $bookFile = FileManagerTenancy::uploadFile($request->file("file"), "files", $slug, "central");
       }
 
       // Begin Transaction
@@ -136,11 +136,11 @@ class BookController extends Controller
         $bookCover = null;
         $bookFile = null;
         if ($request->hasFile("cover")) {
-          $bookCover = FileManager::uploadFile($request->file("cover"), "images", $slug);
+          $bookCover = FileManagerTenancy::uploadFile($request->file("cover"), "images", $slug, "central");
         }
 
         if ($request->hasFile("file")) {
-          $bookFile = FileManager::uploadFile($request->file("file"), "files", $slug);
+          $bookFile = FileManagerTenancy::uploadFile($request->file("file"), "files", $slug, "central");
         }
 
         // Begin Transaction
@@ -151,14 +151,14 @@ class BookController extends Controller
         if ($book->save()) {
           if (!is_null($bookCover)) {
             if ($book->image) {
-              FileManager::deleteFile($book->image->filename);
+              FileManagerTenancy::deleteFile($book->image->filename, "central");
               $book->image()->delete();
             }
             $book->image()->create(["url" => $bookCover->url, "filename" => $bookCover->path, "mask" => generate_mask()]);
           }
 
           if (!is_null($bookFile)) {
-            FileManager::deleteFile($book->file->filename);
+            FileManagerTenancy::deleteFile($book->file->filename, "central");
             $book->file()->delete();
             $book->file()->create(["url" => $bookFile->url, "filename" => $bookFile->path, "mask" => generate_mask()]);
           }
@@ -188,12 +188,12 @@ class BookController extends Controller
         if ($book->delete()) {
           if ($cover) {
             Image::where("id", $cover->id)->delete();
-            FileManager::deleteFile($cover->filename);
+            FileManagerTenancy::deleteFile($cover->filename, "central");
           }
 
           if ($file) {
             File::where("id", $file->id)->delete();
-            FileManager::deleteFile($file->filename);
+            FileManagerTenancy::deleteFile($file->filename, "central");
           }
 
           DB::commit();

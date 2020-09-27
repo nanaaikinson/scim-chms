@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\Staff;
 
-use App\Classes\FileManager;
+use App\Classes\FileManagerTenancy;
 use App\Enums\TicketTagEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTicketRequest;
@@ -23,8 +23,8 @@ class TicketController extends Controller
   {
     try {
       $tenantId = tenant("id");
-      $tickets = Ticket::with("image")->where("tenant_id", $tenantId)->get()->map(function ($record) {
-        $image = $record->image ? getenv("APP_URL") . $record->image->url : NULL;
+      $tickets = Ticket::with("image")->where("tenant_id", $tenantId)->get()->map(function ($record) use ($tenantId) {
+        $image = $record->image ? getenv("APP_URL") . "/" .$tenantId. $record->image->url : NULL;
         return [
           "mask" => (int)$record->mask,
           "title" => $record->title,
@@ -60,7 +60,7 @@ class TicketController extends Controller
       $image = null;
       $slug = Str::slug($validated->title, "-");
       if ($request->hasFile("image")) {
-        $image = FileManager::uploadFile($request->file("image"), "tickets", $slug);
+        $image = FileManagerTenancy::uploadFile($request->file("image"), "tickets", $slug, "tenancy");
       }
 
       if ($ticket) {
@@ -69,7 +69,7 @@ class TicketController extends Controller
         }
 
         // Send email to devs
-        $this->sendMail($ticket, $user, $tenantId, "Created");
+        //$this->sendMail($ticket, $user, $tenantId, "Created");
 
         DB::commit();
         return $this->successResponse("Ticket created successfully");
@@ -127,14 +127,14 @@ class TicketController extends Controller
       $image = null;
       $slug = Str::slug($validated->title, "-");
       if ($request->hasFile("image")) {
-        $image = FileManager::uploadFile($request->file("image"), "tickets", $slug);
+        $image = FileManagerTenancy::uploadFile($request->file("image"), "tickets", $slug, "central");
       }
 
       if ($ticket->save()) {
         // Create if file is not null
         if (!is_null($image)) {
           if ($ticket->image) {
-            FileManager::deleteFile($ticket->image->filename);
+            FileManagerTenancy::deleteFile($ticket->image->filename, "central");
             $ticket->image()->delete();
           }
           $ticket->image()->create(["url" => $image->url, "filename" => $image->path, "mask" => generate_mask()]);
@@ -149,7 +149,6 @@ class TicketController extends Controller
 
       DB::rollBack();
       return $this->errorResponse("An error occurred while updating this ticket");
-
     } catch (ModelNotFoundException $e) {
       return $this->notFoundResponse();
     } catch (Exception $e) {
@@ -157,7 +156,7 @@ class TicketController extends Controller
     }
   }
 
-  public function sendMail($ticket, $user, $tenantId, $action="Created")
+  public function sendMail($ticket, $user, $tenantId, $action = "Created")
   {
     $devs = getenv("DEVS_EMAILS") ? explode(",", getenv("DEVS_EMAILS")) : [];
     foreach ($devs as $dev) {
@@ -171,7 +170,7 @@ class TicketController extends Controller
         ],
         "user" => (object)[
           "name" => "{$user->first_name} {$user->last_name}",
-          "branch" => getenv("APP_URL") . "/" .$tenantId
+          "branch" => getenv("APP_URL") . "/" . $tenantId
         ]
       ]));
     }
