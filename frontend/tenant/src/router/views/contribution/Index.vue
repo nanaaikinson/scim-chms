@@ -54,7 +54,19 @@
               >
               <router-link
                 v-can="'create-contribution'"
-                :to="{ name: 'generalAdd' }"
+                :to="{ name: 'generalAdd', query: { type: 'alter-seed' } }"
+                class="dropdown-item"
+                >Alter Seed</router-link
+              >
+              <router-link
+                v-can="'create-contribution'"
+                :to="{ name: 'generalAdd', query: { type: 'offering' } }"
+                class="dropdown-item"
+                >Offering</router-link
+              >
+              <router-link
+                v-can="'create-contribution'"
+                :to="{ name: 'generalAdd', query: { type: 'general' } }"
                 class="dropdown-item"
                 >General</router-link
               >
@@ -193,6 +205,32 @@
                 >
                   <i class="pi pi-pencil"></i>
                 </router-link>
+                <router-link
+                  tag="button"
+                  v-can="'update-contribution'"
+                  :to="{
+                    name: 'generalEdit',
+                    params: { mask: slotProps.data.mask }
+                  }"
+                  class="btn btn-primary btn-icon mr-2"
+                  v-tooltip.top="'Edit'"
+                  v-if="slotProps.data.type.toLowerCase() === 'offering'"
+                >
+                  <i class="pi pi-pencil"></i>
+                </router-link>
+                <router-link
+                  tag="button"
+                  v-can="'update-contribution'"
+                  :to="{
+                    name: 'generalEdit',
+                    params: { mask: slotProps.data.mask }
+                  }"
+                  class="btn btn-primary btn-icon mr-2"
+                  v-tooltip.top="'Edit'"
+                  v-if="slotProps.data.type.toLowerCase() === 'alter seed'"
+                >
+                  <i class="pi pi-pencil"></i>
+                </router-link>
                 <button
                   class="btn btn-danger btn-icon mr-2"
                   v-can="'delete-contribution'"
@@ -284,6 +322,12 @@ export default {
               response = await Contribution.tithedelete(mask);
               break;
             case "general":
+              response = await Contribution.generaldelete(mask);
+              break;
+            case "offering":
+              response = await Contribution.generaldelete(mask);
+              break;
+            case "alter seed":
               response = await Contribution.generaldelete(mask);
               break;
           }

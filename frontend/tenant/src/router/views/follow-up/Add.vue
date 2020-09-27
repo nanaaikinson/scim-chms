@@ -10,7 +10,11 @@
               <form @submit.prevent="createFollowUp">
                 <div class="row">
                   <div class="col-md-6">
-                    <ValidationProvider name="People field" rules="required" v-slot="{ errors }">
+                    <ValidationProvider
+                      name="People field"
+                      rules="required"
+                      v-slot="{ errors }"
+                    >
                       <div class="form-group">
                         <label for="people" class="d-block">
                           People
@@ -31,7 +35,11 @@
                   </div>
 
                   <div class="col-md-6">
-                    <ValidationProvider name="Assigned to" rules="required" v-slot="{ errors }">
+                    <ValidationProvider
+                      name="Assigned to"
+                      rules="required"
+                      v-slot="{ errors }"
+                    >
                       <div class="form-group">
                         <label for="assigned_to" class="d-block">
                           Assigned To
@@ -52,7 +60,11 @@
                   </div>
 
                   <div class="col-md-6">
-                    <ValidationProvider name="Follow-up date" rules="required" v-slot="{ errors }">
+                    <ValidationProvider
+                      name="Follow-up date"
+                      rules="required"
+                      v-slot="{ errors }"
+                    >
                       <div class="form-group">
                         <label for="date" class="d-block">
                           Follow-Up Date
@@ -96,7 +108,9 @@
                           id="done"
                           v-model="form.completed"
                         />
-                        <label class="custom-control-label" for="done">Done</label>
+                        <label class="custom-control-label" for="done"
+                          >Done</label
+                        >
                       </div>
 
                       <div class v-if="form.completed">
@@ -118,7 +132,9 @@
                                 placeholder="Select date"
                                 :config="dateConfig"
                               />
-                              <span class="text-danger d-block">{{ errors[0] }}</span>
+                              <span class="text-danger d-block">{{
+                                errors[0]
+                              }}</span>
                             </div>
                           </ValidationProvider>
                         </keep-alive>
@@ -142,7 +158,13 @@
 
                   <div class="col-md-12">
                     <div class="text-center">
-                      <button class="btn btn-success px-5" type="submit" ref="submitBtn">Save</button>
+                      <button
+                        class="btn btn-success px-5"
+                        type="submit"
+                        ref="submitBtn"
+                      >
+                        Save
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -171,7 +193,7 @@ export default {
   components: {
     MultiSelect,
     Dropdown,
-    DatePicker,
+    DatePicker
   },
   data() {
     return {
@@ -184,28 +206,32 @@ export default {
         completion_date: null,
         type: 1,
         completed: false,
-        comment: "",
+        comment: ""
       },
       visitTypes: [
         {
           id: 1,
-          name: "Visit",
+          name: "Visit-IDL"
         },
         {
           id: 2,
-          name: "Phone",
+          name: "Visit-WELP"
         },
         {
           id: 3,
-          name: "Message",
+          name: "Phone"
         },
+        {
+          id: 4,
+          name: "Message"
+        }
       ],
       dateConfig: {
         altInput: true,
         altFormat: "F j, Y",
         dateFormat: "Y-m-d",
-        allowInput: true,
-      },
+        allowInput: true
+      }
     };
   },
   methods: {
@@ -215,19 +241,19 @@ export default {
       const peopleRes = await peopleResponse.data;
       const usersRes = await usersResponse.data;
 
-      this.people = peopleRes.data.map((person) => ({
+      this.people = peopleRes.data.map(person => ({
         id: person.id,
-        name: person.name,
+        name: person.name
       }));
 
-      this.users = usersRes.data.map((user) => ({
+      this.users = usersRes.data.map(user => ({
         id: user.id,
-        name: user.name,
+        name: user.name
       }));
     },
 
     createFollowUp(e) {
-      this.$refs.validationObserver.validate().then((result) => {
+      this.$refs.validationObserver.validate().then(result => {
         if (result) {
           const btn = this.$refs.submitBtn;
           const formMsg = this.$refs.formMsg;
@@ -237,7 +263,7 @@ export default {
 
           const formData = {
             ...this.form,
-            completed: this.form.completed ? 1 : 0,
+            completed: this.form.completed ? 1 : 0
           };
 
           FollowUp.store(formData)
@@ -245,13 +271,13 @@ export default {
               Swal.fire("Success", res.message, "success");
               this.$router.push({ name: "FollowUp" });
             })
-            .catch((err) => {
+            .catch(err => {
               removeBtnLoading(btn);
               const { status, data } = err.response;
               let errorBag = "";
 
               if (status === 422) {
-                Object.values(data.errors).map((error) => {
+                Object.values(data.errors).map(error => {
                   errorBag += `<span class="d-block">${error}</span>`;
                 });
               } else {
@@ -262,13 +288,13 @@ export default {
             });
         }
       });
-    },
+    }
   },
   beforeRouteEnter(to, from, next) {
-    next((vm) => {
+    next(vm => {
       vm.setData();
       next();
     });
-  },
+  }
 };
 </script>
