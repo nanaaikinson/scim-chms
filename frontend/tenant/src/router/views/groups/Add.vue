@@ -38,28 +38,47 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="leader">Leader</label>
-                    <select name="leader" id="leader" v-model.trim="leader" class="form-control">
+                    <!-- <select name="leader" id="leader" v-model.trim="leader" class="form-control">
                       <option value>Select leader</option>
                       <option
                         v-for="leader in leaders"
                         :value="leader.id"
                         :key="leader.id"
                       >{{ leader.name }}</option>
-                    </select>
+                    </select> -->
+                    <Dropdown
+                      v-model="leader"
+                      :options="leaders"
+                      optionLabel="name"
+                      optionValue="id"
+                      class="form-control"
+                      :filter="true"
+                    />
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="type">Group Type *</label>
-                    <select name="type" id="type" v-model.trim="type" class="form-control">
+                    <!-- <select name="type" id="type" v-model.trim="type" class="form-control">
                       <option v-for="type in types" :value="type.id" :key="type.id">{{ type.name }}</option>
-                    </select>
+                    </select> -->
+                    <Dropdown
+                      v-model="type"
+                      :options="types"
+                      optionLabel="name"
+                      optionValue="id"
+                      class="form-control"
+                      required
+                      :filter="true"
+                    />
                   </div>
                 </div>
               </div>
               <div class="text-center">
                 <div class="form-group mt-5">
-                  <button class="btn btn-success px-5" ref="submitBtn">Save</button>
+                  <button class="btn btn-success px-5" ref="submitBtn">
+                    Save
+                  </button>
                 </div>
               </div>
             </form>
@@ -75,9 +94,13 @@ import { addBtnLoading, removeBtnLoading } from "@services/helpers";
 import Member from "@services/api/people";
 import Group from "@services/api/groups";
 import Swal from "sweetalert2";
+import Dropdown from "primevue/dropdown";
 
 export default {
-  name: "UserAdd",
+  name: "UserGroup",
+  components: {
+    Dropdown
+  },
   data() {
     return {
       name: "",
@@ -91,8 +114,8 @@ export default {
         { name: "Small Groups", id: 3 },
         { name: "Youth", id: 4 },
         { name: "Women", id: 5 },
-        { name: "Workers", id: 6 },
-      ],
+        { name: "Workers", id: 6 }
+      ]
     };
   },
   methods: {
@@ -105,7 +128,7 @@ export default {
           name: this.name,
           description: this.description,
           leader: this.leader,
-          type: this.type,
+          type: this.type
         };
         const response = await Group.store(formData);
         const res = response.data;
@@ -118,7 +141,7 @@ export default {
         if (res.code === 422) {
           removeBtnLoading(btn);
           const errorData = Object.values(res.errors);
-          errorData.map((error) => {
+          errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
         } else {
@@ -137,11 +160,11 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    },
+    }
   },
 
   async created() {
     await this.getMembers();
-  },
+  }
 };
 </script>

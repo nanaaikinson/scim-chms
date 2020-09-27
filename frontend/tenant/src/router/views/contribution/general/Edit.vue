@@ -143,7 +143,8 @@ export default {
           comment: this.comment,
           date: this.date,
           name: this.name,
-          method: this.method
+          method: this.method,
+          type: this.$route.query.type
         };
         const response = await Contribution.generalUpdate(formData, this.mask);
         const res = response.data;
