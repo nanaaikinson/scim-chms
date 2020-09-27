@@ -105,7 +105,7 @@ class GeneralContributionController extends Controller
   public function destroy(int $mask)
   {
     try {
-      $tithe = Contribution::where("mask", $mask)->where("type", ContributionTypeEnum::General)->firstOrFail();
+      $tithe = Contribution::where("mask", $mask)->firstOrFail();
       if ($tithe->delete()) {
         return $this->successResponse("Contribution deleted successfully");
       }
