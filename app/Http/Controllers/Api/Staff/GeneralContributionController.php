@@ -20,7 +20,7 @@ class GeneralContributionController extends Controller
   {
     try {
       $validated = (object)$request->validationData();
-      $requestContributionType = $request->input("type") || "";
+      $requestContributionType = $request->input("type") ?: "";
       $response = "";
       $type = "";
 
