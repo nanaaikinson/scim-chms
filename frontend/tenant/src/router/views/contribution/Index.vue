@@ -54,7 +54,19 @@
               >
               <router-link
                 v-can="'create-contribution'"
-                :to="{ name: 'generalAdd' }"
+                :to="{ name: 'generalAdd', query: { type: 'alter-seed' } }"
+                class="dropdown-item"
+                >Alter Seed</router-link
+              >
+              <router-link
+                v-can="'create-contribution'"
+                :to="{ name: 'generalAdd', query: { type: 'offering' } }"
+                class="dropdown-item"
+                >Offering</router-link
+              >
+              <router-link
+                v-can="'create-contribution'"
+                :to="{ name: 'generalAdd', query: { type: 'general' } }"
                 class="dropdown-item"
                 >General</router-link
               >
@@ -67,12 +79,24 @@
             :paginator="true"
             :rows="10"
             :loading="loading"
+            :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[10, 25, 50]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             :scrollable="true"
             scrollHeight="55vh"
           >
+            <template #header>
+              <div class="table-header d-flex justify-content-end">
+                <span class="p-input-icon-left">
+                  <i class="pi pi-search" />
+                  <InputText
+                    v-model="filters['global']"
+                    placeholder="Search For"
+                  />
+                </span>
+              </div>
+            </template>
             <template #empty>
               <div class="text-center">No data found.</div>
             </template>
@@ -81,6 +105,13 @@
                 <span v-if="slotProps.data.type.toLowerCase() === 'general'">{{
                   slotProps.data.title
                 }}</span>
+                <span v-if="slotProps.data.type.toLowerCase() === 'offering'">{{
+                  slotProps.data.title
+                }}</span>
+                <span
+                  v-if="slotProps.data.type.toLowerCase() === 'alter seed'"
+                  >{{ slotProps.data.title }}</span
+                >
                 <span v-else>{{ slotProps.data.person.name }}</span>
               </template>
             </Column>
@@ -185,11 +216,40 @@
                   v-can="'update-contribution'"
                   :to="{
                     name: 'generalEdit',
-                    params: { mask: slotProps.data.mask }
+                    params: { mask: slotProps.data.mask },
+                    query: { type: 'general' }
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
                   v-if="slotProps.data.type.toLowerCase() === 'general'"
+                >
+                  <i class="pi pi-pencil"></i>
+                </router-link>
+                <router-link
+                  tag="button"
+                  v-can="'update-contribution'"
+                  :to="{
+                    name: 'generalEdit',
+                    params: { mask: slotProps.data.mask },
+                    query: { type: 'offering' }
+                  }"
+                  class="btn btn-primary btn-icon mr-2"
+                  v-tooltip.top="'Edit'"
+                  v-if="slotProps.data.type.toLowerCase() === 'offering'"
+                >
+                  <i class="pi pi-pencil"></i>
+                </router-link>
+                <router-link
+                  tag="button"
+                  v-can="'update-contribution'"
+                  :to="{
+                    name: 'generalEdit',
+                    params: { mask: slotProps.data.mask },
+                    query: { type: 'alter-seed' }
+                  }"
+                  class="btn btn-primary btn-icon mr-2"
+                  v-tooltip.top="'Edit'"
+                  v-if="slotProps.data.type.toLowerCase() === 'alter seed'"
                 >
                   <i class="pi pi-pencil"></i>
                 </router-link>
@@ -218,6 +278,7 @@
 
 <script>
 import DataTable from "primevue/datatable";
+import InputText from "primevue/inputtext";
 import Column from "primevue/column";
 import Contribution from "@services/api/contribution";
 import { addBtnLoading, removeBtnLoading } from "@services/helpers";
@@ -226,14 +287,15 @@ import Swal from "sweetalert2";
 
 export default {
   name: "Contributions",
-  components: { DataTable, Column },
+  components: { DataTable, Column, InputText },
   data() {
     return {
       table: {
         data: [],
         total: 0
       },
-      loading: true
+      loading: true,
+      filters: {}
     };
   },
   computed: {
@@ -284,6 +346,12 @@ export default {
               response = await Contribution.tithedelete(mask);
               break;
             case "general":
+              response = await Contribution.generaldelete(mask);
+              break;
+            case "offering":
+              response = await Contribution.generaldelete(mask);
+              break;
+            case "alter seed":
               response = await Contribution.generaldelete(mask);
               break;
           }

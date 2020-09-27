@@ -16,7 +16,7 @@ export default new Vuex.Store({
       remember: false
     },
     settings: {
-      currency: "GH₵"
+      currency: ""
     }
   },
   getters: {

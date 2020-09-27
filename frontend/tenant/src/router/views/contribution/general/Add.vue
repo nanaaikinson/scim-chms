@@ -166,6 +166,21 @@ export default {
       const btn = this.$refs.submitBtn;
       const formMsg = this.$refs.formMsg;
       try {
+        let type;
+        switch (this.$route.query.type) {
+          case "general":
+            type = "general";
+            break;
+          case "alter-seed":
+            type = "alter-seed";
+            break;
+          case "offering":
+            type = "offering";
+            break;
+          default:
+            type = "general";
+            break;
+        }
         const errors = [];
         this.contributions.forEach(contribution => {
           if (!contribution.date) errors.push("error");
@@ -179,7 +194,8 @@ export default {
         }
         addBtnLoading(btn);
         const formData = {
-          contributions: this.contributions
+          contributions: this.contributions,
+          type
         };
         const response = await Contribution.generalAdd(formData);
         const res = response.data;

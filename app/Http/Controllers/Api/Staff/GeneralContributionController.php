@@ -20,24 +20,41 @@ class GeneralContributionController extends Controller
   {
     try {
       $validated = (object)$request->validationData();
+      $requestContributionType = $request->input("type") ?: "";
+      $response = "";
+      $type = "";
+
+      switch (strtolower($requestContributionType)) {
+        case "alter-seed":
+          $type = ContributionTypeEnum::AlterSeed;
+          $response = "Alter seed";
+          break;
+        case "offering":
+          $type = ContributionTypeEnum::Offering;
+          $response = "Offering";
+          break;
+        default:
+          $type = ContributionTypeEnum::General;
+          $response = "General";
+          break;
+      }
 
       foreach ($validated->contributions as $item) {
         $item = (object)$item;
 
         Contribution::create([
-          "type" => ContributionTypeEnum::General,
+          "type" => $type,
           "amount" => $item->amount,
           "name" => $item->name,
-          "comment" => $item->comment,
+          "comment" => isset($item->comment) ? $item->comment : NULL,
           "date" => $item->date,
           "mask" => generate_mask(),
-          "method" => $item->method ?: ContributionMethodEnum::Cash
+          "method" => isset($item->method) ? $item->method : ContributionMethodEnum::Cash
         ]);
       }
 
-      return $this->successResponse("General contribution(s) saved successfully");
-    }
-    catch (Exception $e) {
+      return $this->successResponse("{$response} contribution(s) saved successfully");
+    } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
     }
   }
@@ -45,7 +62,7 @@ class GeneralContributionController extends Controller
   public function show(int $mask)
   {
     try {
-      $contribution = Contribution::where("mask", $mask)->where("type", ContributionTypeEnum::General)->firstOrFail();
+      $contribution = Contribution::where("mask", $mask)->firstOrFail();
 
       return [
         "name" => $contribution->name,
@@ -55,11 +72,9 @@ class GeneralContributionController extends Controller
         "comment" => $contribution->comment,
         "method" => $contribution->method,
       ];
-    }
-    catch (ModelNotFoundException $e) {
+    } catch (ModelNotFoundException $e) {
       return $this->notFoundResponse("No data found for this contribution");
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
     }
   }
@@ -68,7 +83,7 @@ class GeneralContributionController extends Controller
   {
     try {
       $validated = (object)$request->validationData();
-      $contribution = Contribution::where("mask", $mask)->where("type", ContributionTypeEnum::General)->firstOrFail();
+      $contribution = Contribution::where("mask", $mask)->firstOrFail();
 
       $contribution->name = $validated->name;
       $contribution->date = $validated->date;
@@ -80,11 +95,9 @@ class GeneralContributionController extends Controller
         return $this->successResponse("Contribution updated successfully");
       }
       return $this->errorResponse("An error occurred while updating this contribution");
-    }
-    catch (ModelNotFoundException $e) {
+    } catch (ModelNotFoundException $e) {
       return $this->notFoundResponse("No data found for this contribution");
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
     }
   }
@@ -92,16 +105,14 @@ class GeneralContributionController extends Controller
   public function destroy(int $mask)
   {
     try {
-      $tithe = Contribution::where("mask", $mask)->where("type", ContributionTypeEnum::General)->firstOrFail();
+      $tithe = Contribution::where("mask", $mask)->firstOrFail();
       if ($tithe->delete()) {
         return $this->successResponse("Contribution deleted successfully");
       }
       return $this->errorResponse("An error occurred while deleting this contribution");
-    }
-    catch (ModelNotFoundException $e) {
+    } catch (ModelNotFoundException $e) {
       return $this->notFoundResponse("No data found for this contribution");
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
     }
   }

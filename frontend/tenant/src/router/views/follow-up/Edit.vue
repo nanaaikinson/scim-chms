@@ -198,7 +198,7 @@ export default {
   name: "EditFollowUp",
   components: {
     Dropdown,
-    DatePicker,
+    DatePicker
   },
   data() {
     return {
@@ -211,29 +211,33 @@ export default {
         completion_date: null,
         type: null,
         completed: false,
-        comment: "",
+        comment: ""
       },
       visitTypes: [
         {
           id: 1,
-          name: "Visit",
+          name: "Visit-IDL"
         },
         {
           id: 2,
-          name: "Phone",
+          name: "Visit-WELP"
         },
         {
           id: 3,
-          name: "Message",
+          name: "Phone"
         },
+        {
+          id: 4,
+          name: "Message"
+        }
       ],
       dateConfig: {
         altInput: true,
         altFormat: "F j, Y",
         dateFormat: "Y-m-d",
-        allowInput: true,
+        allowInput: true
       },
-      mask: "",
+      mask: ""
     };
   },
   methods: {
@@ -259,19 +263,19 @@ export default {
       // this.form.people = followUp.id;
       // this.form.people = followUp.id;
 
-      this.people = peopleRes.map((person) => ({
+      this.people = peopleRes.map(person => ({
         id: person.id,
-        name: person.name,
+        name: person.name
       }));
 
-      this.users = usersRes.map((user) => ({
+      this.users = usersRes.map(user => ({
         id: user.id,
-        name: user.name,
+        name: user.name
       }));
     },
 
     updateFollowUp(e) {
-      this.$refs.validationObserver.validate().then((result) => {
+      this.$refs.validationObserver.validate().then(result => {
         if (result) {
           const btn = this.$refs.submitBtn;
           const formMsg = this.$refs.formMsg;
@@ -284,13 +288,13 @@ export default {
               Swal.fire("Success", res.message, "success");
               this.$router.push({ name: "FollowUp" });
             })
-            .catch((err) => {
+            .catch(err => {
               removeBtnLoading(btn);
               const { status, data } = err.response;
               let errorBag = "";
 
               if (status === 422) {
-                Object.values(data.errors).map((error) => {
+                Object.values(data.errors).map(error => {
                   errorBag += `<span class="d-block">${error}</span>`;
                 });
               } else {
@@ -301,7 +305,7 @@ export default {
             });
         }
       });
-    },
+    }
   },
   async beforeRouteEnter(to, from, next) {
     try {
@@ -312,9 +316,9 @@ export default {
       const response = await Promise.all([
         FollowUp.show(mask),
         People.readOnly(),
-        Users.readOnly(),
+        Users.readOnly()
       ]);
-      next((vm) => vm.setData(response));
+      next(vm => vm.setData(response));
     } catch (error) {
       console.log(error);
     }
@@ -322,6 +326,6 @@ export default {
     //   vm.setData();
     //   next();
     // });
-  },
+  }
 };
 </script>
