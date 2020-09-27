@@ -171,7 +171,7 @@ class TicketController extends Controller
         ],
         "user" => (object)[
           "name" => "{$user->first_name} {$user->last_name}",
-          "branch" => strtoupper($tenantId)
+          "branch" => getenv("APP_URL") . "/" .$tenantId
         ]
       ]));
     }
