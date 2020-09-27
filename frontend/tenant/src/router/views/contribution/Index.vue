@@ -79,12 +79,24 @@
             :paginator="true"
             :rows="10"
             :loading="loading"
+            :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[10, 25, 50]"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
             :scrollable="true"
             scrollHeight="55vh"
           >
+            <template #header>
+              <div class="table-header d-flex justify-content-end">
+                <span class="p-input-icon-left">
+                  <i class="pi pi-search" />
+                  <InputText
+                    v-model="filters['global']"
+                    placeholder="Search For"
+                  />
+                </span>
+              </div>
+            </template>
             <template #empty>
               <div class="text-center">No data found.</div>
             </template>
@@ -93,6 +105,13 @@
                 <span v-if="slotProps.data.type.toLowerCase() === 'general'">{{
                   slotProps.data.title
                 }}</span>
+                <span v-if="slotProps.data.type.toLowerCase() === 'offering'">{{
+                  slotProps.data.title
+                }}</span>
+                <span
+                  v-if="slotProps.data.type.toLowerCase() === 'alter seed'"
+                  >{{ slotProps.data.title }}</span
+                >
                 <span v-else>{{ slotProps.data.person.name }}</span>
               </template>
             </Column>
@@ -197,7 +216,8 @@
                   v-can="'update-contribution'"
                   :to="{
                     name: 'generalEdit',
-                    params: { mask: slotProps.data.mask }
+                    params: { mask: slotProps.data.mask },
+                    query: { type: 'general' }
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
@@ -210,7 +230,8 @@
                   v-can="'update-contribution'"
                   :to="{
                     name: 'generalEdit',
-                    params: { mask: slotProps.data.mask }
+                    params: { mask: slotProps.data.mask },
+                    query: { type: 'offering' }
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
@@ -223,7 +244,8 @@
                   v-can="'update-contribution'"
                   :to="{
                     name: 'generalEdit',
-                    params: { mask: slotProps.data.mask }
+                    params: { mask: slotProps.data.mask },
+                    query: { type: 'alter-seed' }
                   }"
                   class="btn btn-primary btn-icon mr-2"
                   v-tooltip.top="'Edit'"
@@ -256,6 +278,7 @@
 
 <script>
 import DataTable from "primevue/datatable";
+import InputText from "primevue/inputtext";
 import Column from "primevue/column";
 import Contribution from "@services/api/contribution";
 import { addBtnLoading, removeBtnLoading } from "@services/helpers";
@@ -264,14 +287,15 @@ import Swal from "sweetalert2";
 
 export default {
   name: "Contributions",
-  components: { DataTable, Column },
+  components: { DataTable, Column, InputText },
   data() {
     return {
       table: {
         data: [],
         total: 0
       },
-      loading: true
+      loading: true,
+      filters: {}
     };
   },
   computed: {
