@@ -12,7 +12,7 @@ use BenSampo\Enum\Enum;
  * @method static static Welfare()
  * @method static static Pledge()
  * @method static static General()
- * @method static static AlterSeed()
+ * @method static static AltarSeed()
  * @method static static Offering()
  */
 final class ContributionTypeEnum extends Enum
@@ -24,7 +24,7 @@ final class ContributionTypeEnum extends Enum
   const Welfare = 5;
   const Pledge = 6;
   const Offering = 7;
-  const AlterSeed = 8;
+  const AltarSeed = 8;
   const General = 9;
 
   public static function getDescription($value): string
@@ -32,8 +32,8 @@ final class ContributionTypeEnum extends Enum
     switch ($value) {
       case self::CovenantPartner:
         return 'Covenant Partner';
-      case self::AlterSeed:
-        return 'Alter Seed';
+      case self::AltarSeed:
+        return 'Altar Seed';
       default:
         return self::getKey($value);
     }
