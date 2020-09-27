@@ -32,7 +32,8 @@ final class ContributionTypeEnum extends Enum
     switch ($value) {
       case self::CovenantPartner:
         return 'Covenant Partner';
-        break;
+      case self::AlterSeed:
+        return 'Alter Seed';
       default:
         return self::getKey($value);
     }
