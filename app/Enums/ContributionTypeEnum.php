@@ -12,6 +12,8 @@ use BenSampo\Enum\Enum;
  * @method static static Welfare()
  * @method static static Pledge()
  * @method static static General()
+ * @method static static AlterSeed()
+ * @method static static Offering()
  */
 final class ContributionTypeEnum extends Enum
 {
@@ -21,7 +23,9 @@ final class ContributionTypeEnum extends Enum
   const Group = 4;
   const Welfare = 5;
   const Pledge = 6;
-  const General = 7;
+  const Offering = 7;
+  const AlterSeed = 8;
+  const General = 9;
 
   public static function getDescription($value): string
   {
