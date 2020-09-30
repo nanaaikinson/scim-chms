@@ -82,11 +82,11 @@
                   <div class="col-md-4">
                     <label class="d-block">Filter By *</label>
                     <div class="custom-control custom-radio custom-control-inline">
-                      <input type="radio" id="datePaidFor" name="datePaidFor" class="custom-control-input" value="created_at" v-model="form.filter_by_date">
+                      <input type="radio" id="datePaidFor" name="datePaidFor" class="custom-control-input" value="date" v-model="form.filter_by_date">
                       <label class="custom-control-label" for="datePaidFor">Date Paid For</label>
                     </div>
                     <div class="custom-control custom-radio custom-control-inline">
-                      <input type="radio" id="dateRecorded" name="dateRecorded" class="custom-control-input" value="date" v-model="form.filter_by_date">
+                      <input type="radio" id="dateRecorded" name="dateRecorded" class="custom-control-input" value="created_at" v-model="form.filter_by_date">
                       <label class="custom-control-label" for="dateRecorded">Date Record Was Created</label>
                     </div>
                   </div>
@@ -339,7 +339,7 @@ export default {
         to: null,
         from: null,
         duration: 1,
-        filter_by_date: "created_at"
+        filter_by_date: "date"
       },
       contributions: [
         { value: "all", name: "All" },
