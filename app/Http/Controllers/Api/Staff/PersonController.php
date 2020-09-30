@@ -33,7 +33,6 @@ class PersonController extends Controller
 
   public function index()
   {
-    // TODO: Refactor FileManagerTenancy
     try {
       $people = [];
       Person::with("familyPersons")->with("avatar")
@@ -362,11 +361,11 @@ class PersonController extends Controller
     $members = Person::select("id", DB::raw('CONCAT(first_name, " ", last_name) AS name'))
       ->with("avatar")
       ->get()->map(function ($person) {
-        $avatar = $person->avatar ? url("/") . $person->avatar->url : "";
+        $avatar = $person->avatar ? getenv("APP_URL") . "/" . $person->avatar->url : "";
         return [
           "id" => $person->id,
           "name" => $person->name,
-          "avatar" => $person->avatar,
+          "avatar" => $avatar,
         ];
       });
 
