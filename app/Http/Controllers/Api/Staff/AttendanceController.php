@@ -307,7 +307,7 @@ class AttendanceController extends Controller
             "gender" => $person->gender ? (strtolower($person->gender) == "male") ? "M" : "F" : "",
             "telephone" => (string)$person->primary_telephone,
             "location" => $person->physical_address,
-            "membershipStatus" => (MemberStatusEnum::fromValue($person->member_status))->description,
+            "membershipStatus" => $person->member_status ? (MemberStatusEnum::fromValue($person->member_status))->description : "",
             "status" => "in",
             "comment" => ""
           ];
