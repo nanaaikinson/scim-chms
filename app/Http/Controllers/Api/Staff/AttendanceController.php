@@ -298,17 +298,16 @@ class AttendanceController extends Controller
   {
     try {
       $heading = ["PID", "S/N", "NAME", "GENDER", "TELEPHONE", "LOCATION", "STATUS", "COMMENT"];
-      $persons = Person::where("member_status", ST_MEMBER)
-        ->orWhere("member_status", MemberStatusEnum::DistantMember)
-        ->get()
+      $persons = Person::all()
         ->map(function ($person) {
           return [
             "mask" => $person->mask,
             "id" => $person->id,
             "name" => "{$person->first_name} {$person->last_name}",
             "gender" => $person->gender ? (strtolower($person->gender) == "male") ? "M" : "F" : "",
-            "telephone" => $person->primary_telephone,
+            "telephone" => (string)$person->primary_telephone,
             "location" => $person->physical_address,
+            "membershipStatus" => (MemberStatusEnum::fromValue($person->member_status))->description,
             "status" => "in",
             "comment" => ""
           ];
