@@ -297,7 +297,7 @@ class AttendanceController extends Controller
   public function generalAttendanceTemplate()
   {
     try {
-      $heading = ["PID", "S/N", "NAME", "GENDER", "TELEPHONE", "LOCATION", "STATUS", "COMMENT"];
+      $heading = ["PID", "S/N", "NAME", "GENDER", "TELEPHONE", "MEMBERSHIP STATUS", "LOCATION", "STATUS", "COMMENT"];
       $persons = Person::all()
         ->map(function ($person) {
           return [
@@ -306,8 +306,8 @@ class AttendanceController extends Controller
             "name" => "{$person->first_name} {$person->last_name}",
             "gender" => $person->gender ? (strtolower($person->gender) == "male") ? "M" : "F" : "",
             "telephone" => (string)$person->primary_telephone,
+            "membershipStatus" => $person->member_status ? (MemberStatusEnum::fromValue($person->member_status))->description : "",
             "location" => $person->physical_address,
-            "membershipStatus" => (MemberStatusEnum::fromValue($person->member_status))->description,
             "status" => "in",
             "comment" => ""
           ];
