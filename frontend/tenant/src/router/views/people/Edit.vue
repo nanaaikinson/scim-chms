@@ -163,7 +163,12 @@
                     >
                       <option value>Select</option>
                       <option disabled>--------------------</option>
-                      <option :value="o.value" :key="i" v-for="(o, i) in membership_statuses">{{ o.name }}</option>
+                      <option
+                        :value="o.value"
+                        :key="i"
+                        v-for="(o, i) in membership_statuses"
+                        >{{ o.name }}</option
+                      >
                     </select>
                   </div>
                 </div>
@@ -448,18 +453,14 @@ export default {
       config: {
         maxDate: new Date()
       },
-<<<<<<< HEAD
-      comments: ""
-=======
       comments: "",
       membership_statuses: [
-        {value: 1, name: "Member"},
-        {value: 2, name: "Guest"},
-        {value: 3, name: "Distant Member"},
-        {value: 4, name: "Pre Member"},
-        {value: 5, name: "Cell Member"},
+        { value: 1, name: "Member" },
+        { value: 2, name: "Guest" },
+        { value: 3, name: "Distant Member" },
+        { value: 4, name: "Pre Member" },
+        { value: 5, name: "Cell Member" }
       ]
->>>>>>> 5e48bb8bcafcbd0a16e0220d715139ff2ff12c58
     };
   },
   computed: {
