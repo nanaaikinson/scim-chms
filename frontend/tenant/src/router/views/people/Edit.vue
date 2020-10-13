@@ -296,24 +296,15 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label for="family">Family</label>
-                    <select
-                      name="family"
-                      id="family"
-                      class="custom-select"
+                    <Dropdown
                       v-model="family"
-                    >
-                      <option value>Choose Family</option>
-                      <option disabled>---------------</option>
-                      <option value="-1"
-                        >Create a new family using surname</option
-                      >
-                      <option
-                        :value="family.id"
-                        v-for="(family, i) in families"
-                        :key="i"
-                        >{{ family.name }}---{{ family.id }}</option
-                      >
-                    </select>
+                      :options="families"
+                      optionLabel="name"
+                      optionValue="id"
+                      class="form-control"
+                      placeholder="Select a family"
+                      :filter="true"
+                    />
                   </div>
                 </div>
                 <div class="col-md-4" v-if="family">
@@ -412,11 +403,13 @@ import Group from "@services/api/groups";
 import Family from "@services/api/family";
 import Swal from "sweetalert2";
 import MultiSelect from "primevue/multiselect";
+import Dropdown from "primevue/dropdown";
 export default {
   name: "PersonAdd",
   components: {
     flatPickr,
     MultiSelect,
+    Dropdown
   },
   data() {
     return {
@@ -446,22 +439,26 @@ export default {
       relation: "",
       group: [],
       groups: [],
-      families: [],
+      families: [
+        {
+          id: -1,
+          name: "Create a new family using surname"
+        }
+      ],
       profile: "",
-      groups: [],
       mask: "",
       config: {
-        maxDate: new Date(),
+        maxDate: new Date()
       },
-      comments: "",
+      comments: ""
     };
   },
   computed: {
     avatar() {
       return {
-        backgroundImage: "url(" + this.profile + ")",
+        backgroundImage: "url(" + this.profile + ")"
       };
-    },
+    }
   },
   methods: {
     async updatePerson(e) {
@@ -496,7 +493,7 @@ export default {
         formData.append("family", this.family);
         formData.append("relation", this.relation);
 
-        this.group.forEach((element) => {
+        this.group.forEach(element => {
           formData.append("groups[]", element);
         });
 
@@ -511,7 +508,7 @@ export default {
         if (res.code === 422) {
           removeBtnLoading(btn);
           const errorData = Object.values(res.errors);
-          errorData.map((error) => {
+          errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
         } else {
@@ -522,8 +519,11 @@ export default {
     },
 
     setData(group) {
-      const { data } = group[1].data;
+      const { data } = group[2].data;
       this.groups = group[0].data.data;
+      group[1].data.data.forEach(el => {
+        this.families.push(el);
+      });
       this.first_name = data.first_name;
       this.last_name = data.last_name;
       this.middle_name = data.middle_name;
@@ -562,20 +562,7 @@ export default {
       imagePreview.setAttribute("style", `background-image:url(${imageUrl})`);
 
       this.profile = file;
-    },
-    async getFamilies() {
-      try {
-        const response = await Family.all();
-        const res = response.data;
-        this.families = res.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
-
-  async created() {
-    await this.getFamilies();
+    }
   },
 
   async beforeRouteEnter(to, from, next) {
@@ -584,11 +571,15 @@ export default {
       if (!mask) {
         next({ name: "Home" });
       }
-      const response = await Promise.all([Group.all(), People.show(mask)]);
-      next((vm) => vm.setData(response));
+      const response = await Promise.all([
+        Group.all(),
+        Family.all(),
+        People.show(mask)
+      ]);
+      next(vm => vm.setData(response));
     } catch (error) {
       console.log(error);
     }
-  },
+  }
 };
 </script>

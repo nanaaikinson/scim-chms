@@ -185,7 +185,7 @@
                       v-model.number="form.type"
                     >
                       <option value="1">Chart</option>
-                      <option value="2">Count</option>
+                      <option value="2">Accumulation</option>
                     </select>
                   </div>
                 </div>
