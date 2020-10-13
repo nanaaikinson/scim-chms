@@ -32,7 +32,7 @@
                   <keep-alive>
                     <div class="col-md-4" v-if="form.contributiontype === 4">
                       <div class="form-group">
-                        <label for="group" class="d-block">Group *</label>
+                        <label class="d-block">Group *</label>
                         <Dropdown
                           v-model.number="form.group_id"
                           :options="groups"
@@ -48,7 +48,7 @@
                   <keep-alive>
                     <div class="col-md-4" v-if="form.contributiontype === 6">
                       <div class="form-group">
-                        <label for="pledge" class="d-block">Pledge *</label>
+                        <label class="d-block">Pledge *</label>
                         <Dropdown
                           v-model.number="form.pledge_id"
                           :options="pledge"
@@ -77,6 +77,18 @@
                         >{{ method.name }}</option
                       >
                     </select>
+                  </div>
+
+                  <div class="col-md-4">
+                    <label class="d-block">Filter By *</label>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="datePaidFor" name="datePaidFor" class="custom-control-input" value="date" v-model="form.filter_by_date">
+                      <label class="custom-control-label" for="datePaidFor">Date Paid For</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                      <input type="radio" id="dateRecorded" name="dateRecorded" class="custom-control-input" value="created_at" v-model="form.filter_by_date">
+                      <label class="custom-control-label" for="dateRecorded">Date Record Was Created</label>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -326,7 +338,8 @@ export default {
         type: 1,
         to: null,
         from: null,
-        duration: 1
+        duration: 1,
+        filter_by_date: "date"
       },
       contributions: [
         { value: "all", name: "All" },
@@ -386,7 +399,8 @@ export default {
           contribution_type: this.form.contributiontype,
           payment_method: this.form.method,
           duration: this.form.duration,
-          report_type: this.form.type
+          report_type: this.form.type,
+          filter_by_created_at: this.form.filter_by_date === "created_at" ? true : ""
         };
 
         if (this.form.duration === 5) {

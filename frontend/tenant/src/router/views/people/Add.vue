@@ -162,10 +162,13 @@
                       class="custom-select"
                     >
                       <option value>Select</option>
-                      <option value="1">Member</option>
-                      <option value="2">Guest</option>
-                      <option value="3">Distant Member</option>
-                      <option value="4">Pre Member</option>
+                      <option disabled>--------------------</option>
+                      <option
+                        :value="o.value"
+                        :key="i"
+                        v-for="(o, i) in membership_statuses"
+                        >{{ o.name }}</option
+                      >
                     </select>
                   </div>
                 </div>
@@ -408,7 +411,7 @@ export default {
       gender: "",
       grade: "",
       marital_status: "",
-      member_status: "",
+      member_status: 1,
       baptism_date: "",
       join_date: "",
       employer: "",
@@ -437,7 +440,14 @@ export default {
       },
       avatar: {
         backgroundImage: `url(${require("@assets/img/avatar.svg")})`
-      }
+      },
+      membership_statuses: [
+        { value: 1, name: "Member" },
+        { value: 2, name: "Guest" },
+        { value: 3, name: "Distant Member" },
+        { value: 4, name: "Pre Member" },
+        { value: 5, name: "Cell Member" }
+      ]
     };
   },
   methods: {

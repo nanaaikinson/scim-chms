@@ -9,6 +9,7 @@ use BenSampo\Enum\Enum;
  * @method static static Guest()
  * @method static static DistantMember()
  * @method static static PreMember()
+ * @method static static CellMember()
  */
 final class MemberStatusEnum extends Enum
 {
@@ -16,16 +17,17 @@ final class MemberStatusEnum extends Enum
   const Guest = 2;
   const DistantMember = 3;
   const PreMember = 4;
+  const CellMember = 5;
 
   public static function getDescription($value): string
   {
     switch ($value) {
       case self::DistantMember:
         return 'Distant Member';
-        break;
       case self::PreMember:
         return 'Pre Member';
-        break;
+      case self::CellMember:
+        return 'Cell Member';
       default:
         return self::getKey($value);
     }

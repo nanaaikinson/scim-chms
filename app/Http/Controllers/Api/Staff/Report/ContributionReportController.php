@@ -21,6 +21,7 @@ class ContributionReportController extends Controller
   public function index(Request $request)
   {
     try {
+      $filterByCreatedAt = $request->input("filter_by_created_at") ? true : NULL;
       $date = $request->input("date");
       $from = $request->input("from");
       $to = $request->input("to");
@@ -32,34 +33,35 @@ class ContributionReportController extends Controller
       $paymentMethod = $request->input("payment_method");
 
       $query = Contribution::with("person")->with("group")->with("pledge");
+      $filterDateColumn = $filterByCreatedAt ? "created_at" : "date";
 
       // Duration
-      $query->where(function ($query) use ($duration, $to, $from, $date) {
+      $query->where(function ($query) use ($filterDateColumn, $duration, $to, $from, $date) {
         // Day
         if ($duration == ReportDurationEnum::Day) {
-          $query->whereDate("date", $date);
+          $query->whereDate($filterDateColumn, $date);
         }
         // Week
         if ($duration == ReportDurationEnum::Week) {
           $week = Carbon::parse($date)->weekOfYear;
           $year = Carbon::parse($date)->format("Y");
 
-          $query->whereYear("date", $year)->where(DB::raw("WEEKOFYEAR(date)"), $week);
+          $query->whereYear($filterDateColumn, $year)->where(DB::raw("WEEKOFYEAR(date)"), $week);
         }
         // Month
         if ($duration == ReportDurationEnum::Month) {
           $month = Carbon::parse($date)->format("m");
           $year = Carbon::parse($date)->format("Y");
 
-          $query->whereYear("date", $year)->whereMonth("date", $month);
+          $query->whereYear($filterDateColumn, $year)->whereMonth($filterDateColumn, $month);
         }
         // Year
         if ($duration == ReportDurationEnum::Year) {
-          $query->whereYear("date", $date);
+          $query->whereYear($filterDateColumn, $date);
         }
         // Specific period
         if ($duration == ReportDurationEnum::Period) {
-          $query->whereBetween("date", [$from, $to]);
+          $query->whereBetween($filterDateColumn, [$from, $to]);
         }
       });
 
@@ -84,17 +86,17 @@ class ContributionReportController extends Controller
       });
 
       $data = $query->get();
-      return $this->reportType($data, $reportType, $duration, $from, $to, $date);
+      return $this->reportType($data, $reportType, $filterByCreatedAt, $duration, $from, $to, $date);
     } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
     }
   }
 
-  public function accumulationType($data)
+  public function accumulationType($data, $filterByCreatedAt)
   {
     $total = 0;
      $chart_type = "Table";
-    $items = $data->map(function($record) use (&$total) {
+    $items = $data->map(function($record) use ($filterByCreatedAt, &$total) {
       $total += $record->amount;
       if ($record->type == 4) dd($record->group_id);
       //$for = "";
@@ -106,10 +108,12 @@ class ContributionReportController extends Controller
         //"for" => $for,
         "amount" => $record->amount,
         "date" => $record->date,
+        "created_at" => $record->created_at,
         "frequency" => $record->frequency,
         "group" => $group,
         "pledge" => $pledge,
         "person" => $person,
+        "filter_by_created_at" => $filterByCreatedAt ? true : false,
         "contribution_type" => (ContributionTypeEnum::fromValue($record->type))->description,
         "method" => (ContributionMethodEnum::fromValue($record->method))->description
       ];
@@ -118,7 +122,7 @@ class ContributionReportController extends Controller
     return ["total" => round($total, 2), "results" => $items, "chart_type"=> $chart_type];
   }
 
-  public function chartType($data, $duration = null, $from = null, $to = null, $date = null)
+  public function chartType($data, $filterByCreatedAt, $duration = null, $from = null, $to = null, $date = null)
   {
     $results = [];
     $chartType = "";
@@ -142,7 +146,7 @@ class ContributionReportController extends Controller
 
           // Loop through data
           foreach ($data as $d) {
-            $dataMonth = (int)date("m", strtotime($d->date));
+            $dataMonth = (int)date("m", strtotime($filterByCreatedAt ? $d->created_at : $d->date));
             if ($dataMonth !== $i) continue;
 
             $monthData["total"] += $d->amount;
@@ -203,7 +207,7 @@ class ContributionReportController extends Controller
 
         // Loop through data
         foreach ($data as $d) {
-          $dataMonth = (int)date("m", strtotime($d->date));
+          $dataMonth = (int)date("m", strtotime($filterByCreatedAt ? $d->created_at : $d->date));
           if ($dataMonth !== $i) continue;
 
           $monthData["total"] += $d->amount;
@@ -222,7 +226,7 @@ class ContributionReportController extends Controller
         $weekData = ["name" => "Week {$i}", "total" => 0];
 
         foreach ($data as $d) {
-          $dataWeek = Carbon::parse($d->date)->weekNumberInMonth;
+          $dataWeek = Carbon::parse($filterByCreatedAt ? $d->created_at : $d->date)->weekNumberInMonth;
 
           if ($dataWeek == $i) {
             $weekData["total"] += $d->amount;
@@ -242,7 +246,7 @@ class ContributionReportController extends Controller
         $dayData = ["name" => get_day_name($i), "total" => 0];
 
         foreach ($data as $d) {
-          $dataDay = Carbon::parse($d->date)->dayOfWeek;
+          $dataDay = Carbon::parse($filterByCreatedAt ? $d->created_at : $d->date)->dayOfWeek;
 
           if ($dataDay == $i) {
             $dayData["total"] += $d->amount;
@@ -255,7 +259,7 @@ class ContributionReportController extends Controller
 
     // Day
     else {
-      $results = $this->accumulationType($data);
+      $results = $this->accumulationType($data, $filterByCreatedAt);
     }
 
     return [
@@ -264,14 +268,14 @@ class ContributionReportController extends Controller
     ];
   }
 
-  public function reportType($data, $type, $duration = null, $from = null, $to = null, $date = null)
+  public function reportType($data, $type, $filterByCreatedAt, $duration = null, $from = null, $to = null, $date = null)
   {
     switch ((int)$type) {
       case ReportReturnTypeEnum::Chart:
-        return $this->chartType($data, $duration, $from, $to, $date);
+        return $this->chartType($data, $filterByCreatedAt, $duration, $from, $to, $date);
 
       default:
-        return $this->accumulationType($data);
+        return $this->accumulationType($data, $filterByCreatedAt);
     }
   }
 }
