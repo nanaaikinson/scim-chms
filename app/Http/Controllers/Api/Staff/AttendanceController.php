@@ -53,7 +53,7 @@ class AttendanceController extends Controller
     try {
       $rules = [
         "name" => "required",
-        "type" => ["required"],
+        "type" => "required",
         "date" => "required|date",
         "file" => "required"
       ];
@@ -86,8 +86,8 @@ class AttendanceController extends Controller
               AttendancePerson::create([
                 "attendance_id" => $attendance->id,
                 "person_id" => $person[1],
-                "comment" => isset($person[7]) ? $person[7] : null,
-                "status" => isset($person[6]) ? (strtolower($person[6]) == "in" ? ST_PRESENT : ST_ABSENT) : ST_ABSENT
+                "comment" => isset($person[8]) ? $person[8] : null,
+                "status" => isset($person[7]) ? (strtolower($person[7]) == "in" ? ST_PRESENT : ST_ABSENT) : ST_ABSENT
               ]);
             }
             DB::commit();
@@ -107,7 +107,7 @@ class AttendanceController extends Controller
   public function show(int $mask)
   {
     try {
-      $heading = ["PID", "S/N", "NAME", "GENDER", "TELEPHONE", "LOCATION", "STATUS", "COMMENT"];
+      $heading = ["PID", "S/N", "NAME", "GENDER", "TELEPHONE", "MEMBERSHIP STATUS", "LOCATION", "STATUS", "COMMENT"];
       $attendance = Attendance::with("attendancePersons")->where("mask", $mask)->firstOrFail();
       $filename = "Attendance-{$attendance->mask}.csv";
       $rows = $attendance->attendancePersons->map(function ($att) {
@@ -118,6 +118,7 @@ class AttendanceController extends Controller
           "name" => "{$att->person->first_name} {$att->person->last_name}",
           "gender" => $att->person->gender ? (strtolower($att->person->gender) == "male") ? "M" : "F" : "",
           "telephone" => $att->person->primary_telephone ? (string)$att->person->primary_telephone: "",
+          "membershipStatus" => $att->person->member_status ? (MemberStatusEnum::fromValue($att->person->member_status))->description : "",
           "location" => $att->person->physical_address,
           "status" => $att->status == ST_PRESENT ? "in" : "out",
           "comment" => $att->comment
@@ -198,8 +199,8 @@ class AttendanceController extends Controller
               AttendancePerson::create([
                 "attendance_id" => $attendance->id,
                 "person_id" => $person[1],
-                "comment" => isset($person[7]) ? $person[7] : null,
-                "status" => isset($person[6]) ? (strtolower($person[6]) == "in" ? ST_PRESENT : ST_ABSENT) : ST_ABSENT
+                "comment" => isset($person[8]) ? $person[8] : null,
+                "status" => isset($person[7]) ? (strtolower($person[7]) == "in" ? ST_PRESENT : ST_ABSENT) : ST_ABSENT
               ]);
             }
             DB::commit();
@@ -333,7 +334,7 @@ class AttendanceController extends Controller
   public function groupAttendanceTemplate(int $group_id)
   {
     try {
-      $heading = ["PID", "S/N", "NAME", "GENDER", "TELEPHONE", "LOCATION", "STATUS", "COMMENT"];
+      $heading = ["PID", "S/N", "NAME", "GENDER", "TELEPHONE", "MEMBERSHIP STATUS", "LOCATION", "STATUS", "COMMENT"];
       $group = Group::with("persons")->find($group_id);
       $persons = $group->persons->map(function ($person) {
         return [
@@ -342,6 +343,7 @@ class AttendanceController extends Controller
           "name" => "{$person->first_name} {$person->last_name}",
           "gender" => $person->gender ? (strtolower($person->gender) == "male") ? "M" : "F" : "",
           "telephone" => $person->primary_telephone,
+          "membershipStatus" => $person->member_status ? (MemberStatusEnum::fromValue($person->member_status))->description : "",
           "location" => $person->physical_address,
           "status" => "in",
           "comment" => ""
