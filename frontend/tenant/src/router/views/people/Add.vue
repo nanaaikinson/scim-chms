@@ -163,7 +163,12 @@
                     >
                       <option value>Select</option>
                       <option disabled>--------------------</option>
-                      <option :value="o.value" :key="i" v-for="(o, i) in membership_statuses">{{ o.name }}</option>
+                      <option
+                        :value="o.value"
+                        :key="i"
+                        v-for="(o, i) in membership_statuses"
+                        >{{ o.name }}</option
+                      >
                     </select>
                   </div>
                 </div>
@@ -294,24 +299,15 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label for="family">Family</label>
-                    <select
-                      name="family"
-                      id="family"
-                      class="custom-select"
+                    <Dropdown
                       v-model="family"
-                    >
-                      <option value>Choose Family</option>
-                      <option disabled>---------------</option>
-                      <option value="-1"
-                        >Create a new family using surname</option
-                      >
-                      <option
-                        :value="family.id"
-                        v-for="(family, i) in families"
-                        :key="i"
-                        >{{ family.name }}---{{ family.id }}</option
-                      >
-                    </select>
+                      :options="families"
+                      optionLabel="name"
+                      optionValue="id"
+                      class="form-control"
+                      placeholder="Select a family"
+                      :filter="true"
+                    />
                   </div>
                 </div>
                 <div class="col-md-4" v-if="family">
@@ -397,11 +393,13 @@ import Group from "@services/api/groups";
 import Family from "@services/api/family";
 import Swal from "sweetalert2";
 import MultiSelect from "primevue/multiselect";
+import Dropdown from "primevue/dropdown";
 export default {
   name: "PersonAdd",
   components: {
     flatPickr,
     MultiSelect,
+    Dropdown
   },
   data() {
     return {
@@ -431,19 +429,24 @@ export default {
       relation: "",
       group: [],
       groups: [],
-      families: [],
+      families: [
+        {
+          id: -1,
+          name: "Create a new family using surname"
+        }
+      ],
       config: {
-        maxDate: new Date(),
+        maxDate: new Date()
       },
       avatar: {
-        backgroundImage: `url(${require("@assets/img/avatar.svg")})`,
+        backgroundImage: `url(${require("@assets/img/avatar.svg")})`
       },
       membership_statuses: [
-        {value: 1, name: "Member"},
-        {value: 2, name: "Guest"},
-        {value: 3, name: "Distant Member"},
-        {value: 4, name: "Pre Member"},
-        {value: 5, name: "Cell Member"},
+        { value: 1, name: "Member" },
+        { value: 2, name: "Guest" },
+        { value: 3, name: "Distant Member" },
+        { value: 4, name: "Pre Member" },
+        { value: 5, name: "Cell Member" }
       ]
     };
   },
@@ -479,7 +482,7 @@ export default {
         formData.append("next_of_kin_telephone", this.next_of_kin_telephone);
         formData.append("family", this.family);
         formData.append("relation", this.relation);
-        this.group.forEach((element) => {
+        this.group.forEach(element => {
           formData.append("groups[]", element);
         });
         const response = await People.store(formData);
@@ -493,7 +496,7 @@ export default {
         if (res.code === 422) {
           removeBtnLoading(btn);
           const errorData = Object.values(res.errors);
-          errorData.map((error) => {
+          errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
         } else {
@@ -516,7 +519,9 @@ export default {
       try {
         const response = await Family.all();
         const res = response.data;
-        this.families = res.data;
+        res.data.forEach(el => {
+          this.families.push(el);
+        });
       } catch (error) {
         console.log(error);
       }
@@ -524,7 +529,7 @@ export default {
     addTag(newTag) {
       const tag = {
         name: newTag,
-        code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
+        code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000)
       };
       this.groups.push(tag);
       this.group.push(tag);
@@ -540,11 +545,11 @@ export default {
       const imagePreview = this.$refs.imagePreview;
       imagePreview.setAttribute("style", `background-image:url(${imageUrl})`);
       this.image = file;
-    },
+    }
   },
   async created() {
     await this.getGroups();
     await this.getFamilies();
-  },
+  }
 };
 </script>
