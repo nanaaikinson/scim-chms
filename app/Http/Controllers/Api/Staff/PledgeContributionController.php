@@ -11,12 +11,13 @@ use App\Models\Contribution;
 use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 
 class PledgeContributionController extends Controller
 {
   use ResponseTrait;
 
-  public function store(StorePledgeContributionRequest $request)
+  public function store(StorePledgeContributionRequest $request): JsonResponse
   {
     try {
       $validated = (object) $request->validationData();
@@ -28,7 +29,7 @@ class PledgeContributionController extends Controller
         $contribution->person_id = $item->person;
         $contribution->pledge_id = $item->pledge;
         $contribution->date = $item->date ?: NULL;
-        $contribution->comment = $item->comment ?: NULL;
+        $contribution->comment = $request->input("comment") ?: NULL;
         $contribution->amount = $item->amount;
         $contribution->method = $item->method ?: ContributionMethodEnum::Cash;
         $contribution->mask = generate_mask();

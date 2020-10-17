@@ -4,18 +4,17 @@ namespace App\Http\Controllers\Api\Staff;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PledgeRequest;
-use App\Http\Requests\StorePledgeRequest;
 use App\Models\Pledge;
 use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class PledgeController extends Controller
 {
   use ResponseTrait;
 
-  public function index()
+  public function index(): JsonResponse
   {
     try {
       $pledges = Pledge::all()->map(function ($pledge) {
@@ -25,6 +24,10 @@ class PledgeController extends Controller
           "title" => $pledge->title,
           "amount" => $pledge->amount,
           "purpose" => $pledge->purpose,
+          "person_id" => $pledge->person_id,
+          "person" => $pledge->person->name,
+          "paid" => $pledge->paid,
+          "balance" => $pledge->balance,
         ];
       });
       return $this->dataResponse($pledges);
@@ -33,7 +36,7 @@ class PledgeController extends Controller
     }
   }
 
-  public function store(PledgeRequest $request)
+  public function store(PledgeRequest $request): JsonResponse
   {
     try {
       $validated = (object)$request->validationData();
@@ -41,6 +44,7 @@ class PledgeController extends Controller
         "title" => $validated->title,
         "amount" => $validated->amount,
         "purpose" => $validated->purpose ?: NULL,
+        "person_id" => $validated->person_id,
         "mask" => generate_mask(),
       ]);
 
@@ -53,7 +57,7 @@ class PledgeController extends Controller
     }
   }
 
-  public function show(int $mask)
+  public function show(int $mask): JsonResponse
   {
     try {
       $pledge = Pledge::where("mask", $mask)->firstOrFail();
@@ -61,7 +65,8 @@ class PledgeController extends Controller
         "mask" => $pledge->mask,
         "title" => $pledge->title,
         "amount" => $pledge->amount,
-        "purpose" => $pledge->purpose
+        "purpose" => $pledge->purpose,
+        "person_id" => $pledge->person_id
       ]);
     } catch (ModelNotFoundException $e) {
       return $this->notFoundResponse("No data found for this pledge");
@@ -70,7 +75,7 @@ class PledgeController extends Controller
     }
   }
 
-  public function update(PledgeRequest $request, int $mask)
+  public function update(PledgeRequest $request, int $mask): JsonResponse
   {
     try {
       $pledge = Pledge::where("mask", $mask)->firstOrFail();
@@ -79,6 +84,7 @@ class PledgeController extends Controller
       $pledge->title = $validated->title;
       $pledge->amount = $validated->amount;
       $pledge->purpose = $validated->purpose ?: NULL;
+      $pledge->person_id = $validated->person_id;
 
       if ($pledge->save()) {
         return $this->successResponse("Pledge updated successfully");
@@ -91,7 +97,7 @@ class PledgeController extends Controller
     }
   }
 
-  public function destroy(int $mask)
+  public function destroy(int $mask): JsonResponse
   {
     try {
       $pledge = Pledge::where("mask", $mask)->firstOrFail();
