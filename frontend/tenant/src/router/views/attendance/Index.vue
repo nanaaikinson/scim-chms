@@ -68,7 +68,7 @@
 
                 <button
                   class="btn btn-info btn-icon mr-2"
-                  v-can="'view-attendance'"
+                  v-can="'read-attendance'"
                   v-tooltip.top="'Download This Attendance Data'"
                   @click="downloadAttendance(slotProps.data.mask, $event)"
                 >
@@ -253,7 +253,7 @@ export default {
         return (async () => {
           try {
             addBtnLoading(btn);
-            const response = await Attendance.show(this.mask);
+            const response = await Attendance.download(this.mask);
             removeBtnLoading(btn);
             const res = response.data;
             const { url, filename } = res.data.file;

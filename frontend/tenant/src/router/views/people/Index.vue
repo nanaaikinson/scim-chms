@@ -7,9 +7,8 @@
             v-can="'create-person'"
             :to="{ name: 'addperson' }"
             class="btn btn-primary px-5"
-          >Add Person
-          </router-link
-          >
+            >Add Person
+          </router-link>
         </div>
 
         <div>
@@ -28,7 +27,7 @@
             <template #header>
               <div class="table-header d-flex justify-content-end">
                 <span class="p-input-icon-left">
-                  <i class="pi pi-search"/>
+                  <i class="pi pi-search" />
                   <InputText
                     v-model="filters['global']"
                     placeholder="Search For"
@@ -66,18 +65,18 @@
             <Column field="created_at" header="Date Added" sortable></Column>
             <Column field="actions" header="Actions">
               <template #body="slotProps">
-                <!--                <router-link-->
-                <!--                  tag="button"-->
-                <!--                  v-can="'read-person'"-->
-                <!--                  :to="{-->
-                <!--                    name: 'PersonDetail',-->
-                <!--                    params: { mask: slotProps.data.mask }-->
-                <!--                  }"-->
-                <!--                  class="btn btn-primary btn-icon mr-2"-->
-                <!--                  v-tooltip.top="'View Detail'"-->
-                <!--                >-->
-                <!--                  <i class="pi pi-eye"></i>-->
-                <!--                </router-link>-->
+                <router-link
+                  tag="button"
+                  v-can="'read-person'"
+                  :to="{
+                    name: 'PersonDetail',
+                    params: { mask: slotProps.data.mask }
+                  }"
+                  class="btn btn-primary btn-icon mr-2"
+                  v-tooltip.top="'View Detail'"
+                >
+                  <i class="pi pi-eye"></i>
+                </router-link>
 
                 <router-link
                   tag="button"
@@ -113,13 +112,13 @@
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import People from "@services/api/people";
-import {addBtnLoading, removeBtnLoading} from "@services/helpers";
+import { addBtnLoading, removeBtnLoading } from "@services/helpers";
 import Swal from "sweetalert2";
 import InputText from "primevue/inputtext";
 
 export default {
   name: "People",
-  components: {DataTable, Column, InputText},
+  components: { DataTable, Column, InputText },
   data() {
     return {
       filters: {},

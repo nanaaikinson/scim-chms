@@ -11,6 +11,7 @@ use App\Models\Contribution;
 use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -23,7 +24,7 @@ class ContributionController extends Controller
 {
   use ResponseTrait;
 
-  public function index(Request $request)
+  public function index(Request $request): JsonResponse
   {
     try {
       /*$search = $request->input("search") ?: "";
@@ -111,7 +112,7 @@ class ContributionController extends Controller
     }
   }
 
-  public function template()
+  public function template(): JsonResponse
   {
     try {
       $headers = ["CONTRIBUTION TYPE", "AMOUNT", "DATE", "METHOD OF PAYMENT", "PERSON ID", "GROUP ID", "PLEDGE ID", "FREQUENCY", "TITLE", "COMMENT"];
@@ -135,7 +136,7 @@ class ContributionController extends Controller
     }
   }
 
-  public function import(Request $request)
+  public function import(Request $request): JsonResponse
   {
     try {
       $validator = Validator::make($request->all(), ["file" => "required"]);

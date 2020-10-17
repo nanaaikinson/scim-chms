@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ContributionMethodEnum;
+use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePledgeContributionRequest extends FormRequest
@@ -25,11 +27,11 @@ class StorePledgeContributionRequest extends FormRequest
   {
     return [
       "contributions" => "required|array",
-      "contributions.*.person" => "exists:people,id",
-      "contributions.*.pledge" => "exists:pledges,id",
+      "contributions.*.person" => "required|exists:people,id",
+      "contributions.*.pledge" => "required|exists:pledges,id",
       "contributions.*.amount" => "required|regex:/^\d+(\.\d{1,2})?$/",
-      "contributions.*.method" => "required",
-      //"contributions.*.date" => "required|date|date_format:Y-m-d",
+      "contributions.*.method" => ["required", new EnumValue(ContributionMethodEnum::class, false)],
+      "contributions.*.date" => "required|date|date_format:Y-m-d",
     ];
   }
 }

@@ -77,6 +77,7 @@
                           optionValue="id"
                           placeholder="Select Person"
                           class="form-control"
+                          @change="getData($event, i)"
                         />
                       </div>
                     </div>
@@ -85,12 +86,13 @@
                         <label for="person">Select Pledge *</label>
                         <Dropdown
                           v-model="contribution.pledge"
-                          :options="pledges"
+                          :options="contribution.pledges"
                           :filter="true"
                           optionLabel="title"
                           optionValue="id"
                           placeholder="Select Pledge"
                           class="form-control"
+                          :disabled="contribution.person ? false : true"
                         />
                       </div>
                     </div>
@@ -168,7 +170,8 @@ export default {
           date: "",
           person: "",
           pledge: "",
-          method: 1
+          method: 1,
+          pledges: []
         }
       ],
       members: [],
@@ -242,6 +245,13 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+
+    getData(e, i) {
+      console.log(i);
+      this.contributions[i].pledges = this.pledges.filter(
+        pledge => pledge.person_id === e.value
+      );
     },
 
     addMoreRecords() {

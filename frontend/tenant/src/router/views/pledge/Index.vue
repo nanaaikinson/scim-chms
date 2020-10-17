@@ -38,6 +38,9 @@
             </template>
             <Column field="id" header="ID" sortable></Column>
             <Column field="title" header="Title" sortable></Column>
+            <Column field="person" header="Person" sortable></Column>
+            <Column field="paid" header="Paid" sortable></Column>
+            <Column field="balance" header="Balance" sortable></Column>
             <Column field="amount" header="Amount" sortable>
               <template #body="slotProps">
                 <small>{{ currency }}</small>

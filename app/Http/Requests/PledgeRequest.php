@@ -25,6 +25,7 @@ class PledgeRequest extends FormRequest
   {
     return [
       "title" => "required",
+      "person_id" => "required|exists:people,id",
       "amount" => "required|regex:/^\d+(\.\d{1,2})?$/"
     ];
   }
