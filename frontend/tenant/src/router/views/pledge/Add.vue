@@ -36,6 +36,20 @@
                 />
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="person">Person *</label>
+                <Dropdown
+                  v-model="person_id"
+                  :options="members"
+                  :filter="true"
+                  optionLabel="name"
+                  optionValue="id"
+                  placeholder="Select Person"
+                  class="form-control"
+                />
+              </div>
+            </div>
 
             <div class="col-md-6">
               <div class="form-group">
@@ -65,15 +79,22 @@
 <script>
 import { addBtnLoading, removeBtnLoading } from "@services/helpers";
 import Pledge from "@services/api/pledge";
+import Member from "@services/api/people";
 import Swal from "sweetalert2";
+import Dropdown from "primevue/dropdown";
 
 export default {
   name: "PledgeAdd",
+  components: {
+    Dropdown
+  },
   data() {
     return {
       title: "",
       amount: 0,
-      purpose: ""
+      purpose: "",
+      person_id: "",
+      members: []
     };
   },
   methods: {
@@ -85,7 +106,8 @@ export default {
         const formData = {
           title: this.title,
           amount: this.amount,
-          purpose: this.purpose
+          purpose: this.purpose,
+          person_id: this.person_id
         };
         const response = await Pledge.store(formData);
         const res = response.data;
@@ -106,7 +128,21 @@ export default {
         }
         formMsg.innerHTML = `<div class="alert alert-danger">${errorBag}</div>`;
       }
+    },
+    //fetch members
+    async getMembers() {
+      try {
+        const response = await Member.members();
+        const res = response.data;
+        console.log(res);
+        this.members = res.data;
+      } catch (error) {
+        console.log(error);
+      }
     }
+  },
+  async created() {
+    await this.getMembers();
   }
 };
 </script>
