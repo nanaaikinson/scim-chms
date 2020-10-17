@@ -358,8 +358,7 @@ class PersonController extends Controller
 
   public function members()
   {
-    $members = Person::select("id", DB::raw('CONCAT(first_name, " ", last_name) AS name'))
-      ->with("avatar")
+    $members = Person::with("avatar")
       ->get()->map(function ($person) {
         $avatar = $person->avatar ? getenv("APP_URL") . "/" . $person->avatar->url : "";
         return [

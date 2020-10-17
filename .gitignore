@@ -21,3 +21,4 @@ storage/.DS_Store
 storage/oauth-private.key
 storage/oauth-private.key
 /public/assets/
+resources/views/tenant/index.blade.php
