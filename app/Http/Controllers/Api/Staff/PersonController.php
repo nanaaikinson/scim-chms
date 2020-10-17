@@ -19,6 +19,7 @@ use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -134,11 +135,12 @@ class PersonController extends Controller
 
         // Family
         if ($request->family) {
-          if ($request->family > 0) {
+          if ((int)$request->family > 0) {
             FamilyPerson::create(["family_id" => $request->family, "person_id" => $person->id, "relation" => $request->relation]);
           } else {
             $fam = Family::create(["name" => $person->last_name, "mask" => generate_mask()]);
-            FamilyPerson::create(["family_id" => $fam->id, "person_id" => $person->id, "relation" => $request->relation]);
+            $famP = FamilyPerson::create(["family_id" => $fam->id, "person_id" => $person->id, "relation" => $request->relation]);
+            dd($famP);
           }
         }
 
@@ -371,7 +373,7 @@ class PersonController extends Controller
     return $this->dataResponse($members);
   }
 
-  public function details(int $mask)
+  public function details(int $mask): JsonResponse
   {
     try {
       $person = Person::with("groups")->with("familyPersons")
@@ -388,13 +390,13 @@ class PersonController extends Controller
       $familyId = $person->familyPersons->isNotEmpty() ? $person->familyPersons[0]->family_id : null;
       $familyMembers = [];
 
+
       if ($familyId) {
         $familyMembers = FamilyPerson::with("person")->where("family_id", $familyId)
-          ->where("person_id", "<>", $person->id)
           ->get()
           ->map(function ($familyPerson) {
             return [
-              "name" => "{$familyPerson->person->first_name} {$familyPerson->person->last_name}",
+              "name" => $familyPerson->person->name,
               "relation" => $familyPerson->relation,
               "mask" => $familyPerson->person->mask,
               "avatar" => $familyPerson->person->avatar ? url("/") . $familyPerson->person->avatar->url : "",
