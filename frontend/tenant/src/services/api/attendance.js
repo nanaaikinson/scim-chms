@@ -1,5 +1,5 @@
 import Axios from "./axios";
-import {apiURL} from "@services/api/axios";
+import { apiURL } from "@services/api/axios";
 
 export default {
   all() {
@@ -18,9 +18,9 @@ export default {
     return Axios.delete(apiURL + "staff/attendance/" + mask);
   },
   download(mask) {
-    return Axios.get(`${apiURL}/staff/attendance/${mask}/download`);
+    return Axios.get(`${apiURL}staff/attendance/${mask}/download`);
   },
   template(params) {
     return Axios.get(apiURL + "staff/attendance/template", params);
-  },
+  }
 };

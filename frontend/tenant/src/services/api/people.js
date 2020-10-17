@@ -1,5 +1,5 @@
 import axios from "./axios";
-import {apiURL} from "@services/api/axios";
+import { apiURL } from "@services/api/axios";
 
 export default {
   all() {
@@ -25,16 +25,19 @@ export default {
   },
   person: {
     details(mask) {
-      return axios.get(apiURL + "staff/people/" + mask + "details");
+      return axios.get(apiURL + "staff/people/" + mask + "/details");
     },
     attendance(mask, params) {
-      return axios.get(apiURL + "staff/people/" + mask + "attendance", params);
+      return axios.get(apiURL + "staff/people/" + mask + "/attendance", params);
     },
     followUp(mask, params) {
-      return axios.get(apiURL + "staff/people/" + mask + "follow-ups", params);
+      return axios.get(apiURL + "staff/people/" + mask + "/follow-ups", params);
     },
     contributions(mask, params) {
-      return axios.get(apiURL + "staff/people/" + mask + "contributions", params);
-    },
-  },
+      return axios.get(
+        apiURL + "staff/people/" + mask + "/contributions",
+        params
+      );
+    }
+  }
 };

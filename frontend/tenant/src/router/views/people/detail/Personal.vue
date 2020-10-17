@@ -20,17 +20,19 @@
           <div class="card-body">
             <div class="form-group mb-4">
               <label for class="d-block font-weight-bold">Full Name</label>
-              <p>{{ person.first_name }} {{ person.middle_name }} {{ person.last_name }}</p>
+              <p>
+                {{ person.first_name }} {{ person.middle_name }}
+                {{ person.last_name }}
+              </p>
             </div>
 
             <div class="form-row">
               <div class="form-group col-md-6 mb-4">
                 <label class="d-block font-weight-bold">
                   Birthdate
-                  <span
-                    class="font-weight-normal"
-                    v-if="person.age"
-                  >({{ person.age }} years old)</span>
+                  <span class="font-weight-normal" v-if="person.age"
+                    >({{ person.age }} years old)</span
+                  >
                 </label>
                 <p>{{ person.date_of_birth || "----" }}</p>
                 <p></p>
@@ -68,8 +70,10 @@
           <div class="card-body">
             <div class="form-row">
               <div class="form-group col-md-6 mb-4">
-                <label class="d-block font-weight-bold">Membership Status</label>
-                <p>{{ person.member_status}}</p>
+                <label class="d-block font-weight-bold"
+                  >Membership Status</label
+                >
+                <p>{{ person.member_status }}</p>
               </div>
 
               <div class="form-group col-md-6 mb-4">
@@ -79,7 +83,7 @@
 
               <div class="form-group col-md-6 mb-4">
                 <label class="d-block font-weight-bold">Baptised</label>
-                <p>{{ person.baptism_date ? "Yes": "No" }}</p>
+                <p>{{ person.baptism_date ? "Yes" : "No" }}</p>
               </div>
 
               <div class="form-group col-md-6 mb-4">
@@ -98,13 +102,17 @@
           <div class="card-body">
             <div class="form-row">
               <div class="form-group col-md-6 mb-4">
-                <label class="d-block font-weight-bold">Primary Telephone</label>
+                <label class="d-block font-weight-bold"
+                  >Primary Telephone</label
+                >
                 <p>{{ person.primary_telephone || "----" }}</p>
                 <p></p>
               </div>
 
               <div class="form-group col-md-6 mb-4">
-                <label class="d-block font-weight-bold">Secondary Telephone</label>
+                <label class="d-block font-weight-bold"
+                  >Secondary Telephone</label
+                >
                 <p>{{ person.secondary_telephone || "----" }}</p>
                 <p></p>
               </div>
@@ -130,8 +138,14 @@
               <label class="d-block font-weight-bold">Groups</label>
 
               <ul class="list-inline">
-                <li class="list-inline-item" v-for=" (group, i) in person.groups" :key="i">
-                  <span class="badge badge-pill badge-light px-3">{{ group.name }}</span>
+                <li
+                  class="list-inline-item"
+                  v-for="(group, i) in person.groups"
+                  :key="i"
+                >
+                  <span class="badge badge-pill badge-light px-3">{{
+                    group.name
+                  }}</span>
                 </li>
               </ul>
             </div>
@@ -153,18 +167,27 @@
                 <li v-for="(member, i) in person.family" :key="i">
                   <div class="d-flex">
                     <div class="pr-2 avatar avatar-xl">
-                      <img class="avatar-img" :src="member.avatar || defaultAvatar" alt />
+                      <img
+                        class="avatar-img"
+                        :src="member.avatar || defaultAvatar"
+                        alt
+                      />
                     </div>
 
                     <div class="d-flex flex-column justify-content-center">
                       <div class>
                         <p>
                           <router-link
-                            :to="{name: 'PersonDetail', params: { mask: member.mask } }"
-                            v-slot="{href}"
+                            :to="{
+                              name: 'PersonDetail',
+                              params: { mask: member.mask }
+                            }"
+                            v-slot="{ href }"
+                            v-if="member.mask !== person.mask"
                           >
                             <a :href="href">{{ member.name }}</a>
                           </router-link>
+                          <span v-else>{{ member.name }}</span>
                         </p>
                       </div>
                       <div>
@@ -189,7 +212,7 @@ export default {
   computed: {
     defaultAvatar() {
       return this.$store.getters.defaultAvatar;
-    },
-  },
+    }
+  }
 };
 </script>

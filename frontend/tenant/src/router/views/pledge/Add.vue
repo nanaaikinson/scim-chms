@@ -115,11 +115,11 @@ export default {
         Swal.fire("Success", res.message, "success");
         this.$router.push({ name: "pledge" });
       } catch (err) {
-        const res = err.response.data;
+        const res = err.response;
         let errorBag = "";
-        if (res.code === 422) {
+        if (res.status === 422) {
           removeBtnLoading(btn);
-          const errorData = Object.values(res.errors);
+          const errorData = Object.values(res.data.errors);
           errorData.map(error => {
             errorBag += `<span class="d-block">${error}</span>`;
           });
@@ -134,7 +134,6 @@ export default {
       try {
         const response = await Member.members();
         const res = response.data;
-        console.log(res);
         this.members = res.data;
       } catch (error) {
         console.log(error);
