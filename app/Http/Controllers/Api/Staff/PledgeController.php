@@ -45,6 +45,7 @@ class PledgeController extends Controller
         "amount" => $validated->amount,
         "purpose" => $validated->purpose ?: NULL,
         "person_id" => $validated->person_id,
+        "comments" => $request->input("comments") ?: NULL,
         "mask" => generate_mask(),
       ]);
 
@@ -66,7 +67,8 @@ class PledgeController extends Controller
         "title" => $pledge->title,
         "amount" => $pledge->amount,
         "purpose" => $pledge->purpose,
-        "person_id" => $pledge->person_id
+        "person_id" => $pledge->person_id,
+        "comments" => $pledge->comments,
       ]);
     } catch (ModelNotFoundException $e) {
       return $this->notFoundResponse("No data found for this pledge");
@@ -85,6 +87,7 @@ class PledgeController extends Controller
       $pledge->amount = $validated->amount;
       $pledge->purpose = $validated->purpose ?: NULL;
       $pledge->person_id = $validated->person_id;
+      $pledge->comments = $request->input("comments") ?: NULL;
 
       if ($pledge->save()) {
         return $this->successResponse("Pledge updated successfully");

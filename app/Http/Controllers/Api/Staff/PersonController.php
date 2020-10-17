@@ -359,7 +359,7 @@ class PersonController extends Controller
   public function members()
   {
     $members = Person::with("avatar")
-      ->get()->map(function ($person) { 
+      ->get()->map(function ($person) {
         $avatar = $person->avatar ? getenv("APP_URL") . "/" . $person->avatar->url : "";
         return [
           "id" => $person->id,
