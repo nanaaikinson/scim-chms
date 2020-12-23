@@ -25,7 +25,7 @@ class PledgeController extends Controller
           "amount" => $pledge->amount,
           "purpose" => $pledge->purpose,
           "person_id" => $pledge->person_id,
-          "person" => $pledge->person->name,
+          "person" => $pledge->person ? $pledge->person->name : "",
           "paid" => $pledge->paid,
           "balance" => $pledge->balance,
         ];
