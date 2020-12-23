@@ -7,4 +7,3 @@ Route::prefix("branches")->group(function() {
 });
 
 Route::post("/prayer-request", "Api\Admin\PrayerRequestController@store");
-
