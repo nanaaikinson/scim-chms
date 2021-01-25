@@ -349,7 +349,7 @@ export default {
     async submitReport() {
       const btn = this.$refs.submitBtn;
       try {
-        if (!this.form.group_id) {
+        if (this.form.for === 2 && !this.form.group_id) {
           Swal.fire("", "All fields marked * are required", "info");
           return;
         }
@@ -425,6 +425,8 @@ export default {
           const response = await Groups.all();
           const { data: res } = response.data;
           this.groups = res;
+        } else {
+          this.form.group_id = "";
         }
 
         // this.form.group_id = value;
