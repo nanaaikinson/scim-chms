@@ -19,6 +19,9 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
 
 Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(function () {
   Route::get("/", "SpaController@tenant");
+  Route::get("/current", function () {
+    dd(tenant());
+  });
 
   // Staff API routes
   Route::prefix("/staff")->middleware(["json.response"])->group(function () {
@@ -265,6 +268,11 @@ Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(
           Route::put("/", "Api\Staff\SettingController@updateCurrency");
         });
       });
+
+      ### Pastor's Report
+      Route::prefix("pastors-report")->group(function() {
+        Route::post("/", "Api\Staff\Report\PastorReportController@store");
+      });
     });
   });
 
@@ -277,6 +285,4 @@ Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(
     Route::get("/contributions", "Faker\ContributionFakerController@index");
     Route::get("/pledges", "Faker\PledgeFakerController@index");
   });
-
-
 });
