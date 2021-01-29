@@ -211,7 +211,7 @@ export default {
       years: [],
       reportTypes: [
         { value: 1, name: "Chart" },
-        { value: 2, name: "Accumulation" },
+        { value: 2, name: "Accumulation" }
       ],
       categories: [
         { value: "all", name: "All" },
@@ -225,7 +225,7 @@ export default {
         { value: 8, name: "Evangelism" },
         { name: "Transport And Fuel", value: 9 },
         { name: "Administrative And Stationery", value: 10 },
-        { name: "Miscellaneous", value: 11 },
+        { name: "Miscellaneous", value: 11 }
       ],
       form: {
         category: "all",
@@ -233,20 +233,20 @@ export default {
         duration: 1,
         report_type: 2,
         from: null,
-        to: null,
+        to: null
       },
       dateConfig: {
         date: {
-          allowInput: true,
-        },
+          allowInput: true
+        }
       },
-      resultJsonData: [],
+      resultJsonData: []
     };
   },
   computed: {
     currency() {
       return this.$store.getters.currency;
-    },
+    }
   },
   methods: {
     renderReport(e) {
@@ -261,7 +261,7 @@ export default {
         date:
           this.form.duration === 3 || this.form.duration === 2
             ? dayjs(this.form.date).format("YYYY-MM-DD")
-            : this.form.date,
+            : this.form.date
       };
 
       if (this.form.duration === 5) {
@@ -272,7 +272,7 @@ export default {
       addBtnLoading(btn);
 
       Report.expenses({ params: formData })
-        .then((response) => {
+        .then(response => {
           const res = response.data;
           if (Object.entries(res.data).length === 0 || res.data.length === 0) {
             document.querySelector(
@@ -286,7 +286,7 @@ export default {
           //this.reportTitleGenerator();
           this.reportGenerator(res.data, formData.type);
         })
-        .catch((err) => console.log(err))
+        .catch(err => console.log(err))
         .finally(() => {
           removeBtnLoading(btn);
         });
@@ -297,7 +297,7 @@ export default {
       let params = this.form;
 
       const catIndex = this.categories.findIndex(
-        (record) => record.value === params.category
+        record => record.value === params.category
       );
       const { name: categoryName } = this.categories[catIndex];
       if (params.type === 2) {
@@ -337,12 +337,12 @@ export default {
       exportBtn.className = "btn btn-primary export-btn";
       exportBtn.textContent = "Export";
 
-      const tableData = items.map((element) => {
+      const tableData = items.map(element => {
         const jsonData = {
           Name: element.name,
           Amount: `${this.currency + "" + element.amount}`,
           Date: element.date,
-          Type: element.type,
+          Type: element.type
         };
 
         resultJsonData.push(jsonData);
@@ -350,7 +350,7 @@ export default {
           element.name,
           `${this.currency + "" + element.amount}`,
           element.date,
-          element.type,
+          element.type
         ];
       });
 
@@ -359,8 +359,8 @@ export default {
         data: tableData,
         fixedHeader: true,
         search: {
-          enabled: true,
-        },
+          enabled: true
+        }
       };
 
       if (items.length > 10) {
@@ -381,7 +381,7 @@ export default {
         try {
           json2excel({
             data: resultJsonData,
-            name: "Expense-report",
+            name: "Expense-report"
           });
         } catch (err) {
           console.log(err);
@@ -414,24 +414,24 @@ export default {
               series: [{ name: `Expense (${this.currency})`, data: [] }],
               chart: {
                 type: "bar",
-                height: 350,
+                height: 350
               },
               plotOptions: {},
               dataLabels: {
-                enabled: true,
+                enabled: true
               },
               xaxis: {
-                categories: [],
+                categories: []
               },
               yaxis: {
                 title: {
-                  text: `Expense Amount (${this.currency})`,
-                },
-              },
+                  text: `Expense Amount (${this.currency})`
+                }
+              }
             };
 
             // Set chart values
-            data.forEach((element) => {
+            data.forEach(element => {
               options.series[0].data.push(element.total);
               options.xaxis.categories.push(element.name);
             });
@@ -454,7 +454,7 @@ export default {
             series: [{ name: `Expense (${this.currency})`, data: [] }],
             chart: {
               type: "bar",
-              height: 350,
+              height: 350
             },
             plotOptions: {
               // bar: {
@@ -462,20 +462,20 @@ export default {
               // },
             },
             dataLabels: {
-              enabled: true,
+              enabled: true
             },
             xaxis: {
-              categories: [],
+              categories: []
             },
             yaxis: {
               title: {
-                text: `Expense Amount (${this.currency})`,
-              },
-            },
+                text: `Expense Amount (${this.currency})`
+              }
+            }
           };
 
           // Set chart values
-          items.forEach((element) => {
+          items.forEach(element => {
             options.series[0].data.push(element.total);
             options.xaxis.categories.push(element.name);
           });
@@ -488,13 +488,13 @@ export default {
       } else {
         this.renderAccumulationReport(results.results);
       }
-    },
+    }
   },
   created() {
     const currentYear = new Date().getFullYear();
     const startYear = 1970;
 
     for (let i = currentYear; i >= startYear; i--) this.years.push(i);
-  },
+  }
 };
 </script>

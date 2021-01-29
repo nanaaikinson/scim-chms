@@ -48,7 +48,7 @@
                             style="margin-top: -8px;"
                             class="btn btn-danger btn-icon-28 ml-auto"
                             type="button"
-                            @click="RemoveRecord"
+                            @click="RemoveRecord(i)"
                             v-if="expenses.length > 1 && i !== 0"
                             v-tooltip.top="'Remove'"
                           >
@@ -176,7 +176,7 @@ export default {
         { name: "Evangelism", id: 8 },
         { name: "Transport And Fuel", id: 9 },
         { name: "Administrative And Stationery", id: 10 },
-        { name: "Miscellaneous", id: 11 },
+        { name: "Miscellaneous", id: 11 }
       ]
     };
   },
@@ -232,8 +232,8 @@ export default {
         date: ""
       });
     },
-    RemoveRecord() {
-      this.expenses.pop();
+    RemoveRecord(index) {
+      this.expenses.splice(index, 1);
     }
   }
 };

@@ -10,5 +10,8 @@ export default {
   },
   expenses(params) {
     return axios.get(apiURL + "staff/reports/expenses", params);
+  },
+  pastor(params) {
+    return axios.post(apiURL + "staff/reports/expenses", params);
   }
 };

@@ -163,6 +163,9 @@ function hasAccess(name) {
     case "ReportContribution":
       return permissions.includes("view-contributions-report");
 
+    case "pastor-report":
+      return permissions.includes("view-contributions-report");
+
     case "tickets":
       return true;
 

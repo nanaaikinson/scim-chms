@@ -8,16 +8,16 @@ const contribution = {
           comment: "",
           date: "",
           person: "",
-          method: 1,
-        },
+          method: 1
+        }
       ],
       members: [],
       methods: [
         { name: "Cash", id: 1 },
         { name: "Cheque", id: 2 },
         { name: "Online", id: 3 },
-        { name: "Mobile Money", id: 4 },
-      ],
+        { name: "Mobile Money", id: 4 }
+      ]
     };
   },
 
@@ -39,17 +39,17 @@ const contribution = {
         comment: "",
         date: "",
         person: "",
-        method: 1,
+        method: 1
       });
     },
-    RemoveRecord() {
-      this.contributions.pop();
-    },
+    RemoveRecord(index) {
+      this.contributions.splice(index, 1);
+    }
   },
 
   async created() {
     await this.getMembers();
-  },
+  }
 };
 
 export default contribution;
