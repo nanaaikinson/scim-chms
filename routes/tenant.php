@@ -18,8 +18,8 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
 */
 
 Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(function () {
-  Route::get("/", "SpaController@tenant");
   Route::get("/current", "Api\Staff\Report\PastorReportController@tenant");
+  Route::get("/", "SpaController@tenant");
 
   // Staff API routes
   Route::prefix("/staff")->middleware(["json.response"])->group(function () {
