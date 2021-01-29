@@ -50,7 +50,7 @@
                             style="margin-top: -8px;"
                             class="btn btn-danger btn-icon-28 ml-auto"
                             type="button"
-                            @click="RemoveRecord"
+                            @click="RemoveRecord(i)"
                             v-if="contributions.length > 1 && i !== 0"
                             v-tooltip.top="'Remove'"
                           >
@@ -254,8 +254,8 @@ export default {
         method: 1
       });
     },
-    RemoveRecord() {
-      this.contributions.pop();
+    RemoveRecord(index) {
+      this.contributions.splice(index, 1);
     }
   },
   async created() {

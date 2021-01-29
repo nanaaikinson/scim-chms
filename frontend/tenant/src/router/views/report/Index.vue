@@ -56,6 +56,23 @@
               </div>
             </router-link>
           </div>
+
+          <div class="col-md-3">
+            <router-link
+              v-can="'view-contributions-report'"
+              :to="{ name: 'pastor-report' }"
+              style="color: inherit"
+            >
+              <div class="border py-5">
+                <div class="d-flex justify-content-center align-items-center">
+                  <div class="text-center">
+                    <i class="pi pi-user pb-2" style="fontSize: 3rem"></i>
+                    <p class="display-5">Pastor's Report</p>
+                  </div>
+                </div>
+              </div>
+            </router-link>
+          </div>
         </div>
       </div>
     </div>

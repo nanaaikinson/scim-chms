@@ -28,6 +28,14 @@ export default [
         }
       },
       {
+        path: "pastor-report",
+        name: "pastor-report",
+        component: () => import("@views/report/pastor-report/Index.vue"),
+        meta: {
+          requiresAuth: true
+        }
+      },
+      {
         path: "contributions",
         name: "ReportContribution",
         component: () => import("@views/report/contribution/Index.vue"),
