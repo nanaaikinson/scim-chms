@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Staff\Report;
 
+use App\Classes\FileManagerTenancy;
 use App\Http\Controllers\Controller;
 use App\Models\PastorReport;
 use App\Traits\ResponseTrait;
@@ -37,7 +38,12 @@ class PastorReportController extends Controller
 
       if ($report) {
         if ($request->hasFile("file")) {
-
+          $file = FileManagerTenancy::uploadFile($request->file("file"), "reports", null, "central");
+          $report->update([
+            "url" => $file->url,
+            "filename" => $file->path,
+            "filepath" => $file->path,
+          ]);
         }
 
         DB::commit();
@@ -49,10 +55,5 @@ class PastorReportController extends Controller
       DB::rollBack();
       return $this->errorResponse($e->getMessage());
     }
-  }
-
-  public function tenant()
-  {
-    dd(tenant());
   }
 }
