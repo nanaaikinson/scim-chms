@@ -18,7 +18,6 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByPath;
 */
 
 Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(function () {
-  Route::get("/current", "Api\Staff\Report\PastorReportController@tenant");
   Route::get("/", "SpaController@tenant");
 
   // Staff API routes
@@ -239,6 +238,7 @@ Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(
         Route::get("/attendance", "Api\Staff\Report\AttendanceReportController@index")->middleware("permission:view-attendance-report,guard:api");
         Route::get("/expenses", "Api\Staff\Report\ExpenseReportController@index")->middleware("permission:view-expenses-report,guard:api");
         Route::get("/contributions", "Api\Staff\Report\ContributionReportController@index")->middleware("permission:view-contributions-report,guard:api");
+        Route::get("/pastor-report", "Api\Staff\Report\PastorReportController@store");
       });
 
       ### User Profile
