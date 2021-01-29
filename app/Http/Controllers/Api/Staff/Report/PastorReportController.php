@@ -50,4 +50,9 @@ class PastorReportController extends Controller
       return $this->errorResponse($e->getMessage());
     }
   }
+
+  public function tenant()
+  {
+    dd(tenant());
+  }
 }
