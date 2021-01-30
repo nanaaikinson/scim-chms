@@ -21,7 +21,7 @@ class PastorReportController extends Controller
       $validator = Validator::make($request->all(), [
         "file" => "required|mimes:pdf",
         "type" => "required|in:monthly,yearly",
-        "date" => "required|date|date_format:y-m-d",
+        "date" => "required|date|date_format:Y-m-d",
       ]);
       if ($validator->fails()) {
         return $this->validationResponse($validator->errors());
