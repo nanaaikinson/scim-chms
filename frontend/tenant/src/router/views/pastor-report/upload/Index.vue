@@ -20,6 +20,30 @@
                   v-model.trim="title"
                 />
               </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="name">Type *</label>
+                <select class="form-control" v-model="type">
+                  <option value="">Select</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="name">Date *</label>
+                <flat-pickr
+                  v-model="date"
+                  placeholder="Select Date"
+                  name="date"
+                  id="date"
+                  class="form-control bg-white"
+                ></flat-pickr>
+              </div>
+            </div>
+            <div class="col-md-6">
               <div class="form-group">
                 <label for="file">File *</label>
                 <input
@@ -33,12 +57,9 @@
                 />
               </div>
             </div>
-            <div class="col-md-6"></div>
           </div>
-          <div class="">
-            <div class="form-group mt-5">
-              <button class="btn btn-success px-5" ref="submitBtn">Save</button>
-            </div>
+          <div class="text-center mt-5">
+            <button class="btn btn-success px-5" ref="submitBtn">Save</button>
           </div>
         </form>
       </div>
@@ -48,14 +69,21 @@
 
 <script>
 import { addBtnLoading, removeBtnLoading } from "@services/helpers";
-import PastorReport from "@services/api/reports";
+import PastorReport from "@services/api/pastor-report";
 import Swal from "sweetalert2";
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
 
 export default {
   name: "PastorReport",
+  components: {
+    flatPickr
+  },
   data() {
     return {
-      title: ""
+      title: "",
+      type: "",
+      date: ""
     };
   },
   methods: {
@@ -67,12 +95,15 @@ export default {
         const formData = new FormData();
         const file = this.$refs.file;
         formData.append("title", this.title);
+        formData.append("type", this.type);
+        formData.append("date", this.date);
         formData.append("file", file.files[0]);
-        const response = await PastorReport.pastor(formData);
+        const response = await PastorReport.store(formData);
         const res = response.data;
         Swal.fire("Success", res.message, "success");
-        this.$router.push({ name: "ReportContribution" });
+        this.$router.push({ name: "download-pastor-report" });
       } catch (err) {
+        console.log(err);
         const res = err.response.data;
         let errorBag = "";
         if (res.code === 422) {

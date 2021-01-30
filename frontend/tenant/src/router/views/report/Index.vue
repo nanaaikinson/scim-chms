@@ -57,7 +57,7 @@
             </router-link>
           </div>
 
-          <div class="col-md-3">
+          <!-- <div class="col-md-3">
             <router-link
               v-can="'view-contributions-report'"
               :to="{ name: 'pastor-report' }"
@@ -72,7 +72,7 @@
                 </div>
               </div>
             </router-link>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
