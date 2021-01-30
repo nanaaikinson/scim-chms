@@ -31,6 +31,7 @@ class PastorReportController extends Controller
         "date" => $report->type == "monthly" ? date("F Y", strtotime($report->date)) : date("Y", strtotime($report->date)),
         "download_link" => $downloadLink,
         "file_url" => Storage::disk("central")->url($report->filepath),
+        "created_at" => $report->created_at,
       ];
     });
 
