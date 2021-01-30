@@ -5,6 +5,7 @@ import pledgeRoutes from "./pledge";
 import importRoutes from "./imports";
 import branchesRoutes from "./branches";
 import ticketsRoutes from "./ticket";
+import pastorRoutes from "./pastor";
 
 export default [
   {
@@ -265,7 +266,8 @@ export default [
       ...reportRoutes,
       ...importRoutes,
       ...branchesRoutes,
-      ...ticketsRoutes
+      ...ticketsRoutes,
+      ...pastorRoutes
     ]
   },
   {

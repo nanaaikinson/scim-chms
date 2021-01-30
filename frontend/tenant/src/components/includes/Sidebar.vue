@@ -206,6 +206,41 @@
           </router-link>
         </li>
 
+        <li class="nav-item" v-can="'read-contribution'">
+          <a
+            id="pastor-report-collapse-btn"
+            class="nav-link"
+            data-toggle="collapse"
+            href="#pastor-report"
+            role="button"
+            aria-expanded="false"
+            aria-controls="pastor-report"
+          >
+            <i class="link-icon pi pi-user"></i>
+            <span class="link-title">Pastor's Report</span>
+            <i class="link-arrow pi pi-angle-down"></i>
+          </a>
+          <div class="collapse" id="pastor-report">
+            <ul class="nav sub-menu">
+              <li class="nav-item">
+                <router-link
+                  :to="{ name: 'pastor-report' }"
+                  v-can="'read-contribution'"
+                  class="nav-link"
+                  >Upload Pastor's Report</router-link
+                >
+              </li>
+              <li class="nav-item">
+                <router-link
+                  :to="{ name: 'download-pastor-report' }"
+                  v-can="'read-role'"
+                  class="nav-link"
+                  >Download Pastor's Report</router-link
+                >
+              </li>
+            </ul>
+          </div>
+        </li>
         <li class="nav-item" v-can="'read-role' || 'read-user'">
           <a
             id="users-role-collapse-btn"
@@ -285,6 +320,7 @@ export default {
     new BSN.Collapse("#users-role-collapse-btn");
     new BSN.Collapse("#contributions-collapse-btn");
     new BSN.Collapse("#import-collapse-btn");
+    new BSN.Collapse("#pastor-report-collapse-btn");
     // new BSN.Collapse("#settings-collapse-btn");
   }
 };

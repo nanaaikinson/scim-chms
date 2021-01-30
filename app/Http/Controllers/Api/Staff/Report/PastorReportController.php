@@ -19,13 +19,13 @@ class PastorReportController extends Controller
 
   public function index(Request $request): JsonResponse
   {
-    $reports = PastorReport::all()->map(function ($report) {
+    $reports = PastorReport::where('tenant', tenant('id'))->get()->map(function ($report) {
       $downloadLink = config("app.url") . "/pastors-report/download/{$report->id}";
 
       return [
         "id" => $report->id,
-        "tenant" => $report->tenant,
-        "user" => $report->usr,
+        "tenant" => ucfirst($report->tenant),
+        "user" => $report->user,
         "type" => ucfirst($report->type),
         "title" => $report->title,
         "date" => $report->type == "monthly" ? date("F Y", strtotime($report->date)) : date("Y", strtotime($report->date)),
@@ -52,7 +52,7 @@ class PastorReportController extends Controller
 
       DB::beginTransaction();
       $report = PastorReport::create([
-        "tenant" => "",
+        "tenant" => tenant('id'),
         "user" => $request->user()->name,
         "title" => $request->input("title"),
         "type" => $request->input("type"),
