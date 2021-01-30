@@ -6,14 +6,36 @@ use App\Classes\FileManagerTenancy;
 use App\Http\Controllers\Controller;
 use App\Models\PastorReport;
 use App\Traits\ResponseTrait;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PastorReportController extends Controller
 {
   use ResponseTrait;
+
+  public function index(Request $request): JsonResponse
+  {
+    $reports = PastorReport::all()->map(function ($report) {
+      $downloadLink = config("app.url") . "/pastors-report/download/{$report->id}";
+
+      return [
+        "id" => $report->id,
+        "tenant" => $report->tenant,
+        "user" => $report->usr,
+        "type" => ucfirst($report->type),
+        "title" => $report->title,
+        "date" => $report->type == "monthly" ? date("F Y", strtotime($report->date)) : date("Y", strtotime($report->date)),
+        "download_link" => $downloadLink,
+        "file_url" => Storage::disk("central")->url($report->filepath),
+      ];
+    });
+
+    return $this->dataResponse($reports);
+  }
 
   public function store(Request $request): JsonResponse
   {
@@ -54,6 +76,39 @@ class PastorReportController extends Controller
     } catch (\Exception $e) {
       DB::rollBack();
       return $this->errorResponse($e->getMessage());
+    }
+  }
+
+  public function destroy($id): JsonResponse
+  {
+    try {
+      $report = PastorReport::findOrFail($id);
+      $report->delete();
+      FileManagerTenancy::deleteFile($report->filepath, "central");
+
+      return $this->successResponse("Report deleted successfully.");
+    }
+    catch (ModelNotFoundException $e) {
+      return $this->notFoundResponse();
+    }
+    catch (\Exception $e) {
+      return $this->errorResponse($e->getMessage());
+    }
+  }
+
+  public function downloadReport($id)
+  {
+    try {
+      $report = PastorReport::findOrFail($id);
+
+      $file = Storage::disk("central")->get($report->filepath);
+      return response()->download($file);
+    }
+    catch (ModelNotFoundException $e) {
+      return "";
+    }
+    catch (\Exception $e) {
+      return "";
     }
   }
 }

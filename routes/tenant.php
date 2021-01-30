@@ -269,6 +269,7 @@ Route::prefix("/{tenant}")->middleware([InitializeTenancyByPath::class])->group(
 
       ### Pastor's Report
       Route::prefix("pastors-report")->group(function() {
+        Route::get("/", "Api\Staff\Report\PastorReportController@index");
         Route::post("/", "Api\Staff\Report\PastorReportController@store");
       });
     });
