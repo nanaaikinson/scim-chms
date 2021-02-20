@@ -50,6 +50,7 @@ class BackupTenantDBJob implements ShouldQueue
         if (Storage::disk("public")->exists($filename)) {
           $contents = Storage::disk("public")->get($filename);
           Storage::disk("s3")->put("tenants/", $contents);
+          Storage::disk("public")->delete($filename);
         }
       }
       catch (\Exception $e) {
