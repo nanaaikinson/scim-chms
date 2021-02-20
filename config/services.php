@@ -33,4 +33,8 @@ return [
   'sendgrid' => [
     'api_key' => env('SENDGRID_API_KEY'),
   ],
+
+  'wp' => [
+    "api_url" => env('WP_API_URL'),
+  ]
 ];

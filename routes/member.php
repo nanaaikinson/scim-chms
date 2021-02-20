@@ -16,4 +16,5 @@ Route::middleware(["json.response"])->group(function () {
 
   Route::get("/sermons", "SermonController@sermons");
   Route::post("/prayer-request", "PrayerRequestController@store");
+  Route::get("/events", "EventController@index");
 });
