@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::view("/", "welcome");
+Route::get("/", function () {
+  return "App";
+});
 
 Route::get("pastors-report/download/{id}", "Api\Staff\Report\PastorReportController@index");
 
