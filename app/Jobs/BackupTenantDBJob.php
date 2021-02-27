@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Spatie\DbDumper\Databases\MySql;
 
@@ -51,6 +52,10 @@ class BackupTenantDBJob implements ShouldQueue
           $contents = Storage::disk("public")->get($filename);
           Storage::disk("s3")->put("tenants/", $contents);
           Storage::disk("public")->delete($filename);
+
+          Mail::raw('Backup successful @ '. \Carbon\Carbon::now(), function ($message) {
+            $message->to("nanaaikinson24@gmail.com")->subject("SCIM Scheduled Backup Successful");
+          });
         }
       }
       catch (\Exception $e) {
