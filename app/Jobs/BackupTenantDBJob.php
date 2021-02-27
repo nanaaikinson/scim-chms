@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Mail\BackupFailureMail;
+use App\Mail\BackupSuccessfulMail;
 use App\Tenant;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -34,10 +36,10 @@ class BackupTenantDBJob implements ShouldQueue
    */
   public function handle()
   {
-    $date = Carbon::now()->format("Y-m-d");
+    $date = Carbon::now()->format("Y-m-d_h:i:s");
 
     foreach (Tenant::all()->toArray() as $tenant) {
-      $data = (object) $tenant;
+      $data = (object)$tenant;
       $filename = "{$data->tenancy_db_name}_{$date}.sql";
 
       try {
@@ -49,19 +51,15 @@ class BackupTenantDBJob implements ShouldQueue
 
         if (Storage::disk("public")->exists($filename)) {
           $contents = Storage::disk("public")->get($filename);
-          Storage::disk("s3")->put("tenants/", $contents);
+
+          Storage::disk("s3")->put("ScimChms/{$filename}", $contents);
           Storage::disk("public")->delete($filename);
 
-          Mail::raw('Backup successful @ '. \Carbon\Carbon::now(), function ($message) {
-            $message->to("nanaaikinson24@gmail.com")->subject("SCIM Scheduled Backup Successful");
-          });
+          Mail::to("nanaaikinson24@gmail.com")->send(new BackupSuccessfulMail($data->tenancy_db_name));
         }
-      }
-      catch (\Exception $e) {
-        echo $e->getMessage() . "\n";
-        Mail::raw('Backup error @ '. \Carbon\Carbon::now() . ' : ' . $e->getMessage(), function ($message) {
-          $message->to("nanaaikinson24@gmail.com")->subject("SCIM Scheduled Backup Successful");
-        });
+        continue;
+      } catch (\Exception $e) {
+        Mail::to("nanaaikinson24@gmail.com")->send(new BackupFailureMail($data->tenancy_db_name, $e->getMessage()));
         continue;
       }
     }
