@@ -34,11 +34,10 @@ class BackupTenantDBJob implements ShouldQueue
    */
   public function handle()
   {
-    $tenants = Tenant::all();
     $date = Carbon::now()->format("Y-m-d");
 
-    foreach ($tenants as $tenant) {
-      $data = json_decode($tenant->data);
+    foreach (Tenant::all()->toArray() as $tenant) {
+      $data = (object) $tenant;
       $filename = "{$data->tenancy_db_name}_{$date}.sql";
 
       try {
@@ -59,6 +58,7 @@ class BackupTenantDBJob implements ShouldQueue
         }
       }
       catch (\Exception $e) {
+        echo $e->getMessage() . "\n";
         Mail::raw('Backup error @ '. \Carbon\Carbon::now() . ' : ' . $e->getMessage(), function ($message) {
           $message->to("nanaaikinson24@gmail.com")->subject("SCIM Scheduled Backup Successful");
         });
