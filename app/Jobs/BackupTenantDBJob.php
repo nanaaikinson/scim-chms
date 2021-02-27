@@ -59,7 +59,9 @@ class BackupTenantDBJob implements ShouldQueue
         }
       }
       catch (\Exception $e) {
-        // TODO: send email on failure
+        Mail::raw('Backup error @ '. \Carbon\Carbon::now() . ' : ' . $e->getMessage(), function ($message) {
+          $message->to("nanaaikinson24@gmail.com")->subject("SCIM Scheduled Backup Successful");
+        });
         continue;
       }
     }

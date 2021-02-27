@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
 //      ->onFailure(function () {
 //        dispatch(new BackupFailureJob());
 //      });
-    $schedule->job(new BackupTenantDBJob)->daily()->at('10:50');
+    $schedule->job(new BackupTenantDBJob)->daily()->at('10:57');
   }
 
   /**
