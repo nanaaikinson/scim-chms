@@ -20,23 +20,13 @@ class BackupTenantDBJob implements ShouldQueue
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
   /**
-   * Create a new job instance.
-   *
-   * @return void
-   */
-  public function __construct()
-  {
-    //
-  }
-
-  /**
    * Execute the job.
    *
    * @return void
    */
   public function handle()
   {
-    $date = Carbon::now()->format("Y-m-d_h:i:s");
+    $date = Carbon::now()->format("Y-m-d_h-i-s");
 
     foreach (Tenant::all()->toArray() as $tenant) {
       $data = (object)$tenant;
