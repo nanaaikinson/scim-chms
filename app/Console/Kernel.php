@@ -31,15 +31,7 @@ class Kernel extends ConsoleKernel
     // Back Up of project and sql
     $schedule->command('backup:clean')->daily()->at('10:00');
     $schedule->command('backup:run')->daily()->at('10:30');
-
-//    $schedule->command('backup:run')->daily()->at('10:30')
-//      ->onSuccess(function () {
-//        dispatch(new BackupTenantDBJob());
-//      })
-//      ->onFailure(function () {
-//        dispatch(new BackupFailureJob());
-//      });
-    $schedule->job(new BackupTenantDBJob)->daily()->at('11:40');
+    $schedule->job(new BackupTenantDBJob)->daily()->at('12:20');
   }
 
   /**

@@ -168,6 +168,7 @@ return [
     OwenIt\Auditing\AuditingServiceProvider::class,
     CloudinaryLabs\CloudinaryLaravel\CloudinaryServiceProvider::class,
     Maatwebsite\Excel\ExcelServiceProvider::class,
+    Aws\Laravel\AwsServiceProvider::class,
     /*
      * Application Service Providers...
      */
