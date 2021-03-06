@@ -1,8 +1,13 @@
 <?php
 
+use App\Mail\BackupFailureMail;
+use App\Mail\BackupSuccessfulMail;
 use App\Tenant;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Spatie\DbDumper\Databases\MySql;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +26,18 @@ Route::get("/", function () {
     $data = (object)$tenant;
 
     $filename = "{$data->tenancy_db_name}_{$date}.sql";
-    echo($filename) . "\n";
+
+    try {
+      MySql::create()
+        ->setDbName($data->tenancy_db_name)
+        ->setUserName(config("database.connections.mysql.username"))
+        ->setPassword(config("database.connections.mysql.password"))
+        ->dumpToFile(storage_path("app/public/") . $filename);
+
+      dump("$filename - " .Storage::disk("public")->exists($filename));
+    } catch (\Exception $e) {
+      dump($e->getMessage());
+    }
   }
 
   //return "App";
