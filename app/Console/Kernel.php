@@ -2,8 +2,6 @@
 
 namespace App\Console;
 
-use App\Jobs\BackupFailureJob;
-use App\Jobs\BackupTenantDBJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,7 +13,7 @@ class Kernel extends ConsoleKernel
    * @var array
    */
   protected $commands = [
-    //
+    Commands\TenantBackup::class,
   ];
 
   /**
@@ -31,7 +29,8 @@ class Kernel extends ConsoleKernel
     // Back Up of project and sql
     $schedule->command('backup:clean')->daily()->at('10:00');
     $schedule->command('backup:run')->daily()->at('10:30');
-    $schedule->job(new BackupTenantDBJob)->daily()->at('11:00');
+    $schedule->command('scim:tenant-backup')->daily()->at('11:00');
+    $schedule->command('scim:tenant-backup')->daily()->at('14:40');
   }
 
   /**
