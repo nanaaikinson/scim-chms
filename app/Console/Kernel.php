@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
     $schedule->command('backup:clean')->daily()->at('10:00');
     $schedule->command('backup:run')->daily()->at('10:30');
     $schedule->command('scim:tenant-backup')->daily()->at('11:00');
-    $schedule->command('scim:tenant-backup')->daily()->at('14:40');
+    $schedule->command('scim:tenant-backup')->daily()->at('14:42');
   }
 
   /**
