@@ -1,6 +1,7 @@
 <?php
 
 use App\Tenant;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,13 +15,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get("/", function () {
-  
-  //return "App";
+  $date = Carbon::now()->format("Y-m-d_h-i-s");
+
   foreach (Tenant::all()->toArray() as $tenant) {
     $data = (object)$tenant;
 
-    print_r($data);
+    $filename = "{$data->tenancy_db_name}_{$date}.sql";
+    echo($filename) . "\n";
   }
+
+  //return "App";
 });
 
 Route::get("pastors-report/download/{id}", "Api\Staff\Report\PastorReportController@index");
