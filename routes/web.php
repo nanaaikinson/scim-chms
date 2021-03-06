@@ -1,5 +1,6 @@
 <?php
 
+use App\Tenant;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,7 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::get("/", function () {
-  return "App";
+  
+  //return "App";
+  foreach (Tenant::all()->toArray() as $tenant) {
+    $data = (object)$tenant;
+
+    print_r($data);
+  }
 });
 
 Route::get("pastors-report/download/{id}", "Api\Staff\Report\PastorReportController@index");
