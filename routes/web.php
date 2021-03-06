@@ -34,7 +34,13 @@ Route::get("/", function () {
         ->setPassword(config("database.connections.mysql.password"))
         ->dumpToFile(storage_path("app/public/") . $filename);
 
-      dump("$filename - " .Storage::disk("public")->exists($filename));
+      if (Storage::disk("public")->exists($filename)) {
+        $contents = Storage::disk("public")->get($filename);
+
+        Storage::disk("s3")->put("ScimChms/{$filename}", $contents);
+        Storage::disk("public")->delete($filename);
+        dump("s3");
+      }
     } catch (\Exception $e) {
       dump($e->getMessage());
     }
