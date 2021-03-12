@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+
 use App\Models\Country;
 use App\Models\Module;
 use App\Models\Permission;

@@ -166,7 +166,6 @@ return [
      * Package Service Providers...
      */
     OwenIt\Auditing\AuditingServiceProvider::class,
-    CloudinaryLabs\CloudinaryLaravel\CloudinaryServiceProvider::class,
     Maatwebsite\Excel\ExcelServiceProvider::class,
     Aws\Laravel\AwsServiceProvider::class,
     /*
@@ -231,7 +230,6 @@ return [
     'Validator' => Illuminate\Support\Facades\Validator::class,
     'View' => Illuminate\Support\Facades\View::class,
 
-    'Cloudinary' => CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary::class,
     'Excel' => Maatwebsite\Excel\Facades\Excel::class,
   ],
 
