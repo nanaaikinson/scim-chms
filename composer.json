@@ -18,7 +18,6 @@
     "intervention/image": "^2.5",
     "knuckleswtf/scribe": "^1.2",
     "laravel/framework": "^8.0",
-    "laravel/passport": "^10.0",
     "laravel/tinker": "^2.5",
     "league/flysystem-aws-s3-v3": "~1.0",
     "maatwebsite/excel": "^3.1",
@@ -29,7 +28,8 @@
     "spatie/laravel-backup": "^6.11",
     "spatie/laravel-medialibrary": "^9.0.0",
     "spatie/laravel-ray": "^1.13",
-    "stancl/tenancy": "^3.2"
+    "stancl/tenancy": "^3.2",
+    "tymon/jwt-auth": "^1.0"
   },
   "require-dev": {
     "facade/ignition": "^2.3.6",
