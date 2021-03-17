@@ -11,7 +11,7 @@ class ValidatePrayerRequest extends FormRequest
    *
    * @return bool
    */
-  public function authorize()
+  public function authorize(): bool
   {
     return true;
   }
@@ -26,13 +26,13 @@ class ValidatePrayerRequest extends FormRequest
     return [
       "name" => "required",
       "subject" => "required",
-      "email" => "required|email",
+      "email" => "nullable|email",
       "telephone" => "regex:/(0)[0-9]/|not_regex:/[a-z]/|min:10",
       "request" => "required"
     ];
   }
 
-  public function messages()
+  public function messages(): array
   {
     return [
       "telephone.regex" => "The telephone number entered is invalid",

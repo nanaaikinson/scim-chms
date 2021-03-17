@@ -11,17 +11,18 @@ use App\Traits\ResponseTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Str;
+use Ulid\Ulid;
 
 class AuthController extends Controller
 {
   use ResponseTrait;
 
-  public function register(MemberRegistrationRequest $request)
+  public function register(MemberRegistrationRequest $request): JsonResponse
   {
     try {
       $validated = (object)$request->validationData();
@@ -41,7 +42,7 @@ class AuthController extends Controller
         "token" => generate_mask(),
         "token_at" => Carbon::now()->toDateString(),
         "status" => ST_INACTIVE,
-        "mask" => Str::uuid(),
+        "mask" => Ulid::fromTimestamp(time()),
         "meta_data" => (string)json_encode($metaData)
       ]);
 
@@ -65,7 +66,7 @@ class AuthController extends Controller
     }
   }
 
-  public function login(MemberLoginRequest $request)
+  public function login(MemberLoginRequest $request): JsonResponse
   {
     try {
       $validated = (object)$request->validationData();
@@ -83,11 +84,9 @@ class AuthController extends Controller
         You can also click the resend verification email button to have another email sent to you");
       }
       throw new ModelNotFoundException();
-    }
-    catch (ModelNotFoundException $e) {
+    } catch (ModelNotFoundException $e) {
       return $this->errorResponse("Incorrect credentials provided");
-    }
-    catch (Exception $e) {
+    } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
     }
   }

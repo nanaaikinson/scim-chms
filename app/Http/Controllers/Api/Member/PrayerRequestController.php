@@ -26,6 +26,7 @@ class PrayerRequestController extends Controller
         "telephone" => $validated->telephone,
         "request" => $validated->request
       ];
+
       PrayerRequest::create([
         "name" => $request->input("name"),
         "phone" => $request->input("telephone"),
@@ -33,9 +34,10 @@ class PrayerRequestController extends Controller
         "request" => $request->input("request"),
         "subject" => $request->input("subject"),
       ]);
-      Mail::to(getenv("SCIM_ADMIN_EMAIL"))
-        ->queue(new PrayerRequestMail($data));
-      return  $this->successResponse("Prayer request sent successfully.");
+
+      Mail::to(getenv("SCIM_ADMIN_EMAIL"))->queue(new PrayerRequestMail($data));
+
+      return  $this->successResponse("Prayer request received. We'll contact you as soon as possible. Jesus Is Alive");
     } catch (Exception $e) {
       return $this->errorResponse($e->getMessage());
     }

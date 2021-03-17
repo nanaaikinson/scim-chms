@@ -11,7 +11,7 @@ class MemberRegistrationRequest extends FormRequest
    *
    * @return bool
    */
-  public function authorize()
+  public function authorize(): bool
   {
     return true;
   }
@@ -21,7 +21,7 @@ class MemberRegistrationRequest extends FormRequest
    *
    * @return array
    */
-  public function rules()
+  public function rules(): array
   {
     return [
       "first_name" => "required",
@@ -29,6 +29,13 @@ class MemberRegistrationRequest extends FormRequest
       "email" => "required|email|unique:members,email",
       "telephone" => "unique:members,telephone",
       "password" => "required|confirmed|min:6|max:20"
+    ];
+  }
+
+  public function messages(): array
+  {
+    return [
+      "email.unique" => "The email address entered is already associated with an account"
     ];
   }
 }
