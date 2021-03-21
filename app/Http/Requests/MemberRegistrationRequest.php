@@ -27,7 +27,7 @@ class MemberRegistrationRequest extends FormRequest
       "first_name" => "required",
       "last_name" => "required",
       "email" => "required|email|unique:members,email",
-      "telephone" => "unique:members,telephone|min:10|numeric",
+      "telephone" => "nullable|unique:members,telephone|min:10|numeric",
       "password" => "required|confirmed|min:6|max:20|alpha_num"
     ];
   }

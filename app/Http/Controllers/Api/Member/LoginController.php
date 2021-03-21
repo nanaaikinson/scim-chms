@@ -36,7 +36,7 @@ class LoginController extends Controller
               return $this->dataResponse([
                 "name" => $user->name,
                 "email" => $user->email,
-                "avatar" => $mediaItems ? $mediaItems[0]->getFullUrl("thumb") : null,
+                "avatar" => $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl("thumb") : null,
                 "access_token" => $token
               ]);
             }
