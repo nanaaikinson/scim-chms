@@ -28,10 +28,10 @@ class DeveloperTicketMail extends Mailable implements ShouldQueue
    *
    * @return $this
    */
-  public function build()
+  public function build(): DeveloperTicketMail
   {
     return $this->from("noreply@salvationclincchms.com", "SCIM CHMS")
-      ->subject("Ticket #{$this->data['ticket']->id} {$this->data['action']}")
+      ->subject("Ticket #{$this->data['ticket']["id"]} {$this->data['action']}")
       ->view("email.developer.ticket.index");
   }
 }
