@@ -28,8 +28,8 @@ Route::prefix("mobile")->group(function () {
   Route::get("/events", "Api\Member\EventController@index");
   Route::post("/prayer-request", "Api\Member\PrayerRequestController@store");
   Route::prefix("auth")->group(function() {
-    Route::post("/login", "Api\Member\AuthController@login");
-    Route::post("/register", "Api\Member\AuthController@register");
-    Route::post("/social/{provider}", "Api\Member\PrayerRequestController@store");
+    Route::post("/login", "Api\Member\LoginController@login");
+    Route::post("/register", "Api\Member\RegisterController@register");
+    Route::post("/social/{provider}", "Api\Member\SocialAuthController@handle");
   });
 });

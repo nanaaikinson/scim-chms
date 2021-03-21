@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 trait ResponseTrait
 {
@@ -101,8 +102,20 @@ trait ResponseTrait
     return response()->json($response, $response['code']);
   }
 
-  public function downloadFileAndDeleteResponse($file, $filename, $headers = null): JsonResponse
+  public function downloadFileAndDeleteResponse($file, $filename, $headers = null): BinaryFileResponse
   {
     return response()->download($file, $filename)->deleteFileAfterSend();
+  }
+
+  public function exceptionResponse(\Exception $exception, $message = null): JsonResponse
+  {
+    $appEnv = strtolower(config("app.env"));
+    $appDebug = config("app.debug");
+
+    if ($appEnv == "production" && $appDebug == false) {
+      return response()->json(["message" => $message ?: "An error has occurred"], 400);
+    }
+
+    return response()->json(["message" => $exception->getMessage()], 400);
   }
 }

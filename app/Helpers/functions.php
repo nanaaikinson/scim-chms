@@ -1,9 +1,9 @@
 <?php
 
 if (!function_exists("generate_mask")) {
-  function generate_mask(): int
+  function generate_mask($min = 1111, $max = 9999999): int
   {
-    return rand(1111, 9999999);
+    return rand($min, $max);
   }
 }
 

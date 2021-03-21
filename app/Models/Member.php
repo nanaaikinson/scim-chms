@@ -5,17 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Member extends Authenticatable implements JWTSubject
+class Member extends Authenticatable implements JWTSubject, HasMedia
 {
-  use Notifiable;
+  use Notifiable, InteractsWithMedia;
 
   protected $guarded = [];
 
   public function avatar(): MorphOne
   {
     return $this->morphOne('App\Models\Image', 'imageable');
+  }
+
+  public function getNameAttribute(): string
+  {
+    return "{$this->first_name} {$this->last_name}";
+  }
+
+  public function getUUIDAttribute(): string
+  {
+    return "{$this->mask}";
   }
 
   /**
@@ -36,5 +49,12 @@ class Member extends Authenticatable implements JWTSubject
   public function getJWTCustomClaims(): array
   {
     return [];
+  }
+
+  public function registerMediaConversions(Media $media = null): void
+  {
+    $this->addMediaConversion('thumb')
+      ->width(250)
+      ->height(250);
   }
 }

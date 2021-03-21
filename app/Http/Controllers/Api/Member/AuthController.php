@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Ulid\Ulid;
 
 class AuthController extends Controller
@@ -73,7 +74,7 @@ class AuthController extends Controller
       $member = Member::where("email", $validated->email)->with("avatar")->firstOrFail();
       if (Hash::check($validated->password, $member->password)) {
         if ($member->email_verified_at) {
-          $token = $member->createToken("Member Login")->accessToken;
+          $token = JWTAuth::fromUser($member);
           return $this->dataResponse([
             "name" => "{$member->first_name} {$member->last_name}",
             "avatar" => $member->avatar,
