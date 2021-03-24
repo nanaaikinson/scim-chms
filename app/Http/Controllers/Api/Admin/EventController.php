@@ -84,17 +84,17 @@ class EventController extends Controller
         "end_date_time" => $request->input("start_date_time") ?: NULL,
         "primary_contact" => $request->input("primary_contact") ?: NULL,
         "secondary_contact" => $request->input("secondary_contact") ?: NULL,
-        "mask" => Ulid::fromTimestamp(time(), true),
+        "mask" => (string)Ulid::fromTimestamp(time(), true),
       ]);
 
       if ($request->hasFile("image")) {
         $event->addMediaFromRequest('image')->toMediaCollection('images');
       }
 
-      $mediaItems = $event->media;
+      $mediaItems = $event->getMedia("images");
 
-      $event->setAttribute("image", $mediaItems ? $mediaItems[0]->getFullUrl() : null);
-      $event->setAttribute("thumbnail", $mediaItems ? $mediaItems[0]->getFullUrl("thumb") : null);
+      $event->setAttribute("image", $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl() : null);
+      $event->setAttribute("thumbnail", $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl("thumb") : null);
 
       return $this->successDataResponse("Event created successfully", $event);
     } catch (\Exception $e) {
@@ -150,15 +150,15 @@ class EventController extends Controller
       ]);
 
       if ($request->hasFile("image")) {
-        $mediaItems = $event->media;
-        if ($mediaItems) $mediaItems[0]->delete();
+        $mediaItems = $event->getMedia("images");
+        if ($mediaItems->isNotEmpty()) $mediaItems[0]->delete();
         $event->addMediaFromRequest('image')->toMediaCollection('images');
       }
 
-      $mediaItems = $event->media;
+      $mediaItems = $event->getMedia("images");
 
-      $event->setAttribute("image", $mediaItems ? $mediaItems[0]->getFullUrl() : null);
-      $event->setAttribute("thumbnail", $mediaItems ? $mediaItems[0]->getFullUrl("thumb") : null);
+      $event->setAttribute("image", $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl() : null);
+      $event->setAttribute("thumbnail", $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl("thumb") : null);
 
 
       return $this->successDataResponse("Event updated successfully", $event);

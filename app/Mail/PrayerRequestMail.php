@@ -28,7 +28,7 @@ class PrayerRequestMail extends Mailable implements ShouldQueue
    *
    * @return $this
    */
-  public function build()
+  public function build(): PrayerRequestMail
   {
     return $this->from("noreply@salvationclincchms.com", "Salvation Clinic Application")
       ->subject("Prayer request via mobile app")

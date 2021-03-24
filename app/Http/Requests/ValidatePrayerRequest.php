@@ -21,13 +21,13 @@ class ValidatePrayerRequest extends FormRequest
    *
    * @return array
    */
-  public function rules()
+  public function rules(): array
   {
     return [
       "name" => "required",
       "subject" => "required",
       "email" => "nullable|email",
-      "telephone" => "regex:/(0)[0-9]/|not_regex:/[a-z]/|min:10",
+      "telephone" => "nullable|regex:/(0)[0-9]/|not_regex:/[a-z]/|min:10",
       "request" => "required"
     ];
   }
@@ -36,7 +36,7 @@ class ValidatePrayerRequest extends FormRequest
   {
     return [
       "telephone.regex" => "The telephone number entered is invalid",
-      "telephone.not_regex" => "The telephone number must contain only numbers",
+      "telephone.not_regex" => "The telephone number must contain only numbers and must be an international format if possible",
     ];
   }
 }
