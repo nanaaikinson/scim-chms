@@ -91,7 +91,7 @@ trait ResponseTrait
     return response()->json($response, $response['code']);
   }
 
-  protected function notFoundResponse($message = null): JsonResponse
+  protected function notFoundResponse($message = ""): JsonResponse
   {
     $response = [
       'code' => 404,
@@ -116,6 +116,6 @@ trait ResponseTrait
       return response()->json(["message" => $message ?: "An error has occurred"], 400);
     }
 
-    return response()->json(["message" => $exception->getMessage()], 400);
+    return response()->json(["message" => $message ?: $exception->getMessage()], 400);
   }
 }

@@ -30,13 +30,13 @@ class LoginController extends Controller
         if (!$user->is_facebook && !$user->is_google) {
           if (Hash::check($request->input('password'), $user->password)) {
             if ($user->status) {
-              $mediaItems = $user->getMedia("images");
+              $mediaItems = $user->getMedia("avatar");
 
               $token = JWTAuth::customClaims(['exp' => Carbon::now()->addDays(365)->timestamp])->fromUser($user);
               return $this->dataResponse([
                 "name" => $user->name,
                 "email" => $user->email,
-                "avatar" => $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl("thumb") : null,
+                "avatar" => $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl() : null,
                 "access_token" => $token
               ]);
             }

@@ -27,9 +27,19 @@ Route::prefix("admin")->group(function () {
 Route::prefix("mobile")->group(function () {
   Route::get("/events", "Api\Member\EventController@index");
   Route::post("/prayer-request", "Api\Member\PrayerRequestController@store");
+
   Route::prefix("auth")->group(function() {
     Route::post("/login", "Api\Member\LoginController@login");
     Route::post("/register", "Api\Member\RegisterController@register");
     Route::post("/social/{provider}", "Api\Member\SocialAuthController@handle");
+  });
+
+  Route::middleware("auth:member-api")->group(function () {
+    // Profile
+    Route::prefix("profile")->group(function() {
+      Route::get("/", "Api\Member\ProfileController@me");
+      Route::post("/update-avatar", "Api\Member\ProfileController@updateAvatar");
+      Route::patch("/update-details", "Api\Member\ProfileController@update");
+    });
   });
 });

@@ -57,4 +57,11 @@ class Member extends Authenticatable implements JWTSubject, HasMedia
       ->width(250)
       ->height(250);
   }
+
+  public function registerMediaCollections(): void
+  {
+    $this
+      ->addMediaCollection('avatar')
+      ->singleFile();
+  }
 }
