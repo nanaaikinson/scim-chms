@@ -29,7 +29,7 @@ class EventController extends Controller
 
       $events = $query->paginate($perPage, ["*"], "page", $currentPage);
       $events->getCollection()->transform(function ($event) {
-        $mediaItems = $event->media;
+        $mediaItems = $event->getMedia("images");
 
         return [
           "title" => $event->title,
@@ -41,8 +41,8 @@ class EventController extends Controller
           "primary_contact" => $event->primary_contact,
           "secondary_contact" => $event->secondary_contact,
           "mask" => $event->mask,
-          "image" => $mediaItems ? $mediaItems[0]->getFullUrl() : null,
-          "thumbnail" => $mediaItems ? $mediaItems[0]->getFullUrl("thumb") : null,
+          "image" => $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl() : null,
+          "thumbnail" => $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl("thumb") : null,
         ];
       });
 
@@ -109,8 +109,8 @@ class EventController extends Controller
       $mediaItems = $event->getMedia("images");
       $event->fresh();
 
-      $event->setAttribute("image", $mediaItems ? $mediaItems[0]->getFullUrl() : null);
-      $event->setAttribute("thumbnail", $mediaItems ? $mediaItems[0]->getFullUrl("thumb") : null);
+      $event->setAttribute("image", $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl() : null);
+      $event->setAttribute("thumbnail", $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl("thumb") : null);
 
       return $this->dataResponse($event);
     } catch (ModelNotFoundException $e) {
