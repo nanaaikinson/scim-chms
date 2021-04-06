@@ -31,8 +31,8 @@ class MemberRegistrationOTPMail extends Mailable implements ShouldQueue
    */
   public function build(): MemberRegistrationOTPMail
   {
-    return $this->from("no-reply@salvationclincchms.com", "SCIM")
-      ->subject("Account verification with " . $this->user->token)
-      ->view("email.member.register");
+    return $this->from("noreply@salvationclincchms.com", "SCIM")
+      ->subject("OTP Verification")
+      ->view("email.member.otp");
   }
 }
