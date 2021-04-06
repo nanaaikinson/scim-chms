@@ -27,7 +27,7 @@ class RegisterController extends Controller
       $user->email = $request->input("email");
       $user->telephone = $request->input("telephone") ?: NULL;
       $user->password = Hash::make($request->input("password"));
-      $user->token = generate_mask(100000);
+      $user->token = generate_mask(100000, 999999);
       $user->token_at = Carbon::now();
       $user->mask = Ulid::fromTimestamp(time());
       $user->save();

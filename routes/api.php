@@ -31,6 +31,8 @@ Route::prefix("mobile")->group(function () {
   Route::prefix("auth")->group(function() {
     Route::post("/login", "Api\Member\LoginController@login");
     Route::post("/register", "Api\Member\RegisterController@register");
+    Route::post("/verify-otp", "Api\Member\VerificationController@verifyOtp");
+    Route::post("/resend-otp", "Api\Member\VerificationController@resendOtp");
     Route::post("/social/{provider}", "Api\Member\SocialAuthController@handle");
   });
 

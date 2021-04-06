@@ -7,6 +7,7 @@ use App\Mail\MemberResendOTPMail;
 use App\Models\Member;
 use App\Traits\ResponseTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -16,7 +17,7 @@ class VerificationController extends Controller
 {
   use ResponseTrait;
 
-  public function resendVerification(Request $request): JsonResponse
+  public function resendOtp(Request $request): JsonResponse
   {
     try {
       $validator = Validator::make($request->all(), ["email" => "required|email"]);
@@ -26,7 +27,7 @@ class VerificationController extends Controller
       $token = $tokenAt = "";
 
       if ($user) {
-        $token = generate_mask(100000);
+        $token = generate_mask(100000, 999999);
         $tokenAt = Carbon::now();
 
         $user->token = $token;
@@ -47,8 +48,41 @@ class VerificationController extends Controller
 
   }
 
-  public function verifyToken(Request $request)
+  public function verifyOtp(Request $request)
   {
+    try {
+      $validator = Validator::make($request->all(), [
+        "email" => "required|email",
+        "otp" => "required|numeric"
+      ]);
+      if ($validator->fails()) {
+        return $this->validationResponse($validator->errors());
+      }
 
+      $otp = $request->input("otp");
+      $user = Member::where("email", $request->input("email"))->firstOrFail();
+      if ($user->token == $otp) {
+        $now = Carbon::now();
+        $tokenAt = Carbon::parse($user->token_at);
+
+        if ($now->diffInMinutes($tokenAt) <= 20) {
+          $user->update([
+            "status" => 1,
+            "token" => null,
+            "token_at" => null
+          ]);
+
+          return $this->successResponse("OTP verified. Account activated.");
+        }
+        throw new \Exception("OTP provided has expired. Please request for a new one.");
+      }
+      throw new \Exception("OTP provided is incorrect. Please type in the correct OTP or request for a new one.");
+    }
+    catch (ModelNotFoundException $e) {
+      return $this->notFoundResponse("The user queried does not exist.");
+    }
+    catch (\Exception $e) {
+      return $this->exceptionResponse($e);
+    }
   }
 }
