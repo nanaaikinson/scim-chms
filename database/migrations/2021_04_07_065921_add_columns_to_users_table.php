@@ -14,7 +14,6 @@ class AddColumnsToUsersTable extends Migration
   public function up()
   {
     Schema::table('users', function (Blueprint $table) {
-      $table->string("password")->after("email")->nullable();
       $table->string("telephone")->after("password")->nullable();
       $table->boolean("is_facebook")->after("telephone")->default(false);
       $table->boolean("is_google")->after("is_facebook")->default(false);
