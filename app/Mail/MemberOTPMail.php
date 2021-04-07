@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class MemberRegistrationOTPMail extends Mailable implements ShouldQueue
+class MemberOTPMail extends Mailable implements ShouldQueue
 {
   use Queueable, SerializesModels;
 
@@ -29,10 +29,10 @@ class MemberRegistrationOTPMail extends Mailable implements ShouldQueue
    *
    * @return $this
    */
-  public function build(): MemberRegistrationOTPMail
+  public function build(): MemberOTPMail
   {
     return $this->from("noreply@salvationclincchms.com", "SCIM")
-      ->subject("OTP Verification")
+      ->subject("Account OTP Verification")
       ->view("email.member.otp");
   }
 }

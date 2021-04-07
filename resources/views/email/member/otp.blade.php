@@ -30,7 +30,7 @@
               <tr>
                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; margin: 0;" align="left">
 
-                  <p class="" style="line-height: 24px; font-size: 16px; width: 100%; margin: 0;" align="left">Hello {{ $this->user->first_name }},<br>Please use this verification code to confirm your identity.</p>
+                  <p class="" style="line-height: 24px; font-size: 16px; width: 100%; margin: 0;" align="left">Hello {{ $user->first_name }},<br>Please use this verification code to confirm your identity.</p>
                   <table class="s-2 w-100" border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
                     <tbody>
                     <tr>
@@ -53,7 +53,7 @@
                             <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; padding-top: 16px; padding-bottom: 16px; margin: 0;" align="left">
                               <div class=" ">
                                 <h5 class="align-center" style="margin-top: 0; margin-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 20px; line-height: 24px;" align="left">Verification Code:</h5>
-                                <h2 class=" align-center" style="margin-top: 0; margin-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 32px; line-height: 38.4px;" align="left">{{ $this->user->token }}</h2>
+                                <h2 class=" align-center" style="margin-top: 0; margin-bottom: 0; font-weight: 500; vertical-align: baseline; font-size: 32px; line-height: 38.4px;" align="left">{{ $user->token }}</h2>
                                 <table class="s-2 w-100" border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
                                   <tbody>
                                   <tr>

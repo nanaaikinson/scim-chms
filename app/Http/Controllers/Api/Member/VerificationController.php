@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\Member;
 
 use App\Http\Controllers\Controller;
-use App\Mail\MemberResendOTPMail;
+use App\Mail\MemberOTPMail;
 use App\Models\Member;
 use App\Traits\ResponseTrait;
 use Carbon\Carbon;
@@ -34,7 +34,7 @@ class VerificationController extends Controller
         $user->token_at = $tokenAt;
         $user->save();
 
-        Mail::to($user->email)->send(new MemberResendOTPMail($user));
+        Mail::to($user->email)->send(new MemberOTPMail($user));
       }
 
       return $this->successDataResponse("An email has been sent to the email address provided.", [
@@ -77,11 +77,9 @@ class VerificationController extends Controller
         throw new \Exception("OTP provided has expired. Please request for a new one.");
       }
       throw new \Exception("OTP provided is incorrect. Please type in the correct OTP or request for a new one.");
-    }
-    catch (ModelNotFoundException $e) {
+    } catch (ModelNotFoundException $e) {
       return $this->notFoundResponse("The user queried does not exist.");
-    }
-    catch (\Exception $e) {
+    } catch (\Exception $e) {
       return $this->exceptionResponse($e);
     }
   }

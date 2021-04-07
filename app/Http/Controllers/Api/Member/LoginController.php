@@ -52,4 +52,9 @@ class LoginController extends Controller
       return $this->exceptionResponse($e);
     }
   }
+
+  public function social(Request $request, string $provider)
+  {
+    
+  }
 }
