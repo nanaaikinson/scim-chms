@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
@@ -14,12 +13,8 @@ class Member extends Authenticatable implements JWTSubject, HasMedia
 {
   use Notifiable, InteractsWithMedia;
 
+  protected $table = "users";
   protected $guarded = [];
-
-  public function avatar(): MorphOne
-  {
-    return $this->morphOne('App\Models\Image', 'imageable');
-  }
 
   public function getNameAttribute(): string
   {
