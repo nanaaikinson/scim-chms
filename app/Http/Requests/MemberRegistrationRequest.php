@@ -26,7 +26,7 @@ class MemberRegistrationRequest extends FormRequest
     return [
       "first_name" => "required",
       "last_name" => "required",
-      "email" => "required|email|unique:members,email",
+      "email" => "required|email|unique:users,email",
       "telephone" => "nullable|unique:members,telephone|min:10|numeric",
       "password" => "required|confirmed|min:6|max:20|alpha_num"
     ];
