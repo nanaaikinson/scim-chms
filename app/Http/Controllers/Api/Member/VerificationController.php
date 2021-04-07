@@ -23,7 +23,7 @@ class VerificationController extends Controller
       $validator = Validator::make($request->all(), ["email" => "required|email"]);
       if ($validator->fails()) return $this->validationResponse($validator->errors());
 
-      $user = Member::where("email", $request->input("email"))->first();
+      $user = Member::where("email", $request->input("email"))->firstOrFail();
       $token = $tokenAt = "";
 
       if ($user) {
@@ -40,8 +40,10 @@ class VerificationController extends Controller
       return $this->successDataResponse("An email has been sent to the email address provided.", [
         "otp" => $token,
         "otp_at" => $tokenAt,
-        "user_id" => $user->uuid
+        "user_id" => $user->mask
       ]);
+    } catch (ModelNotFoundException $e) {
+      return $this->notFoundResponse();
     } catch (\Exception $e) {
       return $this->exceptionResponse($e);
     }
