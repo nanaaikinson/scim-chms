@@ -17,7 +17,6 @@ class AddColumnsToUsersTable extends Migration
       $table->string("telephone")->after("password")->nullable();
       $table->boolean("is_facebook")->after("telephone")->default(false);
       $table->boolean("is_google")->after("is_facebook")->default(false);
-      $table->boolean("status")->after("is_google")->default(false);
       $table->string("mask")->change();
       $table->string("token")->after("mask")->nullable();
       $table->dateTime("token_at")->after("token")->nullable();
