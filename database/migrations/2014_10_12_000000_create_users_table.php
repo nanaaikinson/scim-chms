@@ -19,7 +19,14 @@ class CreateUsersTable extends Migration
       $table->string('last_name');
       $table->string('email')->unique();
       $table->string('password');
-      $table->unsignedBigInteger('mask')->unique();
+      $table->string("telephone")->nullable();
+      $table->boolean("is_facebook")->default(false);
+      $table->boolean("is_google")->default(false);
+      $table->string("token")->nullable();
+      $table->dateTime("token_at")->nullable();
+      $table->string("country")->nullable();
+      $table->string("role")->nullable();
+      $table->string('mask')->unique();
       $table->rememberToken();
       $table->timestamps();
       $table->softDeletes();
