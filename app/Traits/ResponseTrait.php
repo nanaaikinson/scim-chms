@@ -94,12 +94,9 @@ trait ResponseTrait
   protected function notFoundResponse($message = ""): JsonResponse
   {
     $response = [
-      'code' => 404,
-      'status' => 'error',
-      'data' => 'Resource Not Found',
       'message' => $message ? $message : 'Record Not Found'
     ];
-    return response()->json($response, $response['code']);
+    return response()->json($response, 404);
   }
 
   public function downloadFileAndDeleteResponse($file, $filename, $headers = null): BinaryFileResponse

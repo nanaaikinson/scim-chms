@@ -20,12 +20,7 @@ class EventController extends Controller
     try {
       $perPage = $request->input("per_page") ?: 20;
       $currentPage = $request->input("page") ?: 1;
-      $device = $request->input("device") ?: null;
       $query = Event::query();
-
-      if ($device == "mobile") {
-        $query->whereDate("start_date_time", ">=", now());
-      }
 
       $events = $query->paginate($perPage, ["*"], "page", $currentPage);
       $events->getCollection()->transform(function ($event) {

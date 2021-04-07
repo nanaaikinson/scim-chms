@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Member;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Traits\ResponseTrait;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -33,7 +34,7 @@ class EventController extends Controller
       $events = $query->whereDate("start_date_time", ">=", now())->paginate($perPage);
 
       $events->getCollection()->transform(function($event) {
-        $mediaItems = $event->media;
+        $mediaItems = $event->getMedia("images");
         return [
           "title" => $event->title,
           "description" => $event->description,
@@ -44,8 +45,8 @@ class EventController extends Controller
           "primary_contact" => $event->primary_contact,
           "secondary_contact" => $event->secondary_contact,
           "mask" => $event->mask,
-          "image" => $mediaItems ? $mediaItems[0]->getFullUrl() : null,
-          "thumbnail" => $mediaItems ? $mediaItems[0]->getFullUrl("thumb") : null,
+          "image" => $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl() : null,
+          "thumbnail" => $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl("thumb") : null,
         ];
       });
 
@@ -59,6 +60,25 @@ class EventController extends Controller
     }
     catch (\Exception $e) {
       return $this->errorResponse($e->getMessage());
+    }
+  }
+
+  public function show(string $mask): JsonResponse
+  {
+    try {
+      $event = Event::where("mask", $mask)->firstOrFail();
+      $mediaItems = $event->getMedia("images");
+
+      $event->setAttribute("image", $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl() : null);
+      $event->setAttribute("thumbnail", $mediaItems->isNotEmpty() ? $mediaItems[0]->getFullUrl("thumb") : null);
+
+      return $this->dataResponse($event);
+    }
+    catch (ModelNotFoundException $e) {
+      return $this->notFoundResponse();
+    }
+    catch (\Exception $e) {
+      return $this->exceptionResponse($e);
     }
   }
 }

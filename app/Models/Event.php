@@ -18,15 +18,17 @@ class Event extends Model implements HasMedia
   {
     $this->addMediaConversion('thumb')
       ->width(100)
-      ->height(100);
+      ->height(100)->sharpen(10);
 
     $this->addMediaConversion('thumb_md')
       ->width(250)
-      ->height(250);
+      ->height(250)->sharpen(10);
 
     $this->addMediaConversion('thumb_lg')
       ->width(400)
-      ->height(400);
+      ->height(400)->sharpen(10);
+
+    $this->addMediaCollection('images')->singleFile();
   }
 
   public function scopeMask($query, $mask)

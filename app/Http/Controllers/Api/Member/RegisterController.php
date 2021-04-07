@@ -37,7 +37,7 @@ class RegisterController extends Controller
       return $this->successDataResponse("Registration successful", [
         "otp" => $user->token,
         "otp_at" => $user->token_at,
-        "user_id" => $user->uuid
+        "user_id" => $user->mask
       ]);
 
     } catch (\Exception $e) {
