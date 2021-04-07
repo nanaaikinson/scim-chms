@@ -16,6 +16,14 @@ Route::prefix("admin")->group(function () {
     Route::delete("/{mask}", "Api\Admin\EventController@destroy");
   });
 
+  Route::prefix("blogs")->group(function () {
+    Route::get("/", "Api\Admin\ArticleController@index");
+    Route::post("/", "Api\Admin\ArticleController@store");
+    Route::get("/{mask}", "Api\Admin\ArticleController@show");
+    Route::post("/{mask}", "Api\Admin\ArticleController@update");
+    Route::delete("/{mask}", "Api\Admin\ArticleController@destroy");
+  });
+
   Route::prefix("prayer-requests")->group(function () {
     Route::get("/", "Api\Admin\PrayerRequestController@index");
     Route::get("/{mask}", "Api\Admin\PrayerRequestController@show");
@@ -25,7 +33,10 @@ Route::prefix("admin")->group(function () {
 
 // Mobile Routes
 Route::prefix("mobile")->group(function () {
-  Route::get("/events", "Api\Member\EventController@index");
+  Route::prefix("events")->group(function() {
+    Route::get("/", "Api\Member\EventController@index");
+    Route::get("/{mask}", "Api\Member\EventController@show");
+  });
   Route::post("/prayer-request", "Api\Member\PrayerRequestController@store");
 
   Route::prefix("auth")->group(function() {
