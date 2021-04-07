@@ -5,39 +5,55 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\PrayerRequest;
 use App\Traits\ResponseTrait;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class PrayerRequestController extends Controller
 {
   use ResponseTrait;
 
-  public function store(Request $request): JsonResponse
+  public function index(Request $request): JsonResponse
   {
     try {
-      $validator = Validator::make($request->all(), [
-        "full_name" => "required",
-        "email" => "nullable|email",
-        "phone" => "required|numeric|min:10",
-        "request" => "required"
-      ]);
-      if ($validator->fails()) return $this->validationResponse($validator->errors());
+      $perPage = $request->input("per_page") ?: 20;
+      $prayers = PrayerRequest::paginate($perPage);
 
-      $prayerRequest = PrayerRequest::create([
-        "name" => $request->input("full_name"),
-        "email" => $request->input("email") ?: NULL,
-        "phone" => $request->input("phone") ?: NULL,
-        "request" => $request->input("request") ?: NULL,
-      ]);
+      $prayers = $prayers->toArray();
+      $items = $prayers["data"];
+      $prayers["items"] = $items;
+      unset($prayers["data"]);
+      unset($prayers["links"]);
 
-      if ($prayerRequest) {
-        return $this->successResponse("Thanks for contacting us! We will be in touch with you shortly. Jesus is Alive.");
-      }
-      return $this->errorResponse("An error occurred while submitting your prayer request");
+      return $this->dataResponse($prayers);
+    } catch (\Exception $e) {
+      return $this->errorResponse($e);
     }
-    catch (\Exception $e) {
-      return $this->errorResponse($e->getMessage());
+  }
+
+  public function show(string $mask): JsonResponse
+  {
+    try {
+      $prayer = PrayerRequest::where("mask", $mask)->firstOrFail();
+      return $this->dataResponse($prayer);
+    } catch (ModelNotFoundException $e) {
+      return $this->notFoundResponse();
+    } catch (\Exception $e) {
+      return $this->errorResponse($e);
+    }
+  }
+
+  public function destroy(string $mask): JsonResponse
+  {
+    try {
+      $prayer = PrayerRequest::where("mask", $mask)->firstOrFail();
+      $prayer->delete();
+
+      return $this->successResponse("Prayer request deleted successfully.");
+    } catch (ModelNotFoundException $e) {
+      return $this->notFoundResponse();
+    } catch (\Exception $e) {
+      return $this->errorResponse($e);
     }
   }
 }

@@ -36,5 +36,5 @@ return [
 
   'wp' => [
     "api_url" => env('WP_API_URL'),
-  ]
+  ],
 ];

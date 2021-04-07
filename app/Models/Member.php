@@ -4,16 +4,59 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Member extends Authenticatable
+class Member extends Authenticatable implements JWTSubject, HasMedia
 {
-  use HasApiTokens, Notifiable;
+  use Notifiable, InteractsWithMedia;
 
+  protected $table = "users";
   protected $guarded = [];
 
-  public function avatar()
+  public function getNameAttribute(): string
   {
-    return $this->morphOne('App\Models\Image', 'imageable');
+    return "{$this->first_name} {$this->last_name}";
+  }
+
+  public function getUUIDAttribute(): string
+  {
+    return "{$this->mask}";
+  }
+
+  /**
+   * Get the identifier that will be stored in the subject claim of the JWT.
+   *
+   * @return mixed
+   */
+  public function getJWTIdentifier()
+  {
+    return $this->getKey();
+  }
+
+  /**
+   * Return a key value array, containing any custom claims to be added to the JWT.
+   *
+   * @return array
+   */
+  public function getJWTCustomClaims(): array
+  {
+    return [];
+  }
+
+  public function registerMediaConversions(Media $media = null): void
+  {
+    $this->addMediaConversion('thumb')
+      ->width(250)
+      ->height(250);
+  }
+
+  public function registerMediaCollections(): void
+  {
+    $this
+      ->addMediaCollection('avatar')
+      ->singleFile();
   }
 }

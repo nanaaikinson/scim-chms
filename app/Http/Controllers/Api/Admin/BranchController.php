@@ -9,9 +9,9 @@ use App\Tenant;
 use App\Traits\ResponseTrait;
 use Exception;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Str;
-use Laravel\Passport\Client as PassportClient;
-use Laravel\Passport\PersonalAccessClient as PassportPersonalAccessClient;
+
+// use Laravel\Passport\Client as PassportClient;
+// use Laravel\Passport\PersonalAccessClient as PassportPersonalAccessClient;
 
 class BranchController extends Controller
 {
@@ -33,18 +33,18 @@ class BranchController extends Controller
         $tenant->domains()->create(["domain" => $domain]);
         $tenant->run(function () use ($tenant) {
 
-          // Save passport client
-          PassportClient::create([
-            "name" => ucfirst($tenant->id) . " Personal Access Client",
-            "secret" => Str::random(40),
-            "redirect" => "http://" . getenv("TENANT_DOMAIN") . "/{$tenant->id}/",
-            "personal_access_client" => 1,
-            "password_client" => 0,
-            "revoked" => 0
-          ]);
+          // // Save passport client
+          // PassportClient::create([
+          //   "name" => ucfirst($tenant->id) . " Personal Access Client",
+          //   "secret" => Str::random(40),
+          //   "redirect" => "http://" . getenv("TENANT_DOMAIN") . "/{$tenant->id}/",
+          //   "personal_access_client" => 1,
+          //   "password_client" => 0,
+          //   "revoked" => 0
+          // ]);
 
-          // Save passport personal access client
-          PassportPersonalAccessClient::create(["client_id" => 1]);
+          // // Save passport personal access client
+          // PassportPersonalAccessClient::create(["client_id" => 1]);
 
           Artisan::call("tenants:seed", ["--tenants" => $tenant->id]);
         });

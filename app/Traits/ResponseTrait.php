@@ -2,9 +2,12 @@
 
 namespace App\Traits;
 
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+
 trait ResponseTrait
 {
-  public function deleteResponse($message = null, $data = null)
+  public function deleteResponse($message = null, $data = null): JsonResponse
   {
     $response = [
       'code' => 204,
@@ -15,7 +18,7 @@ trait ResponseTrait
     return response()->json($response, $response['code']);
   }
 
-  public function errorResponse($message = null, $data = null)
+  public function errorResponse($message = null, $data = null): JsonResponse
   {
     $response = [
       'code' => 400,
@@ -26,7 +29,7 @@ trait ResponseTrait
     return response()->json($response, $response['code']);
   }
 
-  public function validationResponse($errors)
+  public function validationResponse($errors): JsonResponse
   {
     $response = [
       'code' => 422,
@@ -36,7 +39,7 @@ trait ResponseTrait
     return response()->json($response, $response['code']);
   }
 
-  public function unauthorizedResponse($message = "Unauthorized")
+  public function unauthorizedResponse($message = "Unauthorized"): JsonResponse
   {
     $response = [
       'code' => 401,
@@ -46,7 +49,7 @@ trait ResponseTrait
     return response()->json($response, $response['code']);
   }
 
-  protected function successResponse($message)
+  protected function successResponse($message): JsonResponse
   {
     $response = [
       'code' => 200,
@@ -56,7 +59,7 @@ trait ResponseTrait
     return response()->json($response, $response['code']);
   }
 
-  protected function successDataResponse($message = null, $data = null)
+  protected function successDataResponse($message = null, $data = null): JsonResponse
   {
     $response = [
       'code' => 200,
@@ -67,7 +70,7 @@ trait ResponseTrait
     return response()->json($response, $response['code']);
   }
 
-  protected function dataResponse($data = null)
+  protected function dataResponse($data = null): JsonResponse
   {
     $response = [
       'code' => 200,
@@ -77,7 +80,7 @@ trait ResponseTrait
     return response()->json($response, $response['code']);
   }
 
-  protected function createdResponse($message = null, $data = null)
+  protected function createdResponse($message = null, $data = null): JsonResponse
   {
     $response = [
       'code' => 201,
@@ -88,7 +91,7 @@ trait ResponseTrait
     return response()->json($response, $response['code']);
   }
 
-  protected function notFoundResponse($message = null)
+  protected function notFoundResponse($message = ""): JsonResponse
   {
     $response = [
       'code' => 404,
@@ -99,8 +102,20 @@ trait ResponseTrait
     return response()->json($response, $response['code']);
   }
 
-  public function downloadFileAndDeleteResponse($file, $filename, $headers = null)
+  public function downloadFileAndDeleteResponse($file, $filename, $headers = null): BinaryFileResponse
   {
     return response()->download($file, $filename)->deleteFileAfterSend();
+  }
+
+  public function exceptionResponse(\Exception $exception, $message = null): JsonResponse
+  {
+    $appEnv = strtolower(config("app.env"));
+    $appDebug = config("app.debug");
+
+    if ($appEnv == "production" && $appDebug == false) {
+      return response()->json(["message" => $message ?: "An error has occurred"], 400);
+    }
+
+    return response()->json(["message" => $message ?: $exception->getMessage()], 400);
   }
 }

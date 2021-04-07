@@ -11,7 +11,7 @@ class ValidatePrayerRequest extends FormRequest
    *
    * @return bool
    */
-  public function authorize()
+  public function authorize(): bool
   {
     return true;
   }
@@ -21,22 +21,22 @@ class ValidatePrayerRequest extends FormRequest
    *
    * @return array
    */
-  public function rules()
+  public function rules(): array
   {
     return [
       "name" => "required",
       "subject" => "required",
-      "email" => "required|email",
-      "telephone" => "regex:/(0)[0-9]/|not_regex:/[a-z]/|min:10",
+      "email" => "nullable|email",
+      "telephone" => "nullable|regex:/(0)[0-9]/|not_regex:/[a-z]/|min:10",
       "request" => "required"
     ];
   }
 
-  public function messages()
+  public function messages(): array
   {
     return [
       "telephone.regex" => "The telephone number entered is invalid",
-      "telephone.not_regex" => "The telephone number must contain only numbers",
+      "telephone.not_regex" => "The telephone number must contain only numbers and must be an international format if possible",
     ];
   }
 }

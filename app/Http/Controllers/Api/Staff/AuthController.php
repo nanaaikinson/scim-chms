@@ -7,12 +7,14 @@ use App\Mail\UserPasswordResetMail;
 use App\Traits\ResponseTrait;
 use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
  * @group Authentication
@@ -54,9 +56,9 @@ class AuthController extends Controller
    * }
    *
    * @param Request $request
-   * @return \Illuminate\Http\JsonResponse
+   * @return JsonResponse
    */
-  public function login(Request $request)
+  public function login(Request $request): JsonResponse
   {
     try {
       $rules = ["email" => "required|email", "password" => "required"];
@@ -70,7 +72,7 @@ class AuthController extends Controller
         $user = Auth::user();
 
         if ($user->status == ST_ACTIVE) {
-          $token = $user->createToken('Personal Access Token')->accessToken;
+          $token = JWTAuth::fromUser($user);
           $currency = (new SettingController())->currency();
 
           return $this->dataResponse([
@@ -100,7 +102,7 @@ class AuthController extends Controller
    * Request user password reset
    * @param Request $request
    */
-  public function passwordReset(Request $request)
+  public function passwordReset(Request $request): JsonResponse
   {
     try {
       $validator = Validator::make($request->all(), ["email" => "required|email"]);

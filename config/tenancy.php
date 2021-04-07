@@ -53,7 +53,7 @@ return [
      * Tenant database names are created like this:
      * prefix + tenant_id + suffix.
      */
-    'prefix' => 'scim__tenant__',
+    'prefix' => env('APP_NAME') . '__tenant__',
     'suffix' => '',
 
     /**
