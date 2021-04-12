@@ -143,17 +143,17 @@ class AuthController extends Controller
    * Logout current authenticated user
    *
    * @authenticated
+   * @return JsonResponse
    */
-  public function logout()
+  public function logout(): JsonResponse
   {
-    $user = Auth::user()->token();
-    $user->revoke();
+    auth("api")->logout(true);
 
     return $this->successResponse("Logout successful");
   }
 
 
-  public function changePassword(Request $request)
+  public function changePassword(Request $request): JsonResponse
   {
     try {
       $user = $request->user();
@@ -178,7 +178,7 @@ class AuthController extends Controller
     }
   }
 
-  public function changeDetails(Request $request)
+  public function changeDetails(Request $request): JsonResponse
   {
     try {
       $user = $request->user();
