@@ -65,7 +65,7 @@ class ArticleController extends Controller
         "mask" => (string)Ulid::fromTimestamp(time()),
       ]);
 
-      if ($request->input("excerpt_image")) {
+      if ($request->file("excerpt_image")) {
         $article->addMediaFromRequest('excerpt_image')->toMediaCollection('excerpt_image');
       }
 
@@ -115,7 +115,7 @@ class ArticleController extends Controller
         "slug" => Str::slug($request->input("slug")),
       ]);
 
-      if ($request->input("excerpt_image")) {
+      if ($request->file("excerpt_image")) {
         $article->addMediaFromRequest('excerpt_image')->toMediaCollection('excerpt_image');
         if ($mediaItems->isNotEmpty()) {
           $mediaItems[0]->delete();

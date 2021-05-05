@@ -15,7 +15,7 @@ class Article extends Model implements HasMedia
   use InteractsWithMedia;
 
   protected $guarded = [];
-  protected $hidden = ["id"];
+  protected $hidden = ["id", "media"];
 
   public function comments(): HasMany
   {
